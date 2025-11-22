@@ -1,0 +1,79 @@
+﻿@model EAD.Models.User
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add New User" : "Edit User";
+}
+
+<link rel="stylesheet" href="~/css/AdminHome.css">
+
+<div class="page-container fade-in">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>@(Model.Id == 0 ? "Add New User" : "Edit User")</h2>
+            <p>@(Model.Id == 0 ? "Create a new account" : "Update user details")</p>
+        </div>
+    </div>
+
+    <div class="data-card">
+        <div class="form-container">
+            <form asp-action="AddUser" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Name -->
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Ex: John Doe" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Ex: john@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <!-- Password - Only show when adding new user -->
+                @if (Model.Id == 0)
+                {
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">Password *</label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="NewPassword" class="form-control" placeholder="Leave blank to keep current" />
+                        <small class="text-muted">Only fill to change password</small>
+                    </div>
+                }
+
+                <!-- User Type -->
+                <div class="form-group">
+                    <label asp-for="UserType" class="form-label">User Type</label>
+                    <select asp-for="UserType" class="form-control">
+                        <option value="1">Tea & Water Only</option>
+                        <option value="2">Food + Tea & Water</option>
+                    </select>
+                </div>
+
+                <!-- Is Active -->
+                <div class="form-group">
+                    <label class="form-check">
+                        <input asp-for="IsActive" type="checkbox" class="form-check-input" />
+                        <span class="form-check-label">Is Active Account</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Save User</button>
+                    <a asp-action="ManageUsers" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,65 @@
+﻿@model List<User>
+
+<!-- Link the Styles -->
+<link rel="stylesheet" href="~/css/AdminHome.css">
+<!-- FontAwesome -->
+
+<div class="page-container fade-in">
+    <!-- Header: Title + Add Button -->
+    <header class="page-header">
+        <div class="page-title">
+            <h2>User Management</h2>
+            <p>Manage access for students and staff</p>
+        </div>
+        <a href="/Admin/AddUser" class="btn-add">
+            <i class="fas fa-plus"></i> Add User
+        </a>
+    </header>
+
+    <!-- Content Card -->
+    <div class="data-card">
+        @if (Model.Count == 0)
+        {
+            <div class="empty-state">
+                <i class="fas fa-users-slash"></i>
+                <h3>No users found</h3>
+                <p>Click the "Add User" button to get started.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Full Name</th>
+                            <th>Email Address</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>#@user.Id</td>
+                                <td style="font-weight: 600;">@user.Name</td>
+                                <td style="color: var(--text-muted);">@user.Email</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="/Admin/EditUser/@user.Id" class="btn-action btn-edit">
+                                            <i class="fas fa-pen"></i> Edit
+                                        </a>
+                                        <a href="/Admin/DeleteUser/@user.Id" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this user?');">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

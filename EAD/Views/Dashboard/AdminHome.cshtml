@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | Mess Management</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="~/css/AdminHome.css">
+</head>
+<body>
+
+    <!-- Extended Header Section -->
+    <header class="admin-header">
+        <nav class="navbar-top">
+            <div class="nav-brand">
+                <div class="brand-logo">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <span>Mess Admin</span>
+            </div>
+            <form action="/Login/Logout" method="post">
+                <button id="logoutBtn" class="btn-logout">
+                    Logout <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </form>
+        </nav>
+
+        <!-- Title Section -->
+        <div class="header-content">
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back, Admin. Here is what's happening today.</p>
+        </div>
+    </header>
+
+    <!-- Main Content (Overlapping the header) -->
+    <main class="dashboard-container">
+
+        <div class="dashboard-grid">
+
+            <!-- Card 1: Users -->
+            <div class="card" onclick="location.href='/Admin/ManageUsers'">
+                <div class="card-top-accent accent-blue"></div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="card-icon icon-bg-blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <h3>Users</h3>
+                        <p>Students & Staff</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                  
+                    <span class="stat-label">Manage users</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Meals (Tracking) -->
+            <div class="card" onclick="location.href='/Admin/ManageMeals'">
+                <div class="card-top-accent accent-green"></div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="card-icon icon-bg-green">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="card-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <h3>Menu</h3>
+                        <p>Today's Serving</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="stat-label">Manage Meals</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Statistics -->
+            <div class="card" onclick="location.href='/Admin/Stats'">
+                <div class="card-top-accent accent-orange"></div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="card-icon icon-bg-orange">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="card-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <h3>Statistics</h3>
+                        <p>Financials & Reports</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="stat-link">View Report <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+
+            <!-- NEW Card 4: Manage Meals -->
+            <div class="card" onclick="location.href='/Admin/ManageMeals'">
+                <div class="card-top-accent accent-purple"></div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="card-icon icon-bg-purple">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="card-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <h3>Manage Meals</h3>
+                        <p>Edit Weekly Schedule</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="stat-link">Edit Menu <i class="fas fa-cog"></i></span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Link to JS -->
+    <script src="~/js/AdminHome.js"></script>
+</body>
+</html>

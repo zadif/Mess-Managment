@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mess Management Login</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="~/css/login.css">
+</head>
+<body>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+ 
+    <div class="main-container">
+        <div class="login-card">
+
+            <div class="card-header">
+                <h1>Mess Management</h1>
+                <p id="role-subtitle">User Login</p>
+            </div>
+
+            <form action="/Login/LoginPage" class="login-form" method="post">
+                <!-- Input 1: Name/Email -->
+                <div class="input-group">
+                    <input type="text" id="username" required placeholder=" " name="name">
+                    <label for="username">Name or Email</label>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+
+                <!-- Input 2: Password -->
+                <div class="input-group">
+                    <input type="password" id="password" required placeholder=" " name="password">
+                    <label for="password">Password</label>
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <!-- Input 3: Role -->
+                <input type="hidden" name="role" id="hiddenRoleInput" value="User" />
+                <!-- Login Button -->
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+
+            <!-- Toggle Switch Section -->
+            <div class="toggle-section">
+                <span class="toggle-text" id="text-user">User</span>
+
+                <div class="toggle-switch-wrapper">
+                    <input type="checkbox" id="mode-toggle" class="toggle-checkbox">
+                    <label for="mode-toggle" class="toggle-label">
+                        <span class="toggle-ball"></span>
+                    </label>
+                </div>
+
+                <span class="toggle-text" id="text-admin">Admin</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Link to your JS file -->
+    <script src="~/js/login.js"></script>
+
+</body>
+</html>

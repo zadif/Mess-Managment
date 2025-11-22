@@ -1,0 +1,236 @@
+﻿/* --- CSS Variables (Theming Engine) --- */
+:root {
+    /* Default Theme (User - Light/Blue) */
+    --bg-gradient-1: #e0c3fc;
+    --bg-gradient-2: #8ec5fc;
+    --card-bg: #ffffff;
+    --text-primary: #333333;
+    --text-secondary: #777777;
+    --accent-color: #4e54c8; /* Royal Blue */
+    --accent-hover: #3f43a5;
+    --input-bg: #f4f4f4;
+    --input-border: #eeeeee;
+    --shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    --toggle-off: #cccccc;
+}
+
+/* Admin Theme (Dark/Red-Orange) - Activated by 'admin-mode' class on body */
+body.admin-mode {
+    --bg-gradient-1: #232526;
+    --bg-gradient-2: #414345;
+    --card-bg: #1e1e24;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent-color: #ff4b2b; /* Vibrant Red/Orange */
+    --accent-hover: #ff416c;
+    --input-bg: #2b2b36;
+    --input-border: #333340;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    --toggle-off: #555555;
+}
+
+/* --- Global Resets --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    /* Smooth transition for ALL color changes */
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+body {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
+    background-size: 400% 400%;
+    animation: gradientAnimate 10s ease infinite;
+}
+
+@keyframes gradientAnimate {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* --- Card Layout --- */
+.main-container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header h1 {
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.card-header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+/* --- Form Elements --- */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+    .input-group input {
+        width: 100%;
+        padding: 15px 15px 15px 45px;
+        background: var(--input-bg);
+        border: 2px solid var(--input-border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        outline: none;
+    }
+
+        .input-group input:focus {
+            border-color: var(--accent-color);
+            background: var(--card-bg);
+        }
+
+    /* Floating Label Logic */
+    .input-group label {
+        position: absolute;
+        left: 45px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        pointer-events: none;
+        transition: 0.3s ease;
+    }
+
+    /* Move label up when focused or not empty */
+    .input-group input:focus ~ label,
+    .input-group input:not(:placeholder-shown) ~ label {
+        top: -8px;
+        left: 15px;
+        font-size: 0.75rem;
+        background: var(--card-bg);
+        padding: 0 5px;
+        color: var(--accent-color);
+    }
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    transition: 0.3s;
+}
+
+.input-group input:focus ~ .input-icon {
+    color: var(--accent-color);
+}
+
+/* --- Button --- */
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+    .btn-login:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+/* --- Toggle Switch --- */
+.toggle-section {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid var(--input-border);
+    padding-top: 20px;
+}
+
+.toggle-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: 0.3s;
+}
+
+/* Highlights current text selection */
+.text-active {
+    color: var(--accent-color);
+}
+
+/* Hidden checkbox */
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    width: 50px;
+    height: 26px;
+    background-color: var(--toggle-off);
+    border-radius: 50px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-ball {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Toggle Active State */
+.toggle-checkbox:checked + .toggle-label {
+    background-color: var(--accent-color);
+}
+
+    .toggle-checkbox:checked + .toggle-label .toggle-ball {
+        transform: translateX(24px);
+    }
