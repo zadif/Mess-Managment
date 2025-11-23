@@ -2,7 +2,7 @@
 
 
 
-@model List<DailyMenu>
+@model List<DailyMenuViewModel>
 
 <!-- Link the Styles -->
 <link rel="stylesheet" href="~/css/AdminHome.css">
@@ -37,8 +37,10 @@
                     <thead>
                         <tr>
                             <th>#ID</th>
-                            <th>Full Name</th>
-                            <th>Email Address</th>
+                            <th>Day </th>
+                            <th>Type</th>
+                            <th>Name</th>
+
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
@@ -47,8 +49,9 @@
                         {
                             <tr>
                                 <td>#@user.Id</td>
-                                <td style="font-weight: 600;">@user.DayOfWeek</td>
-                                <td style="color: var(--text-muted);">@user.MealType</td>
+                                <td >@user.DayOfWeek</td>
+                                <td>@user.MealType</td>
+                                <td >@user.MealItemName</td>
                                 <td>
                                     <div class="action-buttons">
                                         <a href="/Admin/EditDailyMeal/@user.Id" class="btn-action btn-edit">

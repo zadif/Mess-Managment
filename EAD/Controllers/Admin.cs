@@ -184,11 +184,22 @@ namespace EAD.wwwroot.js
 
         public IActionResult DailyMeals()
         {
-            List<DailyMenu> meals = new List<DailyMenu>();
+            List<DailyMenuViewModel> meals = new List<DailyMenuViewModel>();
+          
             using (EadProjectContext db = new EadProjectContext())
             {
-                meals = db.DailyMenus.ToList();
-
+               meals = db.DailyMenus
+         .Include(m => m.MealItem)  
+         .Select(m => new DailyMenuViewModel
+         {
+             Id = m.Id,
+             DayOfWeek = m.DayOfWeek,
+             MealType = m.MealType,
+             MealItemName = m.MealItem != null ? m.MealItem.Name : "Not Assigned",
+             Price = m.MealItem != null ? m.MealItem.Price : 0,
+             Category = m.MealItem != null ? m.MealItem.Category : ""
+         })
+         .ToList();
 
             }
             return View(meals);
