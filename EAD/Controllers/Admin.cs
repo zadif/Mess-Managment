@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace EAD.wwwroot.js
 {
@@ -218,10 +219,15 @@ namespace EAD.wwwroot.js
             return View(new DailyMenu());
         }
         [HttpPost]
-        public IActionResult SaveDailyMenu(DailyMenu menu)
+        public IActionResult SaveDailyMenu(DailyMenu item)
         {
+            var edit =Convert.ToInt32( TempData["edit"]) ;
+            if (edit==0)
+            {
             //In menu.MealItem we are getting null , bcz we are loading it later
             ModelState.Remove("MealItem");
+
+            }
             if (!ModelState.IsValid)
             {
                
@@ -230,15 +236,66 @@ namespace EAD.wwwroot.js
 
             using (EadProjectContext db = new EadProjectContext())
             {
-                if (menu.Id == 0)
-                db.DailyMenus.Add(menu);
-            else
-                db.DailyMenus.Update(menu);
-            
+                if (item.Id == 0)
+                db.DailyMenus.Add(item);
+                else
+                {
+                    // Edit User → Update only if NewPassword is provided
+                    var existing = db.DailyMenus.Find(item.Id);
+                    if (existing != null)
+                    {
+                        existing.DayOfWeek = item.DayOfWeek;
+                        existing.MealType = item.MealType;
+                        existing.MealItemId = item.MealItemId;
+                        existing.MealItem = item.MealItem;
+
+
+                    }
+                }
+
                 db.SaveChanges();
             }
 
             return RedirectToAction("DailyMeals");
         }
+        public IActionResult DeleteDailyMeal(string id)
+        {
+
+            using (var db = new EadProjectContext())
+            {
+                var temp = db.DailyMenus.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefault();
+                if (temp != null)
+                {
+                    db.DailyMenus.Remove(temp);
+                    db.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("DailyMeals");
+
+        }
+
+
+        public IActionResult EditDailyMeal(string id)
+        {
+            using (var db = new EadProjectContext())
+            {
+                var temp = db.DailyMenus.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefault();
+                if (temp != null)
+                {
+                    List<MealItem> items = new List<MealItem>();
+                 
+                        items = db.MealItems.ToList();
+
+                    ViewBag.MealItems = items;
+                    return View("SetDailyMeals", temp);
+                }
+            }
+
+            return RedirectToAction("ManageMeals");
+
+        }
+
     }
-}
+   
+    }
