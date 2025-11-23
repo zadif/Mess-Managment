@@ -19,6 +19,19 @@ namespace EAD.Controllers
                 // Get today's day (e.g., "Monday")
                 string today = DateTime.Today.ToString("dddd");  // Returns "Monday", "Tuesday", etc.
 
+                //string id = Request.Cookies["UserId"];
+                //string userType;
+                //if (id != null)
+                //{
+                //    User usr = db.Users.Where(e => e.Id == Convert.ToInt32(id)).FirstOrDefault();
+                //    if(usr != null)
+                //    {
+                //        userType = usr.UserType;
+                //    }
+
+                //}
+
+
                 list = db.DailyMenus
                     .Include(m => m.MealItem)
                     .Where(d => d.DayOfWeek == today)

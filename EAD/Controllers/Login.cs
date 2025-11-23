@@ -59,6 +59,8 @@ namespace EAD.Controllers
                     var usr = db.Users.FirstOrDefault(e => (e.Name == name || e.Email == name));
                     if (usr != null && BCrypt.Net.BCrypt.Verify(password, usr.Password))
                     {
+                        if (usr.IsActive)
+                        {
                         // Save Role & UserId in cookies (lasts 30 days)
                         Response.Cookies.Append("Role", "User", new CookieOptions
                         {
@@ -75,7 +77,16 @@ namespace EAD.Controllers
                         });
                        return RedirectToAction("Home", "Dashboard");
 
-                        // Password is correct → login success
+                            // Password is correct → login success
+
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Your account is currently deactivated, Contact admin";
+                            return View();
+                        }
+
+
                     }
                     else
                     {
