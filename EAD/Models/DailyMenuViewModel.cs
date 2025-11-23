@@ -8,6 +8,8 @@
         public string DayOfWeek { get; set; } = null!;
         public string MealType { get; set; } = null!;
         public string MealItemName { get; set; } = "Not Set";
+        public string Description { get; set; }="Lazeez";
+
         public decimal Price { get; set; }
         public string Category { get; set; } = "";
     }

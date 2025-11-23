@@ -1,5 +1,204 @@
-﻿<form action="/Login/Logout" method="post">
-    <button id="logoutBtn" class="btn-logout">
-        Logout <i class="fas fa-sign-out-alt"></i>
-    </button>
-</form>
+﻿
+@model List<DailyMenuViewModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mess Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/UserHome.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR (Same as before) -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fas fa-utensils"></i> <span>MessMate</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                <a href="@Url.Action("Summary", "Bill")" class="nav-item"><i class="fas fa-file-invoice-dollar"></i> <span>My Bill</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-history"></i> <span>History</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+            </nav>
+            <form action="/Login/Logout" method="post" class="logout-form">
+                <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </form>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            
+            <header class="top-bar">
+                <div class="date-display">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>@DateTime.Now.ToString("dddd, dd MMMM yyyy")</span>
+                </div>
+                <div class="user-profile-pill">
+                    <div class="avatar">U</div><span>User Panel</span>
+                </div>
+            </header>
+
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h1>Delicious & Healthy</h1>
+                    <p>Check out what's on the menu today.</p>
+                </div>
+                <div class="hero-decoration"><i class="fas fa-carrot"></i></div>
+            </div>
+         
+            <section class="menu-section">
+                <div class="section-header">
+                    <h2>Today's Menu</h2>
+                    <span class="badge-count">@if(Model != null) { @Model.Count() } Items</span>
+                </div>
+
+                <div class="menu-grid">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            // Determine Icon color class based on category
+                            string bgClass = (item.Category == "Breakfast") ? "bg-orange" : "bg-blue";
+                            
+                            <!-- CLICKABLE CARD with Data Attributes -->
+                            <div class="menu-card" 
+                                 onclick="openDetails(this)"
+                                 data-name="@item.MealItemName"
+                                 data-category="@item.Category"
+                                 data-type="@item.MealType"
+                                 data-price="@item.Price"
+                                 data-desc="@(string.IsNullOrEmpty(item.Description) ? "Freshly prepared in our kitchen with healthy ingredients." : item.Description)"
+                                 data-color="@bgClass">
+                                
+                                <div class="card-icon-area @bgClass">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="card-details">
+                                    <span class="category-tag">@item.Category</span>
+                                    <h3>@item.MealItemName</h3>
+                                    <p class="description">@item.MealType</p>
+                                </div>
+                                <div class="card-action">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="no-data"><p>Menu not updated yet.</p></div>
+                    }
+                </div>
+            </section>
+            <section class="quick-actions">
+                <div class="action-card primary" onclick="location.href='@Url.Action("Summary", "Bill")'">
+                    <div class="icon-box"><i class="fas fa-receipt"></i></div>
+                    <div class="text-box">
+                        <h4>View Bill Summary</h4>
+                        <p>Check your monthly expenses</p>
+                    </div>
+                    <i class="fas fa-arrow-right arrow"></i>
+                </div>
+
+                <div class="action-card secondary" onclick="location.href='@Url.Action("Recheck", "Bill")'">
+                    <div class="icon-box"><i class="fas fa-undo-alt"></i></div>
+                    <div class="text-box">
+                        <h4>Request Bill Recheck</h4>
+                        <p>Found an issue? Let us know.</p>
+                    </div>
+                    <i class="fas fa-arrow-right arrow"></i>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- === MODAL POPUP HTML (Hidden by default) === -->
+    <div id="foodModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeDetails()">&times;</button>
+            
+            <div class="modal-header-icon" id="m-icon-bg">
+                <i class="fas fa-utensils"></i>
+            </div>
+
+            <div class="modal-body">
+                <span class="modal-category" id="m-category">BREAKFAST</span>
+                <h2 id="m-name">Food Name</h2>
+                <div class="tags">
+                     <span class="tag-pill" id="m-type">Main Course</span>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <p class="modal-desc" id="m-desc">
+                    Description goes here...
+                </p>
+
+                <div class="modal-footer-row">
+                    <div class="price-box">
+                        <span class="label">Price</span>
+                        <span class="value">Rs. <span id="m-price">0</span></span>
+                    </div>
+                    <!-- Optional: Add to cart or just a close button -->
+                    <button class="btn-done" onclick="closeDetails()">Got it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <!-- === JAVASCRIPT === -->
+    <script>
+        const modal = document.getElementById('foodModal');
+        const mName = document.getElementById('m-name');
+        const mCategory = document.getElementById('m-category');
+        const mType = document.getElementById('m-type');
+        const mDesc = document.getElementById('m-desc');
+        const mPrice = document.getElementById('m-price');
+        const mIconBg = document.getElementById('m-icon-bg');
+
+        // Function to Open Modal
+        function openDetails(card) {
+            // 1. Get data from clicked card
+            const name = card.getAttribute('data-name');
+            const cat = card.getAttribute('data-category');
+            const type = card.getAttribute('data-type');
+            const price = card.getAttribute('data-price');
+            const desc = card.getAttribute('data-desc');
+            const colorClass = card.getAttribute('data-color');
+
+            // 2. Populate Modal
+            mName.innerText = name;
+            mCategory.innerText = cat;
+            mType.innerText = type;
+            mDesc.innerText = desc;
+            mPrice.innerText = price;
+
+            // Handle Icon Color
+            mIconBg.className = 'modal-header-icon'; // Reset
+            mIconBg.classList.add(colorClass);
+
+            // 3. Show Modal
+            modal.classList.add('active');
+        }
+
+        // Function to Close Modal
+        function closeDetails() {
+            modal.classList.remove('active');
+        }
+
+        // Close when clicking outside the box
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeDetails();
+            }
+        }
+    </script>
+</body>
+</html>
