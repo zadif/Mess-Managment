@@ -221,13 +221,12 @@ namespace EAD.wwwroot.js
         [HttpPost]
         public IActionResult SaveDailyMenu(DailyMenu item)
         {
-            var edit =Convert.ToInt32( TempData["edit"]) ;
-            if (edit==0)
-            {
+
+           
             //In menu.MealItem we are getting null , bcz we are loading it later
             ModelState.Remove("MealItem");
 
-            }
+            
             if (!ModelState.IsValid)
             {
                
