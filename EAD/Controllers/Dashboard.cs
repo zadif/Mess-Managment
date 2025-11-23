@@ -19,33 +19,56 @@ namespace EAD.Controllers
                 // Get today's day (e.g., "Monday")
                 string today = DateTime.Today.ToString("dddd");  // Returns "Monday", "Tuesday", etc.
 
-                //string id = Request.Cookies["UserId"];
-                //string userType;
-                //if (id != null)
-                //{
-                //    User usr = db.Users.Where(e => e.Id == Convert.ToInt32(id)).FirstOrDefault();
-                //    if(usr != null)
-                //    {
-                //        userType = usr.UserType;
-                //    }
-
-                //}
-
-
-                list = db.DailyMenus
-                    .Include(m => m.MealItem)
-                    .Where(d => d.DayOfWeek == today)
-                    .Select(m => new DailyMenuViewModel
+                string id = Request.Cookies["UserId"];
+                int userTypeInt;
+                string userType="food";
+                if (id != null)
+                {
+                    User usr = db.Users.Where(e => e.Id == Convert.ToInt32(id)).FirstOrDefault();
+                    if (usr != null)
                     {
-                        Id = m.Id,
-                        DayOfWeek = m.DayOfWeek,
-                        MealType = m.MealType,
-                        MealItemName = m.MealItem != null ? m.MealItem.Name : "Not Set",
-                        Price = m.MealItem != null ? m.MealItem.Price : 0,
-                        Category = m.MealItem != null ? m.MealItem.Category : "",
-                        Description=m.MealItem != null ?m.MealItem.Description: "",
-                    })
-                    .ToList();
+                        userTypeInt = usr.UserType;
+                        if (userTypeInt == 1) userType = "liquid";
+                        else userType = "food";
+                    }
+
+                }
+                if (userType == "liquid")
+                {
+                    list = db.DailyMenus
+                     .Include(m => m.MealItem)
+                     .Where(d => d.DayOfWeek == today && (d.MealType=="Tea" || d.MealType == "Water"))
+                     .Select(m => new DailyMenuViewModel
+                     {
+                         Id = m.Id,
+                         DayOfWeek = m.DayOfWeek,
+                         MealType = m.MealType,
+                         MealItemName = m.MealItem != null ? m.MealItem.Name : "Not Set",
+                         Price = m.MealItem != null ? m.MealItem.Price : 0,
+                         Category = m.MealItem != null ? m.MealItem.Category : "",
+                         Description = m.MealItem != null ? m.MealItem.Description : "",
+                     })
+                     .ToList();
+                }
+                else
+                {
+                    list = db.DailyMenus
+                     .Include(m => m.MealItem)
+                     .Where(d => d.DayOfWeek == today)
+                     .Select(m => new DailyMenuViewModel
+                     {
+                         Id = m.Id,
+                         DayOfWeek = m.DayOfWeek,
+                         MealType = m.MealType,
+                         MealItemName = m.MealItem != null ? m.MealItem.Name : "Not Set",
+                         Price = m.MealItem != null ? m.MealItem.Price : 0,
+                         Category = m.MealItem != null ? m.MealItem.Category : "",
+                         Description = m.MealItem != null ? m.MealItem.Description : "",
+                     })
+                     .ToList();
+                }
+
+                 
             }
 
             return View(list);  
