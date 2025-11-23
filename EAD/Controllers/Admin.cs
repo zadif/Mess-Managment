@@ -1,6 +1,7 @@
 ﻿using EAD.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace EAD.wwwroot.js
 {
@@ -181,6 +182,52 @@ namespace EAD.wwwroot.js
 
         }
 
+        public IActionResult DailyMeals()
+        {
+            List<DailyMenu> meals = new List<DailyMenu>();
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                meals = db.DailyMenus.ToList();
 
+
+            }
+            return View(meals);
+        }
+        [HttpGet]
+        public IActionResult SetDailyMeals()
+        {
+            List<MealItem> items = new List<MealItem>();
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                items = db.MealItems.ToList();
+
+
+            }
+            ViewBag.MealItems = items;
+            return View(new DailyMenu());
+        }
+        [HttpPost]
+        public IActionResult SaveDailyMenu(DailyMenu menu)
+        {
+            //In menu.MealItem we are getting null , bcz we are loading it later
+            ModelState.Remove("MealItem");
+            if (!ModelState.IsValid)
+            {
+               
+                return View("DailyMeals");
+            }
+
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                if (menu.Id == 0)
+                db.DailyMenus.Add(menu);
+            else
+                db.DailyMenus.Update(menu);
+            
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("DailyMeals");
+        }
     }
 }

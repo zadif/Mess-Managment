@@ -21,6 +21,8 @@ public partial class EadProjectContext : DbContext
 
     public virtual DbSet<DailyConsumption> DailyConsumptions { get; set; }
 
+    public virtual DbSet<DailyMenu> DailyMenus { get; set; }
+
     public virtual DbSet<MealItem> MealItems { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -92,6 +94,20 @@ public partial class EadProjectContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.DailyConsumptions)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_DailyConsumption_User");
+        });
+
+        modelBuilder.Entity<DailyMenu>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__DailyMen__3214EC0785AD9854");
+
+            entity.ToTable("DailyMenu");
+
+            entity.Property(e => e.DayOfWeek).HasMaxLength(20);
+            entity.Property(e => e.MealType).HasMaxLength(20);
+
+            entity.HasOne(d => d.MealItem).WithMany(p => p.DailyMenus)
+                .HasForeignKey(d => d.MealItemId)
+                .HasConstraintName("FK_DailyMenu_MealItem");
         });
 
         modelBuilder.Entity<MealItem>(entity =>

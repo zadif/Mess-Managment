@@ -1,0 +1,75 @@
+﻿@model EAD.Models.DailyMenu
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add Menu Item" : "Edit Menu Item";
+}
+
+<link rel="stylesheet" href="~/css/AdminHome.css">
+
+<div class="page-container fade-in">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>@(Model.Id == 0 ? "Add Daily Menu" : "Edit Daily Menu")</h2>
+            <p>Assign meals to days and meal types</p>
+        </div>
+    </div>
+
+    <div class="data-card">
+        <div class="form-container">
+            <form asp-action="SaveDailyMenu" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Day of Week -->
+                <div class="form-group">
+                    <label asp-for="DayOfWeek" class="form-label">Day <span class="text-danger">*</span></label>
+                    <select asp-for="DayOfWeek" class="form-control" required>
+                        <option value="" disabled selected>Select day</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                    <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+                </div>
+
+                <!-- Meal Type -->
+                <div class="form-group">
+                    <label asp-for="MealType" class="form-label">Meal Type <span class="text-danger">*</span></label>
+                    <select asp-for="MealType" class="form-control" required>
+                        <option value="" disabled selected>Select meal type</option>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Snack">Snack</option>
+                        <option value="Tea">Tea & Coffee</option>
+                    </select>
+                    <span asp-validation-for="MealType" class="text-danger"></span>
+                </div>
+
+                <!-- Meal Item -->
+                <div class="form-group">
+                    <label class="form-label">Select Dish <span class="text-danger">*</span></label>
+                    <select name="MealItemId" class="form-control" required>
+                        <option value="" disabled selected>Choose a dish</option>
+                        @foreach (var item in ViewBag.MealItems as List<MealItem>)
+                        {
+                            <option value="@item.Id" selected="@(item.Id == Model.MealItemId)">
+                                @item.Name - Rs. @item.Price (@item.Category)
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn-submit">
+                        @(Model.Id == 0 ? "Add to Menu" : "Update Menu")
+                    </button>
+                    <a asp-action="WeeklyMenu" class="btn-cancel">Back to Menu</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

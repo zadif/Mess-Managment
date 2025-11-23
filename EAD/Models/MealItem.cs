@@ -23,6 +23,6 @@ public partial class MealItem
     [Required(ErrorMessage = "Name is required")]
 
     public string Category { get; set; }
-
+    public virtual ICollection<DailyMenu> DailyMenus { get; set; } = new List<DailyMenu>();
     public virtual ICollection<DailyConsumption> DailyConsumptions { get; set; } = new List<DailyConsumption>();
 }
