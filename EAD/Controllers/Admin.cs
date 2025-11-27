@@ -295,6 +295,179 @@ namespace EAD.wwwroot.js
 
         }
 
+
+        public IActionResult generateDailyConsumptions()
+        {
+            string today = DateTime.Today.ToString("dddd");  // Returns "Monday", "Tuesday", etc.
+
+            using (var db = new EadProjectContext())
+            {
+                var temp = db.DailyMenus.Include(s=>s.MealItem).Where(e=>e.DayOfWeek==today).ToList();
+                if (temp != null)
+                {
+                    var users = db.Users.Where(e => e.IsActive == true).ToList();
+                    if(users ==null) {
+                        ViewBag.Error = "No User exists";
+                        return View();
+                    }
+                   var today2 = DateOnly.FromDateTime(DateTime.Today);
+                    var alreadyGeneratedUsers = db.DailyConsumptions
+    .Where(d => d.ConsumptionDate == today2)
+    .Select(d => d.UserId)
+    .ToList();
+
+                    ViewBag.AlreadyGenerated = alreadyGeneratedUsers;
+                    ViewBag.Users = users;
+                    ViewBag.Menus = temp;
+                    return View();
+
+                }
+                else
+                {
+                    ViewBag.Error = "No Menu exists for today";
+                    return View();
+                }
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult generateDailyConsumptions(string[] consumptions)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            using var db = new EadProjectContext();
+
+            // Optional: Clear old records for today (or skip if you want to allow edits)
+            //db.DailyConsumptions
+            //    .Where(d => d.ConsumptionDate == today)
+            //    .ExecuteDelete();
+
+            if (consumptions != null && consumptions.Any())
+            {
+                foreach (var item in consumptions)
+                {
+                    var parts = item.Split('-');
+                    if (parts.Length == 2 && int.TryParse(parts[0], out int userId) && int.TryParse(parts[1], out int mealItemId))
+                    {
+                        db.DailyConsumptions.Add(new DailyConsumption
+                        {
+                            UserId = userId,
+                            MealItemId = mealItemId,
+                            ConsumptionDate = today,
+                            Quantity = 1
+                        });
+                    }
+                }
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("GenerateDailyConsumptions");
+        }
+
+        [HttpGet]
+        public JsonResult GetUserConsumption(int userId, DateOnly date)
+        {
+            using(EadProjectContext db =new EadProjectContext())
+            {
+
+            var consumptions = db.DailyConsumptions
+                .Where(d => d.UserId == userId && d.ConsumptionDate == date)
+                .Select(d => d.MealItemId)
+                .ToList();
+
+            var menus = db.DailyMenus
+                .Include(m => m.MealItem)
+                .Where(m => m.DayOfWeek == date.DayOfWeek.ToString())
+                .ToList();
+
+            var user = db.Users.Find(userId);
+
+            var html = "<form>";
+            foreach (var menu in menus)
+            {
+                var canConsume = user.UserType == 2 || !menu.MealItem.Category.Equals("Food", StringComparison.OrdinalIgnoreCase);
+                if (canConsume)
+                {
+                    var isChecked = consumptions.Contains(menu.MealItemId) ? "checked" : "";
+                    html += $"<div class='form-check'><input type='checkbox' class='form-check-input' value='{user.Id}-{menu.MealItemId}' {isChecked}> ";
+                    html += $"<label>{menu.MealType}: {menu.MealItem.Name}</label></div>";
+                }
+            }
+            html += "</form>";
+            return Json(new { userName = user.Name, html });
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult SaveUserConsumption(int userId, string[] consumptions)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            using (EadProjectContext db = new EadProjectContext())
+                {
+
+            db.DailyConsumptions
+                .Where(d => d.UserId == userId && d.ConsumptionDate == today)
+                .ExecuteDelete();
+
+            if (consumptions != null)
+            {
+                foreach (var item in consumptions)
+                {
+                    var parts = item.Split('-');
+                    if (int.TryParse(parts[1], out int mealItemId))
+                    {
+                        db.DailyConsumptions.Add(new DailyConsumption
+                        {
+                            UserId = userId,
+                            MealItemId = mealItemId,
+                            ConsumptionDate = today,
+                            Quantity = 1
+                        });
+                    }
+                }
+                db.SaveChanges();
+            }
+            return Ok();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteTodayConsumption()
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            using (EadProjectContext db = new EadProjectContext())
+            {
+
+                db.DailyConsumptions
+                .Where(d => d.ConsumptionDate == today)
+                .ExecuteDelete();
+            db.SaveChanges();
+            return Ok();
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult DeleteUserConsumption(string userId)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                db.DailyConsumptions
+                .Where(d => d.UserId ==Convert.ToInt32( userId) && d.ConsumptionDate == today)
+                .ExecuteDelete();
+
+                db.SaveChanges();
+                return Ok();
+            }
+        }
+
+   
     }
    
     }
