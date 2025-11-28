@@ -13,7 +13,7 @@
 }
 
 function openEditModal(userId) {
-    fetch(`/Admin/GetUserConsumption?userId=${userId}&date=@DateOnly.FromDateTime(DateTime.Today)`)
+    fetch(`/Admin/GetUserConsumption?userId=${userId}`)
         .then(r => r.json())
         .then(data => {
             document.getElementById("modalUserName").textContent = data.userName;

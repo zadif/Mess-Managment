@@ -1,5 +1,12 @@
-﻿<h2>Generate Today's Consumption - @ViewBag.Today</h2>
+﻿
 
+<h2>Generate Today's Consumption </h2>
+
+<br />
+<a href="/" class="btn-add">
+    </i>Home
+</a>
+<br />
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
@@ -94,7 +101,7 @@ else
                                     <input type="hidden" name="userId" value="@user.Id" />
                                     <button type="submit" class="btn btn-sm btn-danger"
                                             onclick="return confirm('Delete consumption for @user.Name today?')">
-                                        Delete This User
+                                        Delete This User's Consumption
                                     </button>
                                 </form>
                             }

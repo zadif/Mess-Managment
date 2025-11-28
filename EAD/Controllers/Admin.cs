@@ -367,19 +367,21 @@ namespace EAD.wwwroot.js
         }
 
         [HttpGet]
-        public JsonResult GetUserConsumption(int userId, DateOnly date)
+        public JsonResult GetUserConsumption(int userId)
         {
-            using(EadProjectContext db =new EadProjectContext())
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            using (EadProjectContext db =new EadProjectContext())
             {
 
             var consumptions = db.DailyConsumptions
-                .Where(d => d.UserId == userId && d.ConsumptionDate == date)
+                .Where(d => d.UserId == userId && d.ConsumptionDate == today)
                 .Select(d => d.MealItemId)
                 .ToList();
 
             var menus = db.DailyMenus
                 .Include(m => m.MealItem)
-                .Where(m => m.DayOfWeek == date.DayOfWeek.ToString())
+                .Where(m => m.DayOfWeek == today.DayOfWeek.ToString())
                 .ToList();
 
             var user = db.Users.Find(userId);
@@ -463,7 +465,8 @@ namespace EAD.wwwroot.js
                 .ExecuteDelete();
 
                 db.SaveChanges();
-                return Ok();
+                return RedirectToAction("GenerateDailyConsumptions");
+
             }
         }
 
