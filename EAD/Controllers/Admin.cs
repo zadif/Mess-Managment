@@ -371,38 +371,49 @@ namespace EAD.wwwroot.js
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
 
-            using (EadProjectContext db =new EadProjectContext())
+            using (EadProjectContext db = new EadProjectContext())
             {
+                // 1. Get what user has ALREADY consumed today
+                var consumedItemIds = db.DailyConsumptions
+                    .Where(d => d.UserId == userId && d.ConsumptionDate == today)
+                    .Select(d => d.MealItemId)
+                    .ToHashSet(); // HashSet is faster for lookups
 
-            var consumptions = db.DailyConsumptions
-                .Where(d => d.UserId == userId && d.ConsumptionDate == today)
-                .Select(d => d.MealItemId)
-                .ToList();
+                // 2. Get Today's Menu
+                var menus = db.DailyMenus
+                    .Include(m => m.MealItem)
+                    .Where(m => m.DayOfWeek == today.DayOfWeek.ToString())
+                    .ToList();
 
-            var menus = db.DailyMenus
-                .Include(m => m.MealItem)
-                .Where(m => m.DayOfWeek == today.DayOfWeek.ToString())
-                .ToList();
+                var user = db.Users.Find(userId);
 
-            var user = db.Users.Find(userId);
+                // 3. Build a clean list of data objects
+                var menuList = new List<object>();
 
-            var html = "<form>";
-            foreach (var menu in menus)
-            {
-                var canConsume = user.UserType == 2 || !menu.MealItem.Category.Equals("Food", StringComparison.OrdinalIgnoreCase);
-                if (canConsume)
+                foreach (var menu in menus)
                 {
-                    var isChecked = consumptions.Contains(menu.MealItemId) ? "checked" : "";
-                    html += $"<div class='form-check'><input type='checkbox' class='form-check-input' value='{user.Id}-{menu.MealItemId}' {isChecked}> ";
-                    html += $"<label>{menu.MealType}: {menu.MealItem.Name}</label></div>";
+                    // Logic: Is user allowed to consume this?
+                    // UserType 2 = Food+Drinks. If UserType != 2, they can only see Non-Food items.
+                    var canConsume = user.UserType == 2 ||
+                                     !menu.MealItem.Category.Equals("Food", StringComparison.OrdinalIgnoreCase);
+
+                    if (canConsume)
+                    {
+                        menuList.Add(new
+                        {
+                            menuId = menu.MealItemId,
+                            mealType = menu.MealType,       // e.g., "Breakfast"
+                            itemName = menu.MealItem.Name,  // e.g., "Omelette"
+                            price = menu.MealItem.Price,    // Optional: if you want to show price
+                            isChecked = consumedItemIds.Contains(menu.MealItemId) // true/false
+                        });
+                    }
                 }
-            }
-            html += "</form>";
-            return Json(new { userName = user.Name, html });
-            }
 
+                // Return pure data
+                return Json(new { userName = user.Name, userId = user.Id, items = menuList });
+            }
         }
-
         [HttpPost]
         public IActionResult SaveUserConsumption(int userId, string[] consumptions)
         {

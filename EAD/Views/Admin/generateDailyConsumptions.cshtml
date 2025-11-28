@@ -1,135 +1,184 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Generate Consumption";
+}
+<link rel="stylesheet" href="~/css/generateDailyConsumptions.css">
 
-<h2>Generate Today's Consumption </h2>
+<!-- Main Container Card -->
+<div class="mess-container">
 
-<br />
-<a href="/" class="btn-add">
-    </i>Home
-</a>
-<br />
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
-}
-else if (ViewBag.Menus == null || !(ViewBag.Menus as IEnumerable<DailyMenu>)?.Any() == true)
-{
-    <div class="alert alert-warning">No menu items found for today.</div>
-}
-else if (ViewBag.Users == null || !(ViewBag.Users as IEnumerable<User>)?.Any() == true)
-{
-    <div class="alert alert-warning">No active users found.</div>
-}
-else
-{
-    <!-- Buttons -->
-    <div class="mb-4 text-center">
-        <button type="button" id="toggleBtn" class="btn btn-outline-secondary me-3" onclick="toggleCheckboxes()">
-            Mark All / Unmark All
-        </button>
-        <button type="submit" form="saveForm" class="btn btn-success btn-lg px-5">
-            Save Today's Consumption
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="deleteTodayConsumption()">
-            Delete Consumption
-        </button>
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Generate Today's Consumption</h2>
+            <p class="text-muted small">Manage daily meal entries for students and staff.</p>
+        </div>
+        <a href="/" class="btn btn-theme-orange">
+            <i class="fa fa-home me-2"></i>Home
+        </a>
     </div>
 
-    <!-- Main Table -->
-    <form id="saveForm" asp-action="generateDailyConsumptions" method="post">
-        @Html.AntiForgeryToken()
-        <table class="table table-bordered table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th>User</th>
-                    <th>Type</th>
-                    @foreach (var menu in ViewBag.Menus)
-                    {
-                        <th class="text-center">
-                            @menu.MealType<br>
-                            <small>@menu.MealItem.Name (₹@menu.MealItem.Price)</small>
-                        </th>
-                    }
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in ViewBag.Users)
-                {
-                    var alreadyGenerated = ViewBag.AlreadyGeneratedUserIds?.Contains(user.Id) == true;
+    <!-- Alerts -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-theme-danger">
+            <i class="fa fa-exclamation-circle me-2"></i> @ViewBag.Error
+        </div>
+    }
+    else if (ViewBag.Menus == null || !(ViewBag.Menus as IEnumerable<DailyMenu>)?.Any() == true)
+    {
+        <div class="alert alert-theme-warning">
+            <i class="fa fa-exclamation-triangle me-2"></i> No menu items found for today.
+        </div>
+    }
+    else if (ViewBag.Users == null || !(ViewBag.Users as IEnumerable<User>)?.Any() == true)
+    {
+        <div class="alert alert-theme-warning">
+            <i class="fa fa-users-slash me-2"></i> No active users found.
+        </div>
+    }
+    else
+    {
+        <!-- Action Toolbar -->
+        <div class="action-toolbar mb-4 p-3 rounded d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <button type="button" id="toggleBtn" class="btn btn-theme-outline" onclick="toggleCheckboxes()">
+                <i class="fa fa-check-square me-2"></i>Mark / Unmark All
+            </button>
 
-                    <tr class="@(alreadyGenerated ? "table-warning" : "")">
-                        <td><strong>@user.Name</strong></td>
-                        <td>
-                            <span class="badge @(user.UserType == 2 ? "bg-success" : "bg-info")">
-                                @(user.UserType == 2 ? "Food + Drinks" : "Drinks Only")
-                            </span>
-                        </td>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-theme-danger-soft" onclick="deleteTodayConsumption()">
+                    <i class="fa fa-trash me-2"></i>Delete All
+                </button>
+                <button type="submit" form="saveForm" class="btn btn-theme-success">
+                    <i class="fa fa-save me-2"></i>Save Consumption
+                </button>
+            </div>
+        </div>
 
-                        @if (ViewBag.AlreadyGenerated.Contains(user.Id))
-                        {
-                            <td colspan="@ViewBag.Menus.Count" class="text-center">
-                                <strong>Already Generated</strong>
-                            </td>
-                        }
-                        else
-                        {
+        <!-- Main Table -->
+        <div class="table-responsive">
+            <form id="saveForm" asp-action="generateDailyConsumptions" method="post">
+                @Html.AntiForgeryToken()
+                <table class="table theme-table align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">User</th>
+                            <th>Type</th>
                             @foreach (var menu in ViewBag.Menus)
                             {
-                                var canConsume = user.UserType == 2 || !menu.MealItem.Category.Equals("Food", StringComparison.OrdinalIgnoreCase);
-                                <td class="text-center align-middle">
-                                    @if (canConsume)
+                                <th class="text-center">
+                                    <div class="d-flex flex-column">
+                                        <span class="menu-type">@menu.MealType</span>
+                                        <small class="text-muted">@menu.MealItem.Name (Rs. @menu.MealItem.Price)</small>
+                                    </div>
+                                </th>
+                            }
+                            <th class="text-center pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in ViewBag.Users)
+                        {
+                            var alreadyGenerated = ViewBag.AlreadyGeneratedUserIds?.Contains(user.Id) == true;
+
+                            <!-- Add class 'row-highlight' if generated to visually separate them -->
+                            <tr class="@(alreadyGenerated ? "row-generated" : "")">
+                                <td class="ps-4">
+                                    <div class="fw-bold text-white">@user.Name</div>
+                                    <small class="text-muted">#@user.Id</small>
+                                </td>
+                                <td>
+                                    <span class="badge @(user.UserType == 2 ? "badge-food" : "badge-drink")">
+                                        @(user.UserType == 2 ? "Food + Drinks" : "Drinks Only")
+                                    </span>
+                                </td>
+
+                                @if (ViewBag.AlreadyGenerated.Contains(user.Id))
+                                {
+                                    <td colspan="@ViewBag.Menus.Count" class="text-center">
+                                        <span class="badge badge-generated">
+                                            <i class="fa fa-check me-1"></i> Generated
+                                        </span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    @foreach (var menu in ViewBag.Menus)
                                     {
-                                        <input type="checkbox" name="consumptions" value="@user.Id-@menu.MealItemId"
-                                               checked class="item form-check-input" style="transform:scale(1.6)" />
+                                        var canConsume = user.UserType == 2 || !menu.MealItem.Category.Equals("Food", StringComparison.OrdinalIgnoreCase);
+                                        <td class="text-center">
+                                            @if (canConsume)
+                                            {
+                                                <div class="custom-check-wrapper">
+                                                    <input type="checkbox" name="consumptions" value="@user.Id-@menu.MealItemId"
+                                                           checked class="item form-check-input theme-checkbox" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted opacity-25"><i class="fa fa-ban"></i></span>
+                                            }
+                                        </td>
                                     }
-                                    else
+                                }
+
+                                <td class="text-center pe-4">
+                                    @if (ViewBag.AlreadyGenerated.Contains(user.Id))
                                     {
-                                        <span class="text-muted">—</span>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-icon-blue" onclick="openEditModal(@user.Id)" title="Edit">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+
+                                            <!-- Wrapped delete in a simplified styling -->
+                                            <button type="submit" formaction='@Url.Action("DeleteUserConsumption")' formmethod="post" class="btn btn-sm btn-icon-red ms-2"
+                                                    onclick="var i = document.createElement('input'); i.type='hidden'; i.name='userId'; i.value='@user.Id'; this.form.appendChild(i); return confirm('Delete consumption for @user.Name today?');">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
                                     }
                                 </td>
-                            }
+                            </tr>
                         }
-
-                        <td class="text-center">
-                            @if (ViewBag.AlreadyGenerated.Contains(user.Id))
-                            {
-                                <button type="button" class="btn btn-sm btn-warning" onclick="openEditModal(@user.Id)">
-                                    Edit
-                                </button>
-                                <form asp-action="DeleteUserConsumption" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Delete consumption for @user.Name today?')">
-                                        Delete This User's Consumption
-                                    </button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </form>
-}
-
-<!-- Edit Modal -->
-<div id="editModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5>Edit Consumption for <span id="modalUserName"></span></h5>
-            <span class="close" onclick="closeModal()">&times;</span>
+                    </tbody>
+                </table>
+            </form>
         </div>
-        <div class="modal-body" id="modalBody">
-            <!-- Filled by JS -->
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-success" onclick="saveEdit()">Save Changes</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-        </div>
-    </div>
+    }
 </div>
 
+<!-- Enhanced Modal HTML -->
+<div id="editModal" class="theme-modal-backdrop" style="display:none;">
+    <div class="theme-modal-content">
 
+        <!-- Header -->
+        <div class="theme-modal-header">
+            <h5>Edit Consumption</h5>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+
+        <!-- Body -->
+        <div class="theme-modal-body">
+            <div class="d-flex align-items-center mb-2">
+                <span class="text-muted me-2">Editing for:</span>
+                <h3 id="modalUserName" class="m-0 text-white fw-bold"></h3>
+            </div>
+
+            <hr style="border-color: #2b2b40; margin-bottom: 20px;">
+
+            <!-- Dynamic Content Area -->
+            <!-- The CSS #modalBody will force big spacing here -->
+            <div id="modalBody">
+                <!-- Data from server loads here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="theme-modal-footer">
+            <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn-modal-save" onclick="saveEdit()">Save Changes</button>
+        </div>
+
+    </div>
+</div>
 
 <script src="~/js/generateDailyConsumptions.js"></script>
