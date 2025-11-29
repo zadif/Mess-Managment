@@ -15,7 +15,7 @@ public partial class User
 
     public int UserType { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; } = false;
 
     public DateTime? CreatedOn { get; set; }
 

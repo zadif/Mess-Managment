@@ -305,8 +305,9 @@ namespace EAD.wwwroot.js
                 var temp = db.DailyMenus.Include(s=>s.MealItem).Where(e=>e.DayOfWeek==today).ToList();
                 if (temp != null)
                 {
-                    var users = db.Users.Where(e => e.IsActive == true).ToList();
-                    if(users ==null) {
+                    var users = db.Users.Where(e => e.IsActive ?? false).ToList();
+
+                    if (users ==null) {
                         ViewBag.Error = "No User exists";
                         return View();
                     }
@@ -481,6 +482,11 @@ namespace EAD.wwwroot.js
             }
         }
 
+
+        public IActionResult Bills()
+        {
+            return View();
+        }
    
     }
    
