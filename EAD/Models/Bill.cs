@@ -9,13 +9,9 @@ public partial class Bill
 
     public int UserId { get; set; }
 
-    public string MonthYear { get; set; } = null!;
-
     public decimal TotalAmount { get; set; }
 
     public DateTime GeneratedOn { get; set; }
-
-    public string Status { get; set; } = null!;
 
     public bool IsPaid { get; set; }
 
@@ -24,6 +20,8 @@ public partial class Bill
     public DateTime? PaidOn { get; set; }
 
     public virtual ICollection<BillRecheckRequest> BillRecheckRequests { get; set; } = new List<BillRecheckRequest>();
+
+    public virtual ICollection<DailyConsumption> DailyConsumptions { get; set; } = new List<DailyConsumption>();
 
     public virtual User User { get; set; } = null!;
 }

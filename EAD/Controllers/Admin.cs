@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace EAD.wwwroot.js
 {
@@ -305,7 +306,7 @@ namespace EAD.wwwroot.js
                 var temp = db.DailyMenus.Include(s=>s.MealItem).Where(e=>e.DayOfWeek==today).ToList();
                 if (temp != null)
                 {
-                    var users = db.Users.Where(e => e.IsActive ?? false).ToList();
+                    var users = db.Users.Where(e => e.IsActive == true).ToList();
 
                     if (users ==null) {
                         ViewBag.Error = "No User exists";
@@ -450,44 +451,104 @@ namespace EAD.wwwroot.js
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteTodayConsumption()
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
 
-            using (EadProjectContext db = new EadProjectContext())
-            {
+            using var db = new EadProjectContext();
 
-                db.DailyConsumptions
-                .Where(d => d.ConsumptionDate == today)
+            var deletedCount = db.DailyConsumptions
+                .Where(d => d.ConsumptionDate == today && d.IsBilled == false)
                 .ExecuteDelete();
-            db.SaveChanges();
-            return Ok();
-            }
 
+            db.SaveChanges();
+
+            if (deletedCount > 0)
+                return Json(new { success = true, message = $"Deleted {deletedCount} consumption records for today." });
+            else
+                return Json(new { success = false, message = "No unbilled consumptions found for today." });
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteUserConsumption(string userId)
         {
+            if (!int.TryParse(userId, out int uid))
+                return Json(new { success = false, message = "Invalid user ID." });
+
             var today = DateOnly.FromDateTime(DateTime.Today);
-            using (EadProjectContext db = new EadProjectContext())
-            {
-                db.DailyConsumptions
-                .Where(d => d.UserId ==Convert.ToInt32( userId) && d.ConsumptionDate == today)
+
+            using var db = new EadProjectContext();
+
+            var deletedCount = db.DailyConsumptions
+                .Where(d => d.UserId == uid && d.ConsumptionDate == today && d.IsBilled == false)
                 .ExecuteDelete();
 
-                db.SaveChanges();
-                return RedirectToAction("GenerateDailyConsumptions");
+            db.SaveChanges();
 
-            }
+            if (deletedCount > 0)
+                return Json(new { success = true, message = "User's consumption deleted successfully." });
+            else
+                return Json(new { success = false, message = "No unbilled consumption found for this user today." });
         }
-
 
         public IActionResult Bills()
         {
             return View();
         }
    
+        public IActionResult GenerateBills()
+        {
+            
+            using(EadProjectContext db=new EadProjectContext())
+            {
+                var temps = db.DailyConsumptions.Where(e => e.IsBilled == false).Include(c => c.MealItem)
+                       .Include(c => c.User).ToList();
+            return View(temps);
+            }
+
+
+        }
+
+
+        [HttpPost]
+        public JsonResult GenerateBills(string userId, string total)
+        {
+            try
+            {
+                using (var db = new EadProjectContext())
+                {
+                    var bill = new Bill
+                    {
+                        UserId = Convert.ToInt32(userId),
+                        TotalAmount = Convert.ToDecimal(total),
+                    };
+                    db.Bills.Add(bill);
+                    db.SaveChanges();
+
+                    // Mark consumptions as billed
+                    var consumptions = db.DailyConsumptions
+                        .Where(d => d.UserId == bill.UserId && d.IsBilled == false)
+                        .ToList();
+
+                    foreach (var c in consumptions)
+                    {
+                        c.IsBilled = true;
+                        c.BillId = bill.Id;
+                    }
+                    db.SaveChanges();
+                }
+
+                return Json(new { success = true });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+
     }
-   
-    }
+
+}

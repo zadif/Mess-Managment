@@ -17,6 +17,10 @@ public partial class DailyConsumption
 
     public bool IsBilled { get; set; }
 
+    public int? BillId { get; set; }
+
+    public virtual Bill? Bill { get; set; }
+
     public virtual MealItem MealItem { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

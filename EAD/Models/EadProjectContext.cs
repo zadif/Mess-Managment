@@ -35,30 +35,22 @@ public partial class EadProjectContext : DbContext
     {
         modelBuilder.Entity<Bill>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bills__3214EC0785021DE2");
-
-            entity.HasIndex(e => new { e.UserId, e.MonthYear }, "UQ_Bill").IsUnique();
+            entity.HasIndex(e => new { e.UserId, e.GeneratedOn }, "UQ_User_GeneratedOn").IsUnique();
 
             entity.Property(e => e.GeneratedOn)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.MonthYear)
-                .HasMaxLength(7)
-                .IsUnicode(false);
             entity.Property(e => e.PaidOn).HasColumnType("datetime");
-            entity.Property(e => e.Status)
-                .HasMaxLength(20)
-                .HasDefaultValue("Pending");
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bills)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Bill_User");
+                .HasConstraintName("FK_Bills_User");
         });
 
         modelBuilder.Entity<BillRecheckRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BillRech__3214EC0775322CE4");
+            entity.HasKey(e => e.Id).HasName("PK__BillRech__3214EC0729003E27");
 
             entity.Property(e => e.RequestMessage).HasMaxLength(500);
             entity.Property(e => e.RequestedOn)
@@ -86,6 +78,10 @@ public partial class EadProjectContext : DbContext
 
             entity.Property(e => e.ConsumptionDate).HasDefaultValueSql("(CONVERT([date],getdate()))");
             entity.Property(e => e.Quantity).HasDefaultValue(1);
+
+            entity.HasOne(d => d.Bill).WithMany(p => p.DailyConsumptions)
+                .HasForeignKey(d => d.BillId)
+                .HasConstraintName("FK_DailyConsumptions_Bill");
 
             entity.HasOne(d => d.MealItem).WithMany(p => p.DailyConsumptions)
                 .HasForeignKey(d => d.MealItemId)

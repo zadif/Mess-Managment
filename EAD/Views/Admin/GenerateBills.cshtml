@@ -1,0 +1,124 @@
+﻿@model List<EAD.Models.DailyConsumption>
+    @{
+    ViewData["Title"] = "Generate Monthly Bills";
+    }
+
+    <link href="~/css/GenerateBills.css" rel="stylesheet" />
+
+    <div class="page-container fade-in">
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Generate Monthly Bills</h2>
+                <p>Review unbilled consumptions and generate bills</p>
+            </div>
+        </div>
+    
+        @if (!Model.Any())
+        {
+        <div class="data-card text-center py-5">
+            <h3>No unbilled consumptions found</h3>
+            <p>All consumptions have already been billed.</p>
+            <a asp-action="Index" asp-controller="Admin" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+        }
+        else
+        {
+        <div class="mb-4 text-center">
+            <button type="button" id="generateAllBillsBtn" class="btn btn-danger btn-lg px-5">
+                Generate Bills for ALL Users
+            </button>
+            <div id="progressText" class="mt-3 text-muted"></div>
+        </div>
+        <div class="data-card">
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>User Type</th>
+                            <th>Meal</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                        var grouped = Model
+                        .GroupBy(c => c.UserId)
+                        .Select(g => new
+                        {
+                        User = g.First().User,
+                        Consumptions = g.ToList(),
+                        TotalAmount = g.Sum(x => x.Quantity * x.MealItem.Price)
+                        })
+                        .OrderBy(x => x.User.Name)
+                        .ToList();
+                        }
+
+                        @foreach (var group in grouped)
+                        {
+                        var user = group.User;
+                        var consumptions = group.Consumptions;
+                        var rowSpan = consumptions.Count;
+
+                        @for (int i = 0; i < rowSpan; i++)
+                        {
+                        var c = consumptions[i];
+                        <tr>
+                            @if (i == 0)
+                            {
+                            <td rowspan="@rowSpan" class="align-middle text-center fw-bold">
+                                @user.Id
+                            </td>
+                            }
+                            <td>@c.ConsumptionDate</td>
+                            @if (i == 0)
+                            {
+                            <td rowspan="@rowSpan" class="align-middle">
+                                <strong>@user.Name</strong>
+                            </td>
+                            <td rowspan="@rowSpan" class="align-middle">
+                                <span class="badge @(user.UserType == 2 ? " bg-success" : "bg-info" )">
+                                    @(user.UserType == 2 ? "Food + Drinks" : "Drinks Only")
+                                </span>
+                            </td>
+                            }
+                            <td>@c.MealItem.Name</td>
+                            <td>
+                                <em class="text-muted">@c.MealItem.Category</em>
+                            </td>
+                            <td>Rs. @c.MealItem.Price</td>
+                            <td class="text-center">@c.Quantity</td>
+                            @if (i == 0)
+                            {
+                            <td rowspan="@rowSpan" class="align-middle text-end fw-bold fs-5 text-success">
+                                Rs. @group.TotalAmount
+                            </td>
+                            }
+                        </tr>
+                        }
+                        <!-- Final Row: Generate Bill Button -->
+                            <tr class="table-primary">
+                                <td colspan="9" class="text-center">
+                                    <button type="button"
+                                            class="btn btn-success btn-lg"
+                                            data-userid="@user.Id"
+                                            data-total="@group.TotalAmount"
+                                            onclick="generateBillForUser(this)">
+                                        Generate Bill for @user.Name – Total: Rs. @group.TotalAmount
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </div>
+
+    <script src="~/js/GenerateBills.js"></script>
