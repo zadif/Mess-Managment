@@ -17,6 +17,12 @@ public partial class Bill
 
     public string Status { get; set; } = null!;
 
+    public bool IsPaid { get; set; }
+
+    public bool VerifiedByAdmin { get; set; }
+
+    public DateTime? PaidOn { get; set; }
+
     public virtual ICollection<BillRecheckRequest> BillRecheckRequests { get; set; } = new List<BillRecheckRequest>();
 
     public virtual User User { get; set; } = null!;

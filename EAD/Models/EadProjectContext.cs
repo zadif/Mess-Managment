@@ -45,6 +45,7 @@ public partial class EadProjectContext : DbContext
             entity.Property(e => e.MonthYear)
                 .HasMaxLength(7)
                 .IsUnicode(false);
+            entity.Property(e => e.PaidOn).HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .HasMaxLength(20)
                 .HasDefaultValue("Pending");
