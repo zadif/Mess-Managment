@@ -1,0 +1,94 @@
+﻿@model List<EAD.Models.Bill>
+@{
+    ViewData["Title"] = "Bill Status & Verification";
+}
+
+<link href="~/css/statusOfBills.css" rel="stylesheet" />
+<div class="page-container fade-in">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>Bill Status & Verification</h2>
+            <p>Admin can verify payments made by users</p>
+        </div>
+    </div>
+
+    <div class="data-card">
+        <div class="table-responsive">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>User</th>
+                        <th>Month</th>
+                        <th>Amount</th>
+                        <th>Generated</th>
+                        <th>Paid On</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bill in Model)
+                    {
+                        var isPaid = bill.IsPaid;
+                        var isVerified = bill.VerifiedByAdmin;
+
+                        <tr>
+                            <td>#@bill.Id</td>
+                            <td>
+                                <strong>@bill.User.Name</strong><br>
+                                <small class="text-muted">@bill.User.Email</small>
+                            </td>
+                            <td>@bill.GeneratedOn</td>
+                            <td class="fw-bold text-success">Rs. @bill.TotalAmount</td>
+                            <td>@bill.GeneratedOn</td>
+                            <td>
+                                @if (bill.PaidOn.HasValue)
+                                {
+                                    <span>@bill.PaidOn.Value</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                @if (isVerified)
+                                {
+                                    <span class="badge bg-success">Verified</span>
+                                }
+                                else if (isPaid)
+                                {
+                                    <span class="badge bg-warning text-dark">Paid (Not Verified)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Pending</span>
+                                }
+                            </td>
+                            <td>
+                                @if (isPaid && !isVerified)
+                                {
+                                    <button type="button" class="btn btn-success btn-sm"
+                                            onclick="verifyBill(@bill.Id, this)">
+                                        Verify Payment
+                                    </button>
+                                }
+                                else if (isVerified)
+                                {
+                                    <span class="text-success fw-bold">Verified</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Waiting for payment</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+                                <script src="~/js/statusOfBills.js"></script>

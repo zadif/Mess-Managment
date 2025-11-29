@@ -548,7 +548,34 @@ namespace EAD.wwwroot.js
             }
         }
 
+        public IActionResult statusOfBills()
+        {
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                var temps = db.Bills
+                       .Include(c => c.User).ToList();
+                return View(temps);
+            }
+        }
+        [HttpPost]
+        public JsonResult VerifyBill(int billId)
+        {
+            try
+            {
+                using var db = new EadProjectContext();
+                var bill = db.Bills.FirstOrDefault(b => b.Id == billId);
 
+                if (bill != null && bill.IsPaid && !bill.VerifiedByAdmin)
+                {
+                    bill.VerifiedByAdmin = true;
+                    db.SaveChanges();
+                    return Json(1); // Success
+                }
+            }
+            catch { }
+
+            return Json(0); // Error
+        }
     }
 
 }
