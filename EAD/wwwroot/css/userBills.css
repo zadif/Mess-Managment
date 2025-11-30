@@ -1,0 +1,13 @@
+﻿.bill-card {
+    transition: all 0.3s;
+    border-width: 3px !important;
+}
+
+    .bill-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+    }
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+}

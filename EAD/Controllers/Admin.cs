@@ -562,14 +562,17 @@ namespace EAD.wwwroot.js
         {
             try
             {
-                using var db = new EadProjectContext();
-                var bill = db.Bills.FirstOrDefault(b => b.Id == billId);
+                using (EadProjectContext db = new EadProjectContext())
+                {
+
+                    var bill = db.Bills.FirstOrDefault(b => b.Id == billId);
 
                 if (bill != null && bill.IsPaid && !bill.VerifiedByAdmin)
                 {
                     bill.VerifiedByAdmin = true;
                     db.SaveChanges();
                     return Json(1); // Success
+                }
                 }
             }
             catch { }

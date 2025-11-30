@@ -1,0 +1,114 @@
+﻿@model List<EAD.Models.Bill>
+@{
+    ViewData["Title"] = "My Bills";
+}
+
+<link href="~/css/userBills.css" rel="stylesheet" />
+
+<div class="page-container fade-in">
+    <div class="page-header text-center mb-5">
+        <h1 class="display-5 fw-bold">My Bills</h1>
+        <p class="lead text-muted">View and manage your monthly mess bills</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <h3>No bills found</h3>
+            <p class="text-muted">Your bills will appear here once generated.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var bill in Model.OrderByDescending(b => b.GeneratedOn))
+            {
+                var isPaid = bill.IsPaid;
+                var isVerified = bill.VerifiedByAdmin;
+
+                <div class="col">
+                    <div class="card bill-card h-100 shadow-sm @(isVerified ? "border-success" : isPaid ? "border-warning" : "border-danger")">
+                        <div class="card-header text-white @(isVerified ? "bg-success" : isPaid ? "bg-warning" : "bg-danger")">
+                            <h5 class="mb-0">
+                                Bill #@bill.Id - @bill.GeneratedOn
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fw-bold">Amount:</span>
+                                <span class="fs-4 text-success fw-bold">Rs. @bill.TotalAmount</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Generated:</span>
+                                <span>@bill.GeneratedOn</span>
+                            </div>
+                            @if (bill.PaidOn.HasValue)
+                            {
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Paid On:</span>
+                                    <span>@bill.PaidOn.Value</span>
+                                </div>
+                            }
+                            <hr>
+                            <div class="text-center">
+                                @if (isVerified)
+                                {
+                                    <div class="badge bg-success fs-6 px-4 py-2">Verified by Admin</div>
+                                }
+                                else if (isPaid)
+                                {
+                                    <div class="badge bg-warning text-dark fs-6 px-4 py-2">Paid - Awaiting Verification</div>
+                                }
+                                else
+                                {
+                                    <div class="badge bg-danger fs-6 px-4 py-2">Not Paid</div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-transparent text-center">
+                            @if (!isPaid)
+                            {
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <button type="button" class="btn btn-success flex-fill" onclick="markAsPaid(@bill.Id, this)">
+                                        Mark as Paid
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger flex-fill" onclick="requestRecheck(@bill.Id)">
+                                        Request Recheck
+                                    </button>
+                                </div>
+                            }
+                            else if (isPaid && !isVerified)
+                            {
+                                <span class="badge bg-warning text-dark w-100 py-3 d-block">Paid - Awaiting Verification</span>
+                            }
+                            else if (isVerified)
+                            {
+                                <span class="badge bg-success w-100 py-3 d-block">Verified</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- SINGLE MODAL — OUTSIDE LOOP -->
+<div id="recheckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:500px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="margin:0;">Request Bill Recheck</h4>
+            <span onclick="closeRecheckModal()" style="font-size:30px; cursor:pointer; color:#999;">×</span>
+        </div>
+        <p>Please explain why you think this bill is wrong:</p>
+        <textarea id="recheckMessage" style="width:100%; height:120px; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px;" placeholder="Example: I was absent on 5th and 6th, or item price seems wrong..."></textarea>
+        <div style="margin-top:20px; text-align:right;">
+            <button onclick="sendRecheckRequest()" style="background:#dc3545; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-size:16px;">Send Request</button>
+            <button onclick="closeRecheckModal()" style="margin-left:10px; background:#6c757d; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+        <script src="~/js/userBills.js"></script>

@@ -21,10 +21,9 @@
                 <i class="fas fa-utensils"></i> <span>MessMate</span>
             </div>
             <nav class="nav-links">
-                <a href="#" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="@Url.Action("Summary", "Bill")" class="nav-item"><i class="fas fa-file-invoice-dollar"></i> <span>My Bill</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-history"></i> <span>History</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+                <a href="/Dashboard/Home" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                <a href="/UserMenu/fullMenu" class="nav-item"><i class="fas fa-file-invoice-dollar"></i> <span>Full Week Menu</span></a>
+                <a href="/UserMenu/Bills" class="nav-item"><i class="fas fa-history"></i> <span>Bills</span></a>
             </nav>
             <form action="/Login/Logout" method="post" class="logout-form">
                 <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>

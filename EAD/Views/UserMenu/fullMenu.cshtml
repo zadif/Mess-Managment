@@ -1,0 +1,64 @@
+﻿@model List<EAD.Models.DailyMenu>
+@{
+    ViewData["Title"] = "Weekly Menu Schedule";
+}
+
+<link href="~/css/fullMenu.css" rel="stylesheet" />
+<div class="page-container fade-in">
+    <div class="page-header text-center mb-5">
+        <h1 class="display-5 fw-bold">Weekly Mess Menu</h1>
+        <p class="lead text-muted">Complete schedule for the week</p>
+    </div>
+
+    <div class="menu-schedule-card">
+        <div class="table-responsive">
+            <table class="weekly-menu-table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Breakfast</th>
+                        <th>Lunch</th>
+                        <th>Dinner</th>
+                        <th>Snacks / Tea</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" })
+                    {
+                        var dayMenus = Model.Where(m => m.DayOfWeek == day).ToList();
+
+                        <tr>
+                            <td class="day-cell">
+                                <div class="day-name">@day</div>
+                                <div class="date-hint">@DateTime.Now.AddDays(Array.IndexOf(new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }, day) - (int)DateTime.Now.DayOfWeek + 7).ToString("dd MMM")</div>
+                            </td>
+
+                            @foreach (var mealType in new[] { "Breakfast", "Lunch", "Dinner", "Snack" })
+                            {
+                                var menu = dayMenus.FirstOrDefault(m => m.MealType == mealType);
+                                <td class="meal-cell">
+                                    @if (menu != null)
+                                    {
+                                        <div class="meal-item">
+                                            <div class="meal-name">@menu.MealItem.Name</div>
+                                            <div class="meal-price">Rs. @menu.MealItem.Price</div>
+                                            @if (!string.IsNullOrEmpty(menu.MealItem.Category) && menu.MealItem.Category != "Food")
+                                            {
+                                                <span class="badge bg-info">@menu.MealItem.Category</span>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
