@@ -1,4 +1,4 @@
-﻿@model List<EAD.Models.Bill>
+﻿@model BillViewModel
 @{
     ViewData["Title"] = "My Bills";
 }
@@ -11,7 +11,7 @@
         <p class="lead text-muted">View and manage your monthly mess bills</p>
     </div>
 
-    @if (!Model.Any())
+    @if (Model?.Bil == null || !Model.Bil.Any())
     {
         <div class="text-center py-5">
             <h3>No bills found</h3>
@@ -19,13 +19,14 @@
         </div>
     }
     else
-    {
+    { var recheckArrId = 0;
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var bill in Model.OrderByDescending(b => b.GeneratedOn))
+            @foreach (var bill in Model.Bil)
             {
+
                 var isPaid = bill.IsPaid;
                 var isVerified = bill.VerifiedByAdmin;
-
+                var isSentforRecheck = Model.BillInRecheck[recheckArrId];
                 <div class="col">
                     <div class="card bill-card h-100 shadow-sm @(isVerified ? "border-success" : isPaid ? "border-warning" : "border-danger")">
                         <div class="card-header text-white @(isVerified ? "bg-success" : isPaid ? "bg-warning" : "bg-danger")">
@@ -53,29 +54,36 @@
                             <div class="text-center">
                                 @if (isVerified)
                                 {
-                                    <div class="badge bg-success fs-6 px-4 py-2">Verified by Admin</div>
+                                    <div class="badge bg-success fs-6 px-4 py-2 changer">Verified by Admin</div>
                                 }
                                 else if (isPaid)
                                 {
-                                    <div class="badge bg-warning text-dark fs-6 px-4 py-2">Paid - Awaiting Verification</div>
+                                    <div class="badge bg-warning text-dark fs-6 px-4 py-2 changer">Paid - Awaiting Verification</div>
+                                }
+                                else if (isSentforRecheck)
+                                {
+                                    <div class="badge bg-danger fs-6 px-4 py-2 changer">Sent for recheck</div>
                                 }
                                 else
                                 {
-                                    <div class="badge bg-danger fs-6 px-4 py-2">Not Paid</div>
+                                <div class="badge bg-danger fs-6 px-4 py-2  changer">Not Paid</div>
                                 }
                             </div>
                         </div>
 
                         <div class="card-footer bg-transparent text-center">
-                            @if (!isPaid)
+                            @if (!isPaid && !isSentforRecheck)
                             {
                                 <div class="d-flex gap-2 justify-content-center">
                                     <button type="button" class="btn btn-success flex-fill" onclick="markAsPaid(@bill.Id, this)">
                                         Mark as Paid
                                     </button>
+                                   
+
                                     <button type="button" class="btn btn-outline-danger flex-fill" onclick="requestRecheck(@bill.Id)">
                                         Request Recheck
                                     </button>
+                                    
                                 </div>
                             }
                             else if (isPaid && !isVerified)
@@ -89,6 +97,7 @@
                         </div>
                     </div>
                 </div>
+                recheckArrId++;
             }
         </div>
     }

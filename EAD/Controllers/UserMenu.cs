@@ -23,7 +23,11 @@ namespace EAD.Controllers
             {
 
                 var temp = db.Bills.Where(e => e.UserId == Convert.ToInt32(id)).ToList();
-                return View(temp);
+                var temp2 = db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).ToList();
+
+                BillViewModel b = new BillViewModel(temp,temp2);
+
+                return View(b);
             }
 
         }

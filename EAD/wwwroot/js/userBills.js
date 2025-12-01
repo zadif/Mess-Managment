@@ -21,7 +21,12 @@
 
     header.className = "card-header bg-warning text-dark";
     footer.innerHTML = '<div class="badge bg-warning text-dark fs-5 px-4 py-2">Paid - Awaiting Verification</div>';
-    alert("Bill marked as paid!");
+
+            document.querySelector(".changer").innerHTML = "Paid - Awaiting Verification";
+            document.querySelector(".changer")
+                .classList.remove("bg-danger")
+                .classList.add("bg-warning", "text-dark");
+
         } else {
         button.disabled = false;
     button.innerHTML = "Mark as Paid";
