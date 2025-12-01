@@ -70,9 +70,31 @@
     .then(r => r.json())
     .then(result => {
         if (result === 1) {
-        closeRecheckModal();
-    alert("Recheck request sent successfully!");
-    location.reload();
+            closeRecheckModal();
+            const card = button.closest(".bill-card");
+            const header = card.querySelector(".card-header");
+            const footer = card.querySelector(".card-footer");
+
+            header.className = "card-header bg-warning text-dark";
+            footer.innerHTML = '<div class="badge bg-warning text-dark fs-5 px-4 py-2"> Recheck Request send</div>';
+
+            document.querySelector(".changer").innerHTML = "Sent for recheck";
+          
+            document.querySelectorAll(
+                'button.btn-success.flex-fill[onclick^="markAsPaid"], ' +
+                'button.btn-outline-danger.flex-fill[onclick^="requestRecheck"]'
+            ).forEach(btn => {
+                // add a class to both buttons
+                btn.classList.add('hidden-bill-action');
+
+                // hide them
+                btn.style.display = 'none';
+
+                // or, if you want them completely removed from the DOM:
+                // btn.remove();
+            });
+
+
         } else {
         alert("Error sending request");
         }

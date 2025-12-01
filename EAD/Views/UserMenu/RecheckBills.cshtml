@@ -1,0 +1,102 @@
+﻿@model List<EAD.Models.BillRecheckRequest>
+@{
+    ViewData["Title"] = "My Recheck Requests";
+}
+
+<link href="~/css/userBills.css" rel="stylesheet" />
+
+<div class="page-container fade-in">
+    <div class="page-header text-center mb-5">
+        <h1 class="display-5 fw-bold">My Recheck Requests</h1>
+        <p class="lead text-muted">View status of bills you requested for rechecking</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="alert alert-info">
+                <h4>No recheck requests found</h4>
+                <p>You haven't requested any bill recheck yet.</p>
+                <a asp-action="Bills" class="btn btn-primary mt-3">← Back to My Bills</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover styled-table">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#Request ID</th>
+                        <th>Bill ID</th>
+                        <th>Month</th>
+                        <th>Amount</th>
+                        <th>Your Message</th>
+                        <th>Status</th>
+                        <th>Requested On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var req in Model.OrderByDescending(r => r.RequestedOn))
+                    {
+                        <tr>
+                            <td><strong>#@req.Id</strong></td>
+                            <td>Bill #@req.Bill.Id</td>
+                            <td>@req.Bill.GeneratedOn</td>
+                            <td class="text-success fw-bold">Rs. @req.Bill.TotalAmount</td>
+                            <td>
+                                <em class="text-muted">"@req.RequestMessage"</em>
+                            </td>
+                            <td>
+                                @if (req.Status == "Pending")
+                                {
+                                    <span class="badge bg-warning text-dark">Pending Review</span>
+                                }
+                                else if (req.Status == "Resolved")
+                                {
+                                    <span class="badge bg-success">Resolved</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@req.Status</span>
+                                }
+                            </td>
+                            <td>@req.RequestedOn<br></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-action="Bills" class="btn btn-outline-primary btn-lg">
+                ← Back to My Bills
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .styled-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+        .styled-table th {
+            background: #0d6efd;
+            color: white;
+            font-weight: 600;
+        }
+
+        .styled-table td {
+            vertical-align: middle;
+        }
+
+    .badge {
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+</style>

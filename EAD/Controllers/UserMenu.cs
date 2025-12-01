@@ -78,5 +78,18 @@ namespace EAD.Controllers
             return Json(0);
 
         }
+  
+    public IActionResult RecheckBills()
+        {
+            string id = Request.Cookies["UserId"];
+            using (EadProjectContext db = new EadProjectContext())
+            {
+
+                var temp2 = db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).Include(s=>s.Bill).ToList();
+
+
+                return View(temp2);
+            }
+        }
     }
 }
