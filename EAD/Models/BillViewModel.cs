@@ -17,7 +17,7 @@ namespace EAD.Models
             Bil = bil ?? new List<Bill>();
             Recheck = recheck ?? new List<BillRecheckRequest>();
 
-            var recheckIds = recheck.Select(r => r.BillId).ToHashSet();
+            var recheckIds = recheck.Where(r => r.Status == "Pending").Select(r => r.BillId).ToHashSet();
 
             BillInRecheck = Bil.Select(b => recheckIds.Contains(b.Id)).ToList();
         }

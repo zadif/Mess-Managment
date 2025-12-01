@@ -589,6 +589,18 @@ namespace EAD.wwwroot.js
         }
 
 
+        public IActionResult recheckBills()
+        {
+            using(EadProjectContext db=new EadProjectContext())
+            {
+                var temp = db.BillRecheckRequests.Include(s=>s.Bill).Include(s=>s.User).ToList();
+            return View(temp);
+            }
+
+        }
+
+
+
         [HttpPost]
         public JsonResult ResolveRecheckRequest(int requestId, string action, decimal? newAmount)
         {
@@ -606,10 +618,7 @@ namespace EAD.wwwroot.js
             {
                 request.Status = "Rejected";
             }
-            else if (action == "resolved")
-            {
-                request.Status = "Resolved";
-            }
+           
 
             db.SaveChanges();
             return Json(new { success = true });

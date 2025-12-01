@@ -31,11 +31,11 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoginPage(string name, string password,string role)
+        public IActionResult LoginPage(string email, string password,string role)
         {
             if (role == "Admin")
             {
-                if (name == "a" && password == "a")
+                if (email == "a" && password == "a")
                 {
                     Response.Cookies.Append("Role", "Admin", new CookieOptions
                     {
@@ -56,7 +56,7 @@ namespace EAD.Controllers
             {
                 using(EadProjectContext db = new EadProjectContext())
                 {
-                    var usr = db.Users.FirstOrDefault(e => (e.Name == name || e.Email == name));
+                    var usr = db.Users.FirstOrDefault(e => (e.Email == email));
                     if (usr != null && BCrypt.Net.BCrypt.Verify(password, usr.Password))
                     {
                         if (usr.IsActive)
