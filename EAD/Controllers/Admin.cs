@@ -41,6 +41,12 @@ namespace EAD.wwwroot.js
             {
                 if (user.Id == 0)
                 {
+
+                    // CHECK IF EMAIL ALREADY EXISTS
+                    if (db.Users.Any(u => u.Email == user.Email))
+                    {
+                    return    RedirectToAction("ManageUsers");
+                    }
                     // New User → Password is required
                     user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                     user.CreatedOn = DateTime.Now;
@@ -554,6 +560,8 @@ namespace EAD.wwwroot.js
             {
                 var temps = db.Bills
                        .Include(c => c.User).ToList();
+
+               
                 return View(temps);
             }
         }
@@ -578,6 +586,33 @@ namespace EAD.wwwroot.js
             catch { }
 
             return Json(0); // Error
+        }
+
+
+        [HttpPost]
+        public JsonResult ResolveRecheckRequest(int requestId, string action, decimal? newAmount)
+        {
+            using var db = new EadProjectContext();
+            var request = db.BillRecheckRequests.Include(r => r.Bill).FirstOrDefault(r => r.Id == requestId);
+
+            if (request == null) return Json(new { success = false });
+
+            if (action == "approve" && newAmount.HasValue && newAmount > 0)
+            {
+                request.Bill.TotalAmount = newAmount.Value;
+                request.Status = "Approved";
+            }
+            else if (action == "reject")
+            {
+                request.Status = "Rejected";
+            }
+            else if (action == "resolved")
+            {
+                request.Status = "Resolved";
+            }
+
+            db.SaveChanges();
+            return Json(new { success = true });
         }
     }
 
