@@ -1,110 +1,112 @@
-﻿
-    let currentRequestId = 0;
-    let currentRequestRow = null;
+﻿    let currentRequestRow = null;
 
-    function openRecheckModal(requestId, userName, currentAmount, userMessage, btn) {
-        currentRequestId = requestId;
-    currentRequestRow = btn ? btn.closest("tr") : document.querySelector(`tr[data-request-id="${requestId}"]`);
+    function openSweetAlertRecheck(requestId, userName, currentAmount, userMessage, btn) {
+        currentRequestRow = btn.closest("tr");
 
-    document.getElementById("modalUserName").textContent = userName;
-    document.getElementById("modalCurrentAmount").textContent = "Rs. " + currentAmount;
-    document.getElementById("modalUserMessage").textContent = userMessage;
-    document.getElementById("newAmount").value = "";
-    document.getElementById("recheckModal").style.display = "flex";
-    }
-
-    function closeRecheckModal() {
-        document.getElementById("recheckModal").style.display = "none";
-    }
-
-    function resolveRequest(action, button) {
-        const newAmountInput = document.getElementById("newAmount");
-    const newAmount = newAmountInput.value;
-
-    // disable all resolve buttons in the modal
-    const modalButtons = document.querySelectorAll(
-    '#recheckModal button[onclick^="resolveRequest"]'
-    );
-        modalButtons.forEach(btn => {
-        btn.disabled = true;
-    if (!btn.dataset.originalText) {
-        btn.dataset.originalText = btn.innerHTML;
+    Swal.fire({
+        title: 'Review Request',
+    background: '#1e1e2d',
+    color: '#fff',
+    html: `
+    <div style="text-align: left; font-size: 0.95rem; line-height: 1.6;">
+        <p><strong>User:</strong> <span style="color: #fd5d38;">${userName}</span></p>
+        <p><strong>Current Bill:</strong> <span class="text-success fw-bold">Rs. ${currentAmount}</span></p>
+        <div style="background: #151521; padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #2b2b40;">
+            <small style="color: #a1a5b7;">User says:</small><br>
+                <em>"${userMessage}"</em>
+        </div>
+        <label class="mt-3 mb-1 d-block" style="font-size:0.85rem;">New Amount (Optional):</label>
+        <input type="number" id="swal-new-amount" class="swal2-input" placeholder="Leave blank to keep Rs. ${currentAmount}" style="margin: 0; width: 100%;">
+    </div>
+    `,
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: '<i class="fas fa-check"></i> Approve & Update',
+    denyButtonText: '<i class="fas fa-times"></i> Reject Request',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#198754',
+    denyButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    focusConfirm: false,
+            preConfirm: () => {
+                const inputVal = document.getElementById('swal-new-amount').value;
+    if (inputVal) {
+                    const newAmount = parseFloat(inputVal);
+    if (isNaN(newAmount)) {
+        Swal.showValidationMessage('Please enter a valid number');
+    return false; 
+                    }
+    if (newAmount == 0) {
+        Swal.showValidationMessage('Shabash, Full discount');
+    return false;
+        }
+    if (newAmount < 0) {
+        Swal.showValidationMessage('Bill amount cannot be negative!');
+    return false;
+                    }
+                    if (newAmount > currentAmount) {
+        Swal.showValidationMessage(`You cannot increase the bill! Max allowed is Rs. ${currentAmount}`);
+    return false;
+                    }
+    return processRecheck(requestId, 'approve', newAmount);
+                }
+    return processRecheck(requestId, 'approve', null);
+            },
+            preDeny: () => {
+                return processRecheck(requestId, 'reject', null);
             }
         });
+    }
 
-    // show "Processing..." on the clicked button
-    if (button) {
-        button.innerHTML = "Processing...";
-        }
-
-    const body =
-    "requestId=" + encodeURIComponent(currentRequestId) +
-    "&action=" + encodeURIComponent(action) +
-    "&newAmount=" + encodeURIComponent(newAmount);
-
-    fetch("/Admin/ResolveRecheckRequest", {
+    function processRecheck(requestId, action, newAmount) {
+        const body = "requestId=" + encodeURIComponent(requestId) + "&action=" + encodeURIComponent(action) + "&newAmount=" + encodeURIComponent(newAmount || "");
+    return fetch("/Admin/ResolveRecheckRequest", {
         method: "POST",
     headers: {"Content-Type": "application/x-www-form-urlencoded" },
     body: body
         })
-            .then(r => r.json())
-            .then(result => {
-                if (result && result.success) {
-                    // ✅ Update the row in the table instead of reloading
-                    if (currentRequestRow) {
-                        const statusCell = currentRequestRow.querySelector(".status-cell");
+        .then(response => { if (!response.ok) throw new Error(response.statusText); return response.json(); })
+        .then(result => {
+            if (result && result.success) {
+        updateTableRow(action, newAmount);
+    Swal.fire({
+        icon: 'success',
+    title: 'Success!',
+    text: action === 'approve' ? 'Bill updated successfully.' : 'Request rejected.',
+    background: '#1e1e2d',
+    color: '#fff',
+    timer: 2000,
+    showConfirmButton: false
+                });
+    return true;
+            } else {
+        Swal.showValidationMessage(`Request failed: ${result.message || 'Unknown error'}`);
+    return false;
+            }
+        })
+        .catch(error => {Swal.showValidationMessage(`Request failed: ${error}`); return false; });
+    }
+
+    function updateTableRow(action, newAmount) {
+        if (!currentRequestRow) return;
+    const statusCell = currentRequestRow.querySelector(".status-cell");
     const actionCell = currentRequestRow.querySelector(".action-cell");
     const amountCell = currentRequestRow.querySelector(".amount-cell");
 
-    let newStatusText;
-    if (action === "approve") {
-        newStatusText = "Approved";
-                        } else if (action === "reject") {
-        newStatusText = "Rejected";
-                        } else {
-        newStatusText = "Resolved";
-                        }
-
     if (statusCell) {
-        statusCell.innerHTML = `<span class="badge bg-secondary">${newStatusText}</span>`;
-                        }
+        let badgeClass = action === "approve" ? "badge-approved" : (action === "reject" ? "badge-rejected" : "badge-processed");
+    let statusText = action === "approve" ? "Approved" : (action === "reject" ? "Rejected" : "Processed");
+    statusCell.innerHTML = `<span class="badge-custom ${badgeClass}">${statusText}</span>`;
+        }
 
     if (actionCell) {
-        actionCell.innerHTML = '<span class="text-success">Processed</span>';
-                        }
+        actionCell.innerHTML = '<span class="text-muted small">Processed</span>';
+        }
 
     const amountValue = parseFloat(newAmount);
-                        if (action === "approve" && !isNaN(amountValue) && amountValue > 0 && amountCell) {
+        if (action === "approve" && !isNaN(amountValue) && amountValue > 0 && amountCell) {
         amountCell.textContent = "Rs. " + amountValue;
-                        }
-                    }
-
-    closeRecheckModal();
-                    // no page reload
-                } else {
-        // re-enable buttons and restore text on error
-        modalButtons.forEach(btn => {
-            btn.disabled = false;
-            if (btn.dataset.originalText) {
-                btn.innerHTML = btn.dataset.originalText;
-            }
-        });
-    alert("Error processing request");
-                }
-            })
-            .catch(err => {
-        console.error("resolveRequest error:", err);
-                // re-enable buttons and restore text on network error
-                modalButtons.forEach(btn => {
-        btn.disabled = false;
-    if (btn.dataset.originalText) {
-        btn.innerHTML = btn.dataset.originalText;
-                    }
-                });
-    alert("Network error");
-            });
+    amountCell.style.color = "#fd5d38"; 
+            setTimeout(() => {amountCell.style.color = ""; amountCell.classList.add('text-success'); }, 2000);
+        }
     }
-
-    window.onclick = e => {
-        if (e.target.id === "recheckModal") closeRecheckModal();
-    };

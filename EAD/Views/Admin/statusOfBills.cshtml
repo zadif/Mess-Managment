@@ -1,94 +1,113 @@
 ﻿@model List<EAD.Models.Bill>
 @{
     ViewData["Title"] = "Bill Status & Verification";
+    Layout = null;
 }
 
-<link href="~/css/statusOfBills.css" rel="stylesheet" />
-<div class="page-container fade-in">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Status & Verification</title>
+
+    <!-- Fonts -->
+    <link href="@Url.Content("~/css/statusOfBills.css")" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 CSS (For beautiful popups) -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+   
+</head>
+<body>
+
     <div class="page-header">
         <div class="page-title">
             <h2>Bill Status & Verification</h2>
             <p>Admin can verify payments made by users</p>
         </div>
+        <a href="/Admin/Bills" class="btn-home"> <i class="fas fa-arrow-left me-2"></i>  Back</a>
     </div>
 
-    <div class="data-card">
-        <div class="table-responsive">
-            <table class="styled-table">
-                <thead>
+    <div class="main-card">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">#ID</th>
+                    <th style="width: 25%;">User Details</th>
+                    <th>Generated</th>
+                    <th>Amount</th>
+                    <th>Paid On</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in Model)
+                {
+                    var isPaid = bill.IsPaid;
+                    var isVerified = bill.VerifiedByAdmin;
+
                     <tr>
-                        <th>#ID</th>
-                        <th>User</th>
-                        <th>Month</th>
-                        <th>Amount</th>
-                        <th>Generated</th>
-                        <th>Paid On</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <td style="color: var(--text-muted);">#@bill.Id</td>
+                        <td>
+                            <span class="user-name">@bill.User.Name</span>
+                            <span class="user-email">@bill.User.Email</span>
+                        </td>
+                        <td>@bill.GeneratedOn.ToString("dd MMM yyyy")</td>
+                        <td style="font-weight: 700;">Rs. @bill.TotalAmount</td>
+                        <td>
+                            @if (bill.PaidOn.HasValue)
+                            {
+                                <span>@bill.PaidOn.Value.ToString("dd/MM/yyyy")</span>
+                            }
+                            else
+                            {
+                                <span style="color: #555;">—</span>
+                            }
+                        </td>
+                        <td>
+                            @if (isVerified)
+                            {
+                                <span class="status-badge status-verified">Verified</span>
+                            }
+                            else if (isPaid)
+                            {
+                                <span class="status-badge status-paid">Paid </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-pending">Pending</span>
+                            }
+                        </td>
+                        <td>
+                            @if (isPaid && !isVerified)
+                            {
+                                <button type="button" class="btn-verify" onclick="verifyBill(@bill.Id, this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verify
+                                </button>
+                            }
+                            else if (isVerified)
+                            {
+                                <span class="text-done">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Completed
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: #555; font-style: italic; font-size: 12px;">Waiting payment...</span>
+                            }
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var bill in Model)
-                    {
-                        var isPaid = bill.IsPaid;
-                        var isVerified = bill.VerifiedByAdmin;
-
-                        <tr>
-                            <td>#@bill.Id</td>
-                            <td>
-                                <strong>@bill.User.Name</strong><br>
-                                <small class="text-muted">@bill.User.Email</small>
-                            </td>
-                            <td>@bill.GeneratedOn</td>
-                            <td class="fw-bold text-success">Rs. @bill.TotalAmount</td>
-                            <td>@bill.GeneratedOn</td>
-                            <td>
-                                @if (bill.PaidOn.HasValue)
-                                {
-                                    <span>@bill.PaidOn.Value</span>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">—</span>
-                                }
-                            </td>
-                            <td>
-                                @if (isVerified)
-                                {
-                                    <span class="badge bg-success">Verified</span>
-                                }
-                                else if (isPaid)
-                                {
-                                    <span class="badge bg-warning text-dark">Paid (Not Verified)</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">Pending</span>
-                                }
-                            </td>
-                            <td>
-                                @if (isPaid && !isVerified)
-                                {
-                                    <button type="button" class="btn btn-success btn-sm"
-                                            onclick="verifyBill(@bill.Id, this)">
-                                        Verify Payment
-                                    </button>
-                                }
-                                else if (isVerified)
-                                {
-                                    <span class="text-success fw-bold">Verified</span>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">Waiting for payment</span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
-</div>
 
-                                <script src="~/js/statusOfBills.js"></script>
+    <!-- SweetAlert2 Script -->
+    <script src="@Url.Content("~/js/statusOfBills.js")"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+</body>
+</html>

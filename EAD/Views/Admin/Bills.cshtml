@@ -1,13 +1,66 @@
-﻿<h2>Bills Dashboard</h2>
+﻿@{
+    ViewData["Title"] = "Bills Dashboard";
+}
 
+<link href="~/css/AdminBills.css" rel="stylesheet" />
+<div class="container-fluid" style="padding: 2rem;">
 
-<button onclick="window.location.href='/Admin/GenerateBills'">
-    Generate Bills
-</button>
-<button onclick="window.location.href='/Admin/statusOfBills'">
-    View status of bills
-</button>
-<button onclick="window.location.href='/Admin/recheckBills'">
-    Recheck Bill request
-</button>
+    <!-- Top Header -->
+    <div class="page-header">
+        <div class="page-title">
+            <h2>Bills Dashboard</h2>
+            <p>Manage generation, status, and verification of bills.</p>
+        </div>
+        <!-- Matches the orange "Home" button in your screenshots -->
+        <a href="/" class="btn-home">
+            <i class="fas fa-home me-2"></i> Home
+        </a>
+    </div>
 
+    <!-- Cards Grid -->
+    <div class="dashboard-grid">
+
+        <!-- Card 1: Generate Bills (Cyan Theme) -->
+        <a href="/Admin/GenerateBills" class="menu-card card-cyan">
+            <div>
+                <div class="icon-box bg-cyan-light">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="card-title">Generate Bills</div>
+                <div class="card-desc">Create new monthly bills for students and staff.</div>
+            </div>
+            <div class="action-link">
+                GENERATE NOW <i class="fas fa-arrow-right ms-2" style="margin-left: 8px;"></i>
+            </div>
+        </a>
+
+        <!-- Card 2: View Status (Purple Theme) -->
+        <a href="/Admin/statusOfBills" class="menu-card card-purple">
+            <div>
+                <div class="icon-box bg-purple-light">
+                    <i class="fas fa-list-check"></i>
+                </div>
+                <div class="card-title">Status of Bills</div>
+                <div class="card-desc">Track payment status and outstanding dues.</div>
+            </div>
+            <div class="action-link">
+                VIEW REPORTS <i class="fas fa-arrow-right ms-2" style="margin-left: 8px;"></i>
+            </div>
+        </a>
+
+        <!-- Card 3: Recheck Request (Orange/Pink Theme) -->
+        <a href="/Admin/recheckBills" class="menu-card card-pink">
+            <div>
+                <div class="icon-box bg-pink-light">
+                    <i class="fas fa-rotate-left"></i>
+                </div>
+                <div class="card-title">Recheck Requests</div>
+                <div class="card-desc">Review and process bill correction requests.</div>
+            </div>
+            <div class="action-link">
+                MANAGE REQUESTS <i class="fas fa-arrow-right ms-2" style="margin-left: 8px;"></i>
+            </div>
+        </a>
+
+    </div>
+</div>

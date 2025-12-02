@@ -2,100 +2,111 @@
 
 
 
+@{
+    ViewData["Title"] = "Recheck Requests";
+}
 
-<link href="~/css/statusOfBills.css" rel="stylesheet" />
+<link href="~/css/AdminRecheckBill.css" rel="stylesheet" />
 
-<div class="page-container fade-in">
-    <div class="page-header text-center mb-5">
-        <h1 class="display-5 fw-bold">Recheck Requests</h1>
-        <p class="lead text-muted">Review and resolve user recheck requests</p>
-    </div>
+<div class="container-fluid py-4">
+    <div class="dashboard-card">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Left Side: Text -->
+            <div>
+                <h1 class="page-title">Recheck Requests</h1>
+                <p class="page-subtitle">Review and resolve billing discrepancies reported by users.</p>
+            </div>
 
-    @if (!Model.Any())
-    {
-        <div class="text-center py-5">
-            <h3>No pending recheck requests</h3>
+            <!-- Right Side: Button -->
+            <a href="/Admin/Bills" class="btn-home">
+                <i class="fas fa-arrow-left me-2"></i> Back
+            </a>
         </div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>#ID</th>
-                        <th>User</th>
-                        <th>Bill Month</th>
-                        <th>Amount</th>
-                        <th>User Message</th>
-                        <th>Requested On</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var req in Model)
-                    {
-                        <tr data-request-id="@req.Id">
-                            <td>#@req.Id</td>
-                            <td><strong>@req.User.Name</strong></td>
-                            <td>@req.Bill.GeneratedOn</td>
-                            <td class="amount-cell text-success fw-bold">Rs. @req.Bill.TotalAmount</td>
-                            <td><em>"@req.RequestMessage"</em></td>
-                            <td>@req.RequestedOn</td>
-                            <td class="status-cell">
-                                @if (req.Status == "Pending")
-                                {
-                                    <span class="badge bg-warning">Pending</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">@req.Status</span>
-                                }
-                            </td>
-                            <td class="action-cell">
-                                @if (req.Status == "Pending")
-                                {
-                                    <button type="button" class="btn btn-primary btn-sm"
-                                            onclick="openRecheckModal(@req.Id, '@req.User.Name', @req.Bill.TotalAmount, '@req.RequestMessage', this)">
-                                        Review Request
-                                    </button>
-                                }
-                                else
-                                {
-                                    <span class="text-success">Processed</span>
-                                }
-                            </td>
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--text-muted); opacity: 0.5;"></i>
+                </div>
+                <h3 class="h5 text-muted">No pending recheck requests</h3>
+            </div>
+        }
+        else
+        {
+            <div class="custom-table-container">
+                <table class="table-dark-custom">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>User Name</th>
+                            <th>Bill Date</th>
+                            <th>Amount</th>
+                            <th style="max-width: 250px;">Message</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-</div>
-
-<!-- RECHECK MODAL -->
-<div id="recheckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
-    <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:550px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h4 style="margin:0;">Review Recheck Request</h4>
-            <span onclick="closeRecheckModal()" style="font-size:30px; cursor:pointer; color:#999;">×</span>
-        </div>
-
-        <div class="mb-3"><strong>User:</strong> <span id="modalUserName"></span></div>
-        <div class="mb-3"><strong>Current Amount:</strong> <span id="modalCurrentAmount" class="text-success fw-bold"></span></div>
-        <div class="mb-4"><strong>User Message:</strong><br><em id="modalUserMessage" class="text-muted"></em></div>
-
-        <div class="mb-3">
-            <label><strong>New Amount (optional):</strong></label>
-            <input type="number" id="newAmount" class="form-control" placeholder="Leave blank to keep original" />
-        </div>
-
-        <div class="text-end">
-            <button onclick="resolveRequest('approve', this)" class="btn btn-success me-2">Approve & Update</button>
-            <button onclick="resolveRequest('reject', this)" class="btn btn-danger me-2">Reject</button>
-        </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var req in Model)
+                        {
+                            <tr data-request-id="@req.Id">
+                                <td class="text-muted">#@req.Id</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!-- Placeholder Avatar -->
+                                        <div style="width:30px; height:30px; background:#fd5d38; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">
+                                            @req.User.Name.Substring(0,1).ToUpper()
+                                        </div>
+                                        <span>@req.User.Name</span>
+                                    </div>
+                                </td>
+                                <td>@req.Bill.GeneratedOn.ToString("MMM dd, yyyy")</td>
+                                <td class="amount-cell text-success fw-bold">Rs. @req.Bill.TotalAmount</td>
+                                <td class="text-muted text-truncate" style="max-width: 250px;" title="@req.RequestMessage">
+                                    "@req.RequestMessage"
+                                </td>
+                                <td class="status-cell">
+                                    @if (req.Status == "Pending")
+                                    {
+                                        <span class="badge-custom badge-pending">Pending</span>
+                                    }
+                                    else if (req.Status == "Approved")
+                                    {
+                                        <span class="badge-custom badge-approved">Approved</span>
+                                    }
+                                    else if (req.Status == "Rejected")
+                                    {
+                                        <span class="badge-custom badge-rejected">Rejected</span>
+                                    }
+                                    else
+                                    {
+                                        <!-- Fallback for any other status -->
+                                        <span class="badge-custom badge-processed">@req.Status</span>
+                                    }
+                                </td>
+                                <td class="action-cell text-end">
+                                    @if (req.Status == "Pending")
+                                    {
+                                        <button type="button" class="btn-action"
+                                                onclick="openSweetAlertRecheck(@req.Id, '@req.User.Name', @req.Bill.TotalAmount, '@req.RequestMessage', this)">
+                                            <i class="fas fa-edit"></i> Review
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Processed</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>
 
-            <script src="~/js/AdminRecheckBills.js"></script>
+<!-- SweetAlert2 CDN (Ensure this or local file is loaded) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/js/AdminRecheckBills.js"></script>

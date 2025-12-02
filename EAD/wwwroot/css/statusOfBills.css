@@ -1,76 +1,159 @@
-﻿/* Simple & Beautiful Table Styling */
-.styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1e1e2e;
-    color: #ddd;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+﻿:root {
+    --bg-body: #151521;
+    --bg-card: #1e1e2d;
+    --text-main: #ffffff;
+    --text-muted: #a1a5b7;
+    --border-color: #2b2b40;
+    --primary-orange: #ff5733;
+    --success-green: #1bc5bd;
+    --danger-red: #f64e60;
+}
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 40px;
 }
 
-    .styled-table thead {
-        background: #16213e;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        letter-spacing: 0.5px;
-    }
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
 
-    .styled-table th {
-        padding: 16px 20px;
-        text-align: left;
-        font-weight: 600;
-        color: #00d4ff;
-    }
-
-    .styled-table td {
-        padding: 14px 20px;
-        border-bottom: 1px solid #333;
-        vertical-align: middle;
-    }
-
-    .styled-table tr:hover {
-        background: #16213e;
-        transition: 0.3s;
-    }
-
-/* Status Badges */
-.badge {
-    padding: 6px 12px;
-    border-radius: 50px;
-    font-size: 0.85rem;
+.page-title h2 {
+    margin: 0;
+    font-size: 24px;
     font-weight: 600;
 }
 
-.bg.bg-success {
-    background: #28a745 !important;
+.page-title p {
+    margin: 5px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
 }
 
-.bg-warning {
-    background: #ffc107 !important;
-    color: #212529 !important;
+/* Home Button */
+.btn-home {
+    background-color: var(--primary-orange);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(255, 87, 51, 0.3);
+    transition: transform 0.2s;
 }
 
-.bg-danger {
-    background: #dc3545 !important;
-}
-
-/* Buttons */
-.btn-sm {
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .styled-table {
-        font-size: 0.9rem;
+    .btn-home:hover {
+        transform: translateY(-2px);
+        color: white;
     }
 
-        .styled-table th,
-        .styled-table td {
-            padding: 10px 12px;
-        }
+/* --- CARD & TABLE --- */
+.main-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .custom-table thead th {
+        text-align: left;
+        padding: 15px 10px;
+        color: #6c7293;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .custom-table tbody td {
+        padding: 20px 10px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 14px;
+        color: var(--text-main);
+    }
+
+/* User Info */
+.user-name {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.user-email {
+    display: block;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+.status-verified {
+    background: rgba(27, 197, 189, 0.2);
+    color: var(--success-green);
+}
+
+.status-pending {
+    background: rgba(246, 78, 96, 0.2);
+    color: var(--danger-red);
+}
+
+.status-paid {
+    background: rgba(255, 168, 0, 0.2);
+    color: #ffa800;
+}
+
+/* Actions */
+.btn-verify {
+    background: transparent;
+    border: 1px solid var(--success-green);
+    color: var(--success-green);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .btn-verify:hover {
+        background-color: var(--success-green);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(27, 197, 189, 0.3);
+    }
+
+.text-done {
+    color: var(--success-green);
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+

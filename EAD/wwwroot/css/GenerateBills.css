@@ -1,24 +1,310 @@
-﻿.styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1e1e2e;
-    color: #ddd;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+﻿:root {
+    --bg-dark: #151521;
+    --card-bg: #1e1e2d;
+    --primary-orange: #fd5d38;
+    --text-white: #ffffff;
+    --text-muted: #a1a5b7;
+    --accent-green: #50cd89;
+    --accent-cyan: #009ef7;
+    --border-color: #2b2b40;
 }
 
-    .styled-table th {
-        background: #16213e;
-        padding: 15px;
-        text-align: left;
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title h2 {
+    font-weight: 700;
+    margin: 0;
+}
+
+.page-title p {
+    color: var(--text-muted);
+    margin: 5px 0 0 0;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    color: var(--text-muted);
+}
+
+/* Action Bar (Generate All) */
+.action-bar {
+    background: var(--card-bg);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.status-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* User Bill Card */
+.bill-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: transform 0.2s;
+    border: 1px solid transparent;
+}
+
+    .bill-card:hover {
+        border-color: #333;
     }
 
-    .styled-table td {
-        padding: 12px 15px;
+/* Card Header (Summary) */
+.bill-header {
+    padding: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    background: rgba(253, 93, 56, 0.1);
+    color: var(--primary-orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.badge-custom {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-food {
+    background: rgba(0, 158, 247, 0.15);
+    color: var(--accent-cyan);
+}
+
+.badge-drink {
+    background: rgba(80, 205, 137, 0.15);
+    color: var(--accent-green);
+}
+
+.bill-total {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+/* Buttons */
+.btn-custom {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-orange {
+    background: var(--primary-orange);
+    color: white;
+}
+
+    .btn-orange:hover {
+        background: #e04a28;
+    }
+
+    .btn-orange:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--text-muted);
+}
+
+    .btn-outline:hover {
+        border-color: var(--text-white);
+        color: var(--text-white);
+    }
+
+/* Detailed Table (Hidden by default) */
+.details-container {
+    display: none; /* JS toggles this */
+    background: #181824;
+    padding: 1rem;
+    border-top: 1px solid #2b2b40;
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+    .details-table th {
+        text-align: left;
+        color: var(--text-muted);
+        padding: 8px;
         border-bottom: 1px solid #333;
     }
 
-    .styled-table tr:hover {
-        background: #16213e;
+    .details-table td {
+        padding: 8px;
+        color: var(--text-white);
+        border-bottom: 1px solid #2b2b40;
+    }
+
+    .details-table tr:last-child td {
+        border-bottom: none;
+    }
+
+/* Custom Toast Notification */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.custom-toast {
+    background: var(--card-bg);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border-left: 4px solid var(--primary-orange);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out forwards;
+    min-width: 250px;
+}
+
+.toast-success {
+    border-left-color: var(--accent-green);
+}
+
+.toast-error {
+    border-left-color: #ff4d4d;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* Custom Modal */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.custom-modal {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.modal-text {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+
+
+.btn-home {
+    background-color: #fd5d38; /* Your theme's orange accent */
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 2rem; /* Rounded pill shape */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(253, 93, 56, 0.3); /* Glow effect */
+    border: none;
+}
+
+    .btn-home:hover {
+        background-color: #e04a28; /* Slightly darker on hover */
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(253, 93, 56, 0.4);
     }
