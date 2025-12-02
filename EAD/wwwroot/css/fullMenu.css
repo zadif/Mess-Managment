@@ -1,139 +1,225 @@
-﻿.weekly-menu-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    font-family: 'Segoe UI', sans-serif;
-}
-
-.weekly-menu-table th {
-    background: #1e3a8a;
-    color: white;
-    padding: 20px 15px;
-    text-align: center;
+﻿
+/* --- THEME SETTINGS --- */
+.btn-home-corner {
+    position: absolute; /* Fixes it to the top right of the page */
+    top: 25px;
+    right: 30px;
+    background-color: #ffffff;
+    color: #5a67d8; /* Your Theme Purple */
+    padding: 10px 24px;
+    border-radius: 50px; /* Pill shape */
+    text-decoration: none;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Soft shadow */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    z-index: 1000; /* Ensures it stays on top */
 }
 
-.weekly-menu-table td {
-    padding: 18px 15px;
+.btn-home-corner:hover {
+    background-color: #5a67d8;
+    color: #ffffff;
+    transform: translateY(-3px); /* Subtle lift effect */
+    box-shadow: 0 6px 15px rgba(90, 103, 216, 0.3); /* Purple glow shadow */
+}
+
+:root {
+    /* Matches your Login Page Background roughly */
+    --bg-theme: #aabbe5;
+    /* Deep Purple for Headers */
+    --brand-primary: #5a67d8;
+    --brand-dark: #434190;
+    /* Text Colors */
+    --text-dark: #2d3748;
+    --text-light: #718096;
+    --price-color: #2f855a; /* Green for money */
+}
+
+body {
+    background-color: var(--bg-theme); /* The Login Page Purple/Blue */
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 40px;
+}
+
+/* --- LAYOUT --- */
+.page-container {
+    max-width: 1400px; /* Wide enough for the table */
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.header-area {
     text-align: center;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
+    margin-bottom: 30px;
+    color: white; /* White text on the colored background looks premium */
 }
 
-.day-cell {
-    background: #f8fafc;
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #1e40af;
-}
-
-.date-hint {
-    font-size: 0.9rem;
-    color: #64748b;
-    margin-top: 4px;
-}
-
-.meal-cell {
-    background: #f8fafc;
-    min-height: 90px;
-    transition: all 0.3s;
-}
-
-    .meal-cell:hover {
-        background: #eff6ff;
-        transform: translateY(-2px);
+    .header-area h2 {
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-.meal-item {
-    background: white;
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    height: 100%;
+    .header-area p {
+        font-weight: 400;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+
+/* --- MAIN CARD --- */
+.menu-shadow-card {
+    background: #ffffff;
+    border-radius: 20px;
+    /* Deep shadow like the login box */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    padding: 0;
+}
+
+/* --- TABLE STYLING --- */
+.mess-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px; /* Ensures it doesn't squish on mobile */
+}
+
+    /* Table Header */
+    .mess-table thead th {
+        background-color: var(--brand-primary);
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        padding: 20px;
+        font-weight: 600;
+        text-align: left;
+        border: none;
+    }
+
+    /* Rounded corners for the header strip */
+    .mess-table thead tr:first-child th:first-child {
+        border-top-left-radius: 10px;
+    }
+
+    .mess-table thead tr:first-child th:last-child {
+        border-top-right-radius: 10px;
+    }
+
+    /* Table Body */
+    .mess-table tbody tr {
+        border-bottom: 1px solid #edf2f7;
+        transition: background-color 0.2s;
+    }
+
+        .mess-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .mess-table tbody tr:hover {
+            background-color: #fafbfe; /* Very subtle hover */
+        }
+
+    .mess-table td {
+        padding: 20px;
+        vertical-align: top;
+        color: var(--text-dark);
+    }
+
+/* Day Column Styling */
+.col-day {
+    width: 12%;
+    background-color: #f8faff;
+    border-right: 2px solid #edf2f7;
+}
+
+.day-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brand-dark);
+    display: block;
+}
+
+/* --- MEAL ITEMS (CLEAN LIST STYLE) --- */
+.meal-list {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 12px;
 }
 
-.meal-name {
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 6px;
+.meal-item-row {
+    position: relative;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #e2e8f0; /* Subtle separator */
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
-.meal-price {
-    color: #059669;
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-.badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    margin-top: 6px;
-}
-
-.menu-schedule-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-}
-
-@media (max-width: 768px) {
-    .weekly-menu-table th,
-    .weekly-menu-table td {
-        padding: 12px 8px;
-        font-size: 0.9rem;
+    .meal-item-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
     }
 
-    .meal-name {
-        font-size: 0.95rem;
+    .meal-item-row:hover .item-name {
+        color: var(--brand-primary);
     }
-}
 
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.modal-header {
+.item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 2px;
 }
 
-.close {
-    font-size: 28px;
-    cursor: pointer;
+.item-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #2d3748;
 }
 
-.modal-footer {
-    margin-top: 20px;
-    text-align: right;
+.item-price {
+    font-weight: 700;
+    color: var(--price-color);
+    font-size: 0.9rem;
+    background: #f0fff4;
+    padding: 2px 6px;
+    border-radius: 4px;
 }
+
+.item-cat {
+    font-size: 0.75rem;
+    color: #718096;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* --- EMPTY STATE --- */
+.no-food {
+    color: #cbd5e0;
+    font-size: 1.5rem;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+}
+
+/* --- BUTTONS --- */
+.btn-policy {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 8px 20px;
+    border-radius: 50px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+    .btn-policy:hover {
+        background-color: white;
+        color: var(--brand-primary);
+    }
+
