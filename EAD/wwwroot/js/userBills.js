@@ -1,147 +1,128 @@
-﻿let currentBillId = 0;
-let currentBillCard = null;
+﻿        // 1. Confirm Payment Logic
+    function confirmPayment(billId) {
+        Swal.fire({
+            title: 'Pay Bill?',
+            text: "Are you sure you want to mark this bill as paid?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4318FF',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Mark Paid'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                processPayment(billId);
+            }
+        });
+        }
 
-// MARK AS PAID
-function markAsPaid(billId, button) {
-    if (!confirm("Have you paid this bill?")) return;
+    function processPayment(billId) {
+        // Show loading spinner
+        Swal.fire({
+            title: 'Processing...',
+            didOpen: () => { Swal.showLoading() }
+        });
 
-    // get both buttons in this card and disable them
-    const card = button.closest(".bill-card");
-    const cardButtons = card.querySelectorAll(
-        'button.btn-success.flex-fill[onclick^="markAsPaid"], ' +
-        'button.btn-outline-danger.flex-fill[onclick^="requestRecheck"]'
-    );
-    cardButtons.forEach(b => b.disabled = true);
-    button.innerHTML = "Processing...";
-
+    // AJAX Call
     fetch("/UserMenu/MarkAsPaid", {
         method: "POST",
-        body: new URLSearchParams({ billId: billId })
-    })
-        .then(r => r.json())
-        .then(result => {
-            if (result === 1) {
-                const header = card.querySelector(".card-header");
-                const footer = card.querySelector(".card-footer");
-
-                if (header) {
-                    header.className = "card-header bg-warning text-dark";
+    headers: {"Content-Type": "application/x-www-form-urlencoded" },
+    body: "billId=" + billId
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result === 1) {
+        Swal.fire('Success', 'Bill marked as paid!', 'success');
+    updateUiToPaid(billId);
+                } else {
+        Swal.fire('Error', 'Could not update bill.', 'error');
                 }
-                if (footer) {
-                    footer.innerHTML = '<div class="badge bg-warning text-dark fs-5 px-4 py-2">Paid - Awaiting Verification</div>';
-                }
-
-                const badge = card.querySelector(".changer");
-                if (badge) {
-                    badge.innerHTML = "Paid - Awaiting Verification";
-                    badge.classList.remove("bg-danger");
-                    badge.classList.add("bg-warning", "text-dark");
-                }
-            } else {
-                cardButtons.forEach(b => b.disabled = false);
-                button.innerHTML = "Mark as Paid";
-                alert("Error!");
-            }
-        })
-        .catch(err => {
-            console.error("markAsPaid error:", err);
-            cardButtons.forEach(b => b.disabled = false);
-            button.innerHTML = "Mark as Paid";
-            alert("Network error!");
-        });
-}
-
-// REQUEST RECHECK
-function requestRecheck(billId, button) {
-    currentBillId = billId;
-    currentBillCard = button.closest(".bill-card");
-
-    document.getElementById("recheckMessage").value = "";
-    document.getElementById("recheckModal").style.display = "flex";
-}
-
-function closeRecheckModal() {
-    document.getElementById("recheckModal").style.display = "none";
-}
-
-function sendRecheckRequest() {
-    const message = document.getElementById("recheckMessage").value.trim();
-    if (!message) {
-        alert("Please write a message");
-        return;
-    }
-
-    const sendBtn = document.getElementById("recheckSendBtn");
-    if (sendBtn) {
-        sendBtn.disabled = true;
-        if (!sendBtn.dataset.originalText) {
-            sendBtn.dataset.originalText = sendBtn.innerHTML;
+            })
+            .catch(err => {
+        console.error(err);
+    Swal.fire('Error', 'Network error occurred.', 'error');
+            });
         }
-        sendBtn.innerHTML = "Sending...";
-    }
+
+    // 2. Request Recheck Logic
+    function openRecheckPopup(billId) {
+        Swal.fire({
+            title: 'Request Recheck',
+            input: 'textarea',
+            inputLabel: 'Why is the bill incorrect?',
+            inputPlaceholder: 'Type your reason here...',
+            showCancelButton: true,
+            confirmButtonText: 'Send Request',
+            confirmButtonColor: '#e31a1a',
+            preConfirm: (message) => {
+                if (!message) {
+                    Swal.showValidationMessage('Please write a reason');
+                }
+                return message;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sendRecheck(billId, result.value);
+            }
+        });
+        }
+
+    function sendRecheck(billId, msg) {
+        Swal.fire({
+            title: 'Sending...',
+            didOpen: () => { Swal.showLoading() }
+        });
 
     const params = new URLSearchParams();
-    params.append("billId", currentBillId);
-    params.append("msg", message);
+    params.append("billId", billId);
+    params.append("msg", msg);
 
     fetch("/UserMenu/RequestRecheck", {
         method: "POST",
-        body: params
-    })
-        .then(r => r.json())
-        .then(result => {
-            if (result === 1) {
-                closeRecheckModal();
-
-                if (currentBillCard) {
-                    const header = currentBillCard.querySelector(".card-header");
-                    const footer = currentBillCard.querySelector(".card-footer");
-                    const badge = currentBillCard.querySelector(".changer");
-
-                    if (header) {
-                        header.className = "card-header bg-warning text-dark";
-                    }
-                    if (footer) {
-                        footer.innerHTML = '<div class="badge bg-warning text-dark fs-5 px-4 py-2">Recheck Request sent</div>';
-                    }
-                    if (badge) {
-                        badge.innerHTML = "Sent for recheck";
-                    }
-
-                    // hide only this card's action buttons
-                    currentBillCard.querySelectorAll(
-                        'button.btn-success.flex-fill[onclick^="markAsPaid"], ' +
-                        'button.btn-outline-danger.flex-fill[onclick^="requestRecheck"]'
-                    ).forEach(btn => {
-                        btn.classList.add("hidden-bill-action");
-                        btn.style.display = "none";
-                    });
+    body: params
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result === 1) {
+        Swal.fire('Sent', 'Recheck request sent to admin.', 'success');
+    updateUiToRecheck(billId);
+                } else {
+        Swal.fire('Error', 'Failed to send request.', 'error');
                 }
+            })
+            .catch(err => {
+        Swal.fire('Error', 'Network error.', 'error');
+            });
+        }
 
-                if (sendBtn) {
-                    sendBtn.disabled = false;
-                    sendBtn.innerHTML = sendBtn.dataset.originalText || "Send Request";
-                }
-            } else {
-                if (sendBtn) {
-                    sendBtn.disabled = false;
-                    sendBtn.innerHTML = sendBtn.dataset.originalText || "Send Request";
-                }
-                alert("Error sending request");
+    // 3. UI Helper Functions (Update page without reload)
+    function updateUiToPaid(billId) {
+            // Update Badge
+            const badge = document.getElementById(`badge-${billId}`);
+    if(badge) {
+        badge.className = "status-badge status-pending";
+    badge.innerText = "Pending";
             }
-        })
-        .catch(err => {
-            console.error("sendRecheckRequest error:", err);
-            if (sendBtn) {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = sendBtn.dataset.originalText || "Send Request";
+    // Update Buttons
+    const actions = document.getElementById(`actions-${billId}`);
+    if(actions) {
+        actions.innerHTML = `
+                    <div class="w-100 text-center text-muted fw-bold p-2 bg-light rounded">
+                        <i class="bi bi-hourglass-split"></i> Awaiting Verification
+                    </div>`;
             }
-            alert("Network error");
-        });
-}
+        }
 
-// Close modal when clicking outside
-window.onclick = function (e) {
-    const modal = document.getElementById("recheckModal");
-    if (e.target === modal) closeRecheckModal();
-};
+    function updateUiToRecheck(billId) {
+            const badge = document.getElementById(`badge-${billId}`);
+    if(badge) {
+        badge.className = "status-badge status-pending";
+    badge.innerText = "In Recheck";
+            }
+    const actions = document.getElementById(`actions-${billId}`);
+    if(actions) {
+        actions.innerHTML = `
+                    <div class="w-100 text-center text-warning fw-bold p-2 bg-light rounded">
+                        <i class="bi bi-envelope-paper"></i> Recheck Sent
+                    </div>`;
+            }
+        }

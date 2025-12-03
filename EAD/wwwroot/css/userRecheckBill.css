@@ -1,0 +1,151 @@
+﻿
+/* 1. Global & Layout */
+body {
+    background-color: #f4f7fe !important;
+}
+.badge-soft-danger {
+    background-color: #fff5f5;
+    color: #e53e3e; /* Red Text */
+    border: 1px solid #fed7d7;
+}
+/* 2. FIXED Corner Button Styling */
+.btn-home-corner {
+    position: fixed; /* Changed from absolute to fixed */
+    top: 25px; /* Distance from top of browser window */
+    right: 30px; /* Distance from right of browser window */
+    background-color: #ffffff;
+    color: #5a67d8;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    z-index: 9999; /* Ensures it sits on top of everything */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .btn-home-corner:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(90, 103, 216, 0.25) !important;
+        color: #4c51bf;
+    }
+
+/* 3. Theme Colors */
+:root {
+    --theme-primary: #5a67d8;
+    --theme-primary-hover: #4c51bf;
+    --theme-bg-light: #eff2ff;
+}
+
+/* 4. Card Styling */
+.main-card {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+    border-radius: 20px !important;
+    margin-top: 20px;
+}
+
+/* 5. Typography */
+.text-theme {
+    color: var(--theme-primary) !important;
+}
+
+.text-theme-light {
+    color: #bcc3ff !important;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+/* 6. Buttons & Interactables */
+.btn-theme {
+    background-color: var(--theme-primary);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .btn-theme:hover {
+        background-color: var(--theme-primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+    }
+
+.btn-light-theme {
+    background-color: var(--theme-bg-light);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+    .btn-light-theme:hover {
+        background-color: var(--theme-primary);
+        color: white !important;
+    }
+
+/* 7. Table & Badges */
+.bg-light-header {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #edf2f7;
+}
+
+.hover-row:hover {
+    background-color: #fbfdff;
+}
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.badge-soft-warning {
+    background-color: #fffaf0;
+    color: #dd6b20;
+    border: 1px solid #feebc8;
+}
+
+.badge-soft-success {
+    background-color: #f0fff4;
+    color: #38a169;
+    border: 1px solid #c6f6d5;
+}
+
+.badge-soft-secondary {
+    background-color: #edf2f7;
+    color: #718096;
+}
+
+/* 8. Empty State */
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    background: #f0f2ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* 9. Animations */
+.fade-in {
+    animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

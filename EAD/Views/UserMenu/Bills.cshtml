@@ -1,127 +1,136 @@
 ﻿@model BillViewModel
 @{
     ViewData["Title"] = "My Bills";
+    Layout = null; /* TEMPORARILY SET TO NULL TO ENSURE MY STYLES LOAD.
+                      Change back to your layout (e.g., Layout = "_Layout";)
+                      if you want to keep your sidebar. */
 }
 
-<link href="~/css/userBills.css" rel="stylesheet" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="page-container fade-in">
-    <div class="page-header text-center mb-5">
-        <h1 class="display-5 fw-bold">My Bills</h1>
-        <p class="lead text-muted">View and manage your monthly mess bills</p>
-    </div>
+    <!-- 1. FORCE LOAD BOOTSTRAP 5 & SWEETALERT (Fixes the "Shitty UI" and "Nothing Happens") -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="~/css/userBills.css" rel="stylesheet" />
+</head>
+<body>
 
-    @if (Model?.Bil == null || !Model.Bil.Any())
-    {
-        <div class="text-center py-5">
-            <h3>No bills found</h3>
-            <p class="text-muted">Your bills will appear here once generated.</p>
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header text-center mb-5">
+            <h1 class="display-6">Monthly Bills</h1>
+            <p>Manage your mess expenses easily</p>
+            <a href="/" class="btn-home-corner">
+                <i class="bi bi-house-door-fill"></i> Home
+            </a>
         </div>
-    }
-    else
-    { var recheckArrId = 0;
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var bill in Model.Bil)
-            {
 
-                var isPaid = bill.IsPaid;
-                var isVerified = bill.VerifiedByAdmin;
-                var isSentforRecheck = Model.BillInRecheck[recheckArrId];
-                <div class="col">
-                    <div class="card bill-card h-100 shadow-sm @(isVerified ? "border-success" : isPaid ? "border-warning" : "border-danger")">
-                        <div class="card-header text-white @(isVerified ? "bg-success" : isPaid ? "bg-warning" : "bg-danger")">
-                            <h5 class="mb-0">
-                                Bill #@bill.Id - @bill.GeneratedOn
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="fw-bold">Amount:</span>
-                                <span class="fs-4 text-success fw-bold">Rs. @bill.TotalAmount</span>
+        @if (Model?.Bil == null || !Model.Bil.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-receipt" style="font-size: 4rem; opacity: 0.5;"></i>
+                <h3 class="mt-3">No Bills Found</h3>
+                <p>Relax! You have no pending bills at the moment.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @{
+                    var recheckArrId = 0;
+                }
+                @foreach (var bill in Model.Bil)
+                {
+                    var isPaid = bill.IsPaid;
+                    var isVerified = bill.VerifiedByAdmin;
+                    var isSentforRecheck = Model.BillInRecheck[recheckArrId];
+
+                    /* Determine UI State */
+                    string badgeClass = "status-unpaid";
+                    string badgeText = "Unpaid";
+
+                    if (isVerified) { badgeClass = "status-paid"; badgeText = "Verified"; }
+                    else if (isPaid) { badgeClass = "status-pending"; badgeText = "Pending"; }
+                    else if (isSentforRecheck) { badgeClass = "status-pending"; badgeText = "In Recheck"; }
+
+                    <div class="col">
+                        <div class="bill-card" id="card-@bill.Id">
+                            <!-- Header Section -->
+                            <div>
+                                <span class="status-badge @badgeClass" id="badge-@bill.Id">@badgeText</span>
+                                <span class="bill-id">Bill #@bill.Id</span>
+                                <div class="bill-amount-label">Total Amount</div>
+                                <div class="bill-amount-value">Rs. @bill.TotalAmount</div>
                             </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Generated:</span>
-                                <span>@bill.GeneratedOn</span>
-                            </div>
-                            @if (bill.PaidOn.HasValue)
-                            {
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Paid On:</span>
-                                    <span>@bill.PaidOn.Value</span>
+
+                            <!-- Details Section -->
+                            <div class="mb-3">
+                                <div class="bill-info-row">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>Generated: <strong>@bill.GeneratedOn</strong></span>
                                 </div>
-                            }
-                            <hr>
-                            <div class="text-center">
-                                @if (isVerified)
+
+                                @if (bill.PaidOn.HasValue)
                                 {
-                                    <div class="badge bg-success fs-6 px-4 py-2 changer">Verified by Admin</div>
-                                }
-                                else if (isPaid)
-                                {
-                                    <div class="badge bg-warning text-dark fs-6 px-4 py-2 changer">Paid - Awaiting Verification</div>
-                                }
-                                else if (isSentforRecheck)
-                                {
-                                    <div class="badge bg-danger fs-6 px-4 py-2 changer">Sent for recheck</div>
+                                    <div class="bill-info-row text-success">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        <span>Paid: @bill.PaidOn.Value.ToString("MMM dd, yyyy")</span>
+                                    </div>
                                 }
                                 else
                                 {
-                                <div class="badge bg-danger fs-6 px-4 py-2  changer">Not Paid</div>
+                                    <div class="bill-info-row text-danger">
+                                        <i class="bi bi-clock-history"></i>
+                                        <span>Due: Within 5 days</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-area" id="actions-@bill.Id">
+                                @if (!isPaid && !isSentforRecheck)
+                                {
+                                    <button class="btn-pay" onclick="confirmPayment(@bill.Id)">
+                                        Pay Now
+                                    </button>
+                                    <button class="btn-recheck" onclick="openRecheckPopup(@bill.Id)">
+                                        Recheck
+                                    </button>
+                                }
+                                else if (isPaid && !isVerified)
+                                {
+                                    <div class="w-100 text-center text-muted fw-bold p-2 bg-light rounded">
+                                        <i class="bi bi-hourglass-split"></i> Awaiting Verification
+                                    </div>
+                                }
+                                else if (isVerified)
+                                {
+                                    <div class="w-100 text-center text-success fw-bold p-2 bg-light rounded">
+                                        <i class="bi bi-check-all"></i> Payment Verified
+                                    </div>
+                                }
+                                else if (isSentforRecheck)
+                                {
+                                    <div class="w-100 text-center text-warning fw-bold p-2 bg-light rounded">
+                                        <i class="bi bi-envelope-paper"></i> Recheck Sent
+                                    </div>
                                 }
                             </div>
                         </div>
-
-                        <div class="card-footer bg-transparent text-center">
-                            @if (!isPaid && !isSentforRecheck)
-                            {
-                                <div class="d-flex gap-2 justify-content-center">
-                                    <button type="button" class="btn btn-success flex-fill" onclick="markAsPaid(@bill.Id, this)">
-                                        Mark as Paid
-                                    </button>
-
-
-                                    <button type="button" class="btn btn-outline-danger flex-fill" onclick="requestRecheck(@bill.Id, this)">
-                                        Request Recheck
-                                    </button>
-
-                                    
-                                </div>
-                            }
-                            else if (isPaid && !isVerified)
-                            {
-                                <span class="badge bg-warning text-dark w-100 py-3 d-block">Paid - Awaiting Verification</span>
-                            }
-                            else if (isVerified)
-                            {
-                                <span class="badge bg-success w-100 py-3 d-block">Verified</span>
-                            }
-                        </div>
                     </div>
-                </div>
-                recheckArrId++;
-            }
-        </div>
-    }
-</div>
-
-<!-- SINGLE MODAL — OUTSIDE LOOP -->
-<div id="recheckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
-    <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:500px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h4 style="margin:0;">Request Bill Recheck</h4>
-            <span onclick="closeRecheckModal()" style="font-size:30px; cursor:pointer; color:#999;">×</span>
-        </div>
-        <p>Please explain why you think this bill is wrong:</p>
-        <textarea id="recheckMessage" style="width:100%; height:120px; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px;" placeholder="Example: I was absent on 5th and 6th, or item price seems wrong..."></textarea>
-        <div style="margin-top:20px; text-align:right;">
-            <button id="recheckSendBtn" onclick="sendRecheckRequest()" style="background:#dc3545; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-size:16px;">
-                Send Request
-            </button>
-
-            <button onclick="closeRecheckModal()" style="margin-left:10px; background:#6c757d; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer;">Cancel</button>
-        </div>
+                    recheckArrId++;
+                }
+            </div>
+        }
     </div>
-</div>
 
-
-        <script src="~/js/userBills.js"></script>
+    <!-- 3. JAVASCRIPT LOGIC (INLINE TO ENSURE IT LOADS) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="~/js/userBills.js"></script>
+</body>
+</html>

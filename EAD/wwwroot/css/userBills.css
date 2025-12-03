@@ -1,13 +1,180 @@
-﻿.bill-card {
-    transition: all 0.3s;
-    border-width: 3px !important;
+﻿
+.btn-home-corner {
+    position: absolute; /* Fixes it to the top right of the page */
+    top: 25px;
+    right: 30px;
+    background-color: #ffffff;
+    color: #5a67d8; /* Your Theme Purple */
+    padding: 10px 24px;
+    border-radius: 50px; /* Pill shape */
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Soft shadow */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    z-index: 1000; /* Ensures it stays on top */
+}
+
+.btn-home-corner:hover {
+    background-color: #5a67d8;
+    color: #ffffff;
+    transform: translateY(-3px); /* Subtle lift effect */
+    box-shadow: 0 6px 15px rgba(90, 103, 216, 0.3); /* Purple glow shadow */
+}
+
+body {
+    background-color: #f4f7fe; /* Light blue-grey background */
+    font-family: 'Poppins', sans-serif;
+    color: #2b3674;
+}
+
+/* Page Container */
+.page-container {
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Styling */
+.page-header h1 {
+    color: #2b3674;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: #a3aed0;
+    font-size: 1.1rem;
+}
+
+/* CARD DESIGN */
+.bill-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: none;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
     .bill-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+        box-shadow: 0px 25px 50px rgba(112, 144, 176, 0.2);
     }
 
-.card-header {
-    border-radius: 12px 12px 0 0 !important;
+/* Status Badge Top Right */
+.status-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
+
+.status-unpaid {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Card Content */
+.bill-id {
+    color: #a3aed0;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.bill-amount-label {
+    font-size: 0.85rem;
+    color: #a3aed0;
+    font-weight: 500;
+}
+
+.bill-amount-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4318FF; /* Your Indigo Theme Color */
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+.bill-info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #2b3674;
+}
+
+    .bill-info-row i {
+        margin-right: 10px;
+        color: #4318FF;
+        font-size: 1.1rem;
+    }
+
+/* Buttons */
+.action-area {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-pay {
+    background-color: #4318FF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 0;
+    font-weight: 600;
+    width: 100%;
+    transition: 0.2s;
+}
+
+    .btn-pay:hover {
+        background-color: #3311db;
+        color: white;
+    }
+
+.btn-recheck {
+    background-color: transparent;
+    color: #e31a1a;
+    border: 2px solid #fee2e2;
+    border-radius: 12px;
+    padding: 10px 0;
+    font-weight: 600;
+    width: 100%;
+    transition: 0.2s;
+}
+
+    .btn-recheck:hover {
+        background-color: #fee2e2;
+    }
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    color: #a3aed0;
+}
+
