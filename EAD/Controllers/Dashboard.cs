@@ -10,7 +10,7 @@ namespace EAD.Controllers
         {
             return View();
         }
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
         {
             List<DailyMenuViewModel> list = new List<DailyMenuViewModel>();
 
@@ -24,7 +24,7 @@ namespace EAD.Controllers
                 string userType="food";
                 if (id != null)
                 {
-                    User usr = db.Users.Where(e => e.Id == Convert.ToInt32(id)).FirstOrDefault();
+                    User usr = await db.Users.Where(e => e.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
                     if (usr != null)
                     {
                         userTypeInt = usr.UserType;
@@ -35,7 +35,7 @@ namespace EAD.Controllers
                 }
                 if (userType == "liquid")
                 {
-                    list = db.DailyMenus
+                    list =await db.DailyMenus
                      .Include(m => m.MealItem)
                      .Where(d => d.DayOfWeek == today && (d.MealType=="Tea" || d.MealType == "Water"))
                      .Select(m => new DailyMenuViewModel
@@ -48,11 +48,11 @@ namespace EAD.Controllers
                          Category = m.MealItem != null ? m.MealItem.Category : "",
                          Description = m.MealItem != null ? m.MealItem.Description : "",
                      })
-                     .ToList();
+                     .ToListAsync();
                 }
                 else
                 {
-                    list = db.DailyMenus
+                    list =await db.DailyMenus
                      .Include(m => m.MealItem)
                      .Where(d => d.DayOfWeek == today)
                      .Select(m => new DailyMenuViewModel
@@ -65,7 +65,7 @@ namespace EAD.Controllers
                          Category = m.MealItem != null ? m.MealItem.Category : "",
                          Description = m.MealItem != null ? m.MealItem.Description : "",
                      })
-                     .ToList();
+                     .ToListAsync();
                 }
 
                  

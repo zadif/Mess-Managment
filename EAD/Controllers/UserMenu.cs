@@ -6,24 +6,24 @@ namespace EAD.Controllers
 {
     public class UserMenu : Controller
     {
-        public IActionResult fullMenu()
+        public async Task< IActionResult> fullMenu()
         {
             using(EadProjectContext db= new EadProjectContext())
             {
 
-                var temp = db.DailyMenus.Include(e => e.MealItem).ToList();
+                var temp = await db.DailyMenus.Include(e => e.MealItem).ToListAsync();
             return View(temp);
             }
 
         }
-        public IActionResult Bills()
+        public async Task<IActionResult> Bills()
         {
             string id = Request.Cookies["UserId"];
             using (EadProjectContext db = new EadProjectContext())
             {
 
-                var temp = db.Bills.Where(e => e.UserId == Convert.ToInt32(id)).ToList();
-                var temp2 = db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).ToList();
+                var temp =await db.Bills.Where(e => e.UserId == Convert.ToInt32(id)).ToListAsync();
+                var temp2 =await  db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).ToListAsync();
 
                 BillViewModel b = new BillViewModel(temp,temp2);
 
@@ -32,14 +32,14 @@ namespace EAD.Controllers
 
         }
         [HttpPost]
-        public JsonResult MarkAsPaid(int billId)
+        public async Task< JsonResult> MarkAsPaid(int billId)
         {
             var userId = int.Parse(Request.Cookies["UserId"]);
 
             using (var db = new EadProjectContext())
             {
 
-                var bill = db.Bills.FirstOrDefault(b => b.Id == billId && b.UserId == userId);
+                var bill =await db.Bills.FirstOrDefaultAsync(b => b.Id == billId && b.UserId == userId);
 
                 if (bill != null && !bill.IsPaid)
                 {
@@ -53,7 +53,7 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public IActionResult RequestRecheck(int billId,string msg)
+        public async Task<IActionResult> RequestRecheck(int billId,string msg)
         {
             var userId = int.Parse(Request.Cookies["UserId"]);
            
@@ -62,7 +62,7 @@ namespace EAD.Controllers
 
                 using (var db = new EadProjectContext())
                 {
-                var bill = db.Bills.FirstOrDefault(b => b.Id == billId);
+                var bill =await db.Bills.FirstOrDefaultAsync(b => b.Id == billId);
                     BillRecheckRequest bil = new BillRecheckRequest();
                     bil.UserId = userId;
                     bil.BillId = billId;
@@ -78,14 +78,14 @@ namespace EAD.Controllers
             return Json(0);
 
         }
-  
-    public IActionResult RecheckBills()
+
+        public async Task<IActionResult> RecheckBills()
         {
             string id = Request.Cookies["UserId"];
             using (EadProjectContext db = new EadProjectContext())
             {
 
-                var temp2 = db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).Include(s=>s.Bill).ToList();
+                var temp2 =await db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).Include(s=>s.Bill).ToListAsync();
 
 
                 return View(temp2);

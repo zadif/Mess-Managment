@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace EAD.Controllers
@@ -31,7 +32,7 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoginPage(string email, string password,string role)
+        public async Task<IActionResult> LoginPage(string email, string password, string role)
         {
             if (role == "Admin")
             {
@@ -56,7 +57,7 @@ namespace EAD.Controllers
             {
                 using(EadProjectContext db = new EadProjectContext())
                 {
-                    var usr = db.Users.FirstOrDefault(e => (e.Email == email));
+                    var usr =await db.Users.FirstOrDefaultAsync(e => (e.Email == email));
                     if (usr != null && BCrypt.Net.BCrypt.Verify(password, usr.Password))
                     {
                         if (usr.IsActive)
