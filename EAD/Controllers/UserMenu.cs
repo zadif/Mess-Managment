@@ -86,10 +86,50 @@ namespace EAD.Controllers
             {
 
                 var temp2 =await db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).Include(s=>s.Bill).ToListAsync();
-
+                temp2.Reverse();
 
                 return View(temp2);
             }
+        }
+
+        public async Task<IActionResult> RecheckConsumptions()
+        {
+            string id = Request.Cookies["UserId"];
+          
+            using (EadProjectContext db=new EadProjectContext())
+            {
+                var temps = await db.DailyConsumptions.Where(e => e.UserId == Convert.ToInt32(id)).Include(s=>s.MealItem).Include(s=>s.Bill)
+                    .Select(m=> new RecheckDailyConsumptionViewModel
+                    {
+                        Id=m.Id,
+                        ConsumptionDate=m.ConsumptionDate,
+                        WasUserPresent=m.WasUserPresent,
+                        Quantity=m.Quantity,
+                        IsBilled=m.IsBilled,
+                        MealItem=m.MealItem,
+                        Bill=m.Bill
+
+                    })     .ToListAsync();
+                temps.Reverse();
+
+            return View(temps);
+            }
+
+
+        }
+        [HttpPost]
+        public async Task<JsonResult> RecheckConsumptions(string id)
+        {
+            using (EadProjectContext db = new EadProjectContext())
+            {
+               var temp=await db.DailyConsumptions.Where(e => e.Id == Convert.ToInt32(id)).FirstOrDefaultAsync() ;
+                temp.WasUserPresent = false;
+                db.SaveChangesAsync();
+                return Json(1);
+
+            }
+
+            return Json(0);
         }
     }
 }
