@@ -511,7 +511,8 @@ namespace EAD.Controllers
             {
                 var temps = await db.DailyConsumptions.Where(e => e.IsBilled == false).Include(c => c.MealItem)
                        .Include(c => c.User).ToListAsync();
-            return View(temps);
+                temps.Reverse();
+                return View(temps);
             }
 
 
@@ -560,8 +561,9 @@ namespace EAD.Controllers
             {
                 var temps = await db.Bills
                        .Include(c => c.User).ToListAsync();
+                temps.Reverse();
 
-               
+
                 return View(temps);
             }
         }
@@ -594,7 +596,9 @@ namespace EAD.Controllers
             using(EadProjectContext db=new EadProjectContext())
             {
                 var temp = await db.BillRecheckRequests.Include(s=>s.Bill).Include(s=>s.User).ToListAsync();
-            return View(temp);
+                temp.Reverse();
+
+                return View(temp);
             }
 
         }
