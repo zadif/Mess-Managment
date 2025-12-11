@@ -361,7 +361,8 @@ namespace EAD.Controllers
                             UserId = userId,
                             MealItemId = mealItemId,
                             ConsumptionDate = today,
-                            Quantity = 1
+                            Quantity = 1,
+                            WasUserPresent=true
                         });
                     }
                 }
