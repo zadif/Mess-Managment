@@ -32,6 +32,8 @@
                         <th style="width: 21%">Lunch</th>
                         <th style="width: 21%">Dinner</th>
                         <th style="width: 21%">Snacks</th>
+                        <th style="width: 21%">Tea</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -44,7 +46,7 @@
                             </td>
 
                             <!-- 2. Meals Columns -->
-                            @foreach (var mealType in new[] { "Breakfast", "Lunch", "Dinner", "Snack" })
+                            @foreach (var mealType in new[] { "Breakfast", "Lunch", "Dinner", "Snack","Tea" })
                             {
                                 var meals = Model.Where(m => m.DayOfWeek == day && m.MealType == mealType).ToList();
 
