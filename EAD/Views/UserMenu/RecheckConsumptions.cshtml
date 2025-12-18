@@ -27,22 +27,22 @@ else
         <tbody>
             @foreach (var c in Model)
             {
+                var isBillPaid = (c.Bill != null && c.Bill.IsPaid);
                 <tr>
                     <td>@c.ConsumptionDate.ToString("dd MMM yyyy")</td>
                     <td>@c.MealItem.Name</td>
                     <td>Rs. @c.MealItem.Price</td>
-
                     <!-- ADD ID HERE: status-[ID] -->
                     <td id="status-@c.Id">
-                        @if (c.Bill.IsPaid)
+                        @if (isBillPaid)
                         {
                             <span class="badge bg-success">Bill Paid</span>
                         }
-                        else if (!c.Bill.IsPaid && c.WasUserPresent)
+                        else if (!isBillPaid && c.WasUserPresent)
                         {
                             <span class="badge bg-warning">Pending</span>
                         }
-                        else if (!c.Bill.IsPaid && !c.WasUserPresent)
+                        else if (!isBillPaid && !c.WasUserPresent)
                         {
                             <span class="badge bg-danger">Recheck Request Sent</span>
                         }
@@ -50,13 +50,13 @@ else
 
                     <!-- ADD ID HERE: action-[ID] -->
                     <td id="action-@c.Id">
-                        @if (!c.Bill.IsPaid && c.WasUserPresent)
+                        @if (!isBillPaid && c.WasUserPresent)
                         {
                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="openRecheckModal(@c.Id)">
                                 Request Recheck
                             </button>
                         }
-                        else if (!c.Bill.IsPaid && !c.WasUserPresent)
+                        else if (!isBillPaid && !c.WasUserPresent)
                         {
                             <span class="text-muted">Request Sent</span>
                         }
