@@ -596,7 +596,7 @@ namespace EAD.Controllers
         {
             using(EadProjectContext db=new EadProjectContext())
             {
-                var temp = await db.BillRecheckRequests.Include(s=>s.Bill).Include(s=>s.User).ToListAsync();
+                var temp = await db.BillRecheckRequests.Include(s=>s.Bill).Include(s=>s.User)   .ToListAsync();
                 temp.Reverse();
 
                 return View(temp);
@@ -627,6 +627,68 @@ namespace EAD.Controllers
 
             await db.SaveChangesAsync();
             return Json(new { success = true });
+        }
+    
+    
+    public async Task<IActionResult> recheckConsumptions()
+        {
+
+            using(EadProjectContext db=new EadProjectContext())
+            {
+                var temps = await db.DailyConsumptions.Where(e => e.WasUserPresent == false).Include(s => s.User)
+                      .Select(m => new recheckDailyConsumptionAdminViewModel
+                      {
+                          Id = m.Id,
+                          ConsumptionDate = m.ConsumptionDate,
+                          WasUserPresent = m.WasUserPresent,
+                          Quantity = m.Quantity,
+                     BillId=m.BillId,
+                     User=m.User
+
+                      })
+
+                    .ToListAsync();
+                temps.Reverse();
+
+            return View(temps);
+            }
+
+
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> ApproveRecheck(int id)
+        {
+            using (EadProjectContext db = new EadProjectContext())
+            { 
+          
+                    await db.DailyConsumptions.Where(e => e.Id == id).ExecuteDeleteAsync();
+                    await db.SaveChangesAsync();
+                }
+                return Json(new { success = true });
+
+            
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RejectRecheck(int id)
+        {
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                var consumption =await db.DailyConsumptions.Where(e => e.Id == id).FirstOrDefaultAsync();
+                if (consumption != null)
+                {
+                consumption.WasUserPresent = true; // Put it back
+                }
+                await db.SaveChangesAsync();
+            }
+            return Json(new { success = true });
+
+
+         
         }
     }
 

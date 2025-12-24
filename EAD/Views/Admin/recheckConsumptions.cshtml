@@ -1,0 +1,79 @@
+﻿@model List<EAD.Models.recheckDailyConsumptionAdminViewModel>
+
+@{
+    ViewData["Title"] = "Admin - Recheck Consumptions";
+}
+
+<h2 class="text-center my-5 fw-bold">Pending Recheck Requests</h2>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <div class="alert alert-info">
+            <h4>No pending recheck requests</h4>
+            <p>All consumptions are accepted.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>User</th>
+                 
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>#@c.Id</td>
+                        <td>@c.ConsumptionDate</td>
+                        <td>
+                            <strong>@c.User.Name</strong><br>
+                        </td>
+                        <td class="text-center">
+                            <form asp-action="ApproveRecheck" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@c.Id" />
+                                <button type="submit" class="btn btn-success btn-sm"
+                                        onclick="return confirm('Approve recheck and REMOVE this consumption?')">
+                                    Approve (Remove)
+                                </button>
+                            </form>
+                            <form asp-action="RejectRecheck" method="post" class="d-inline ms-2">
+                                <input type="hidden" name="id" value="@c.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Reject recheck (keep consumption)?')">
+                                    Reject
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<style>
+    .table th {
+        background: #0d6efd;
+        color: white;
+        font-weight: 600;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+    }
+</style>
