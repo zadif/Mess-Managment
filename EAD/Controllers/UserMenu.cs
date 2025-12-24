@@ -131,5 +131,43 @@ namespace EAD.Controllers
 
             return Json(0);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> RecheckConsumptionsByBill(int billId)
+        {
+            using (EadProjectContext db = new EadProjectContext())
+            {
+                var bill = await db.Bills
+                    .Where(e => e.Id == billId)
+                    .Include(b => b.DailyConsumptions)
+                        .ThenInclude(dc => dc.MealItem)  // ← THIS IS THE KEY LINE
+                    .FirstOrDefaultAsync();
+
+                if (bill == null)
+                    return Json(null);
+
+                var consumptions = bill.DailyConsumptions
+                    .Select(dc => new
+                    {
+                        id = dc.Id,
+                        consumptionDate = dc.ConsumptionDate.ToString("yyyy-MM-dd"),
+                        wasUserPresent=dc.WasUserPresent,
+                        mealItem = new
+                        {
+                            id = dc.MealItem.Id,
+                            name = dc.MealItem.Name,
+                            price = dc.MealItem.Price,
+                            category = dc.MealItem.Category
+                        },
+                        quantity = dc.Quantity,
+                        totalPrice = dc.Quantity * dc.MealItem.Price
+                    })
+                    .ToList();
+
+                return Json(consumptions);
+            }
+        }
+
+
     }
 }

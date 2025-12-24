@@ -1,128 +1,161 @@
-﻿        // 1. Confirm Payment Logic
-    function confirmPayment(billId) {
-        Swal.fire({
-            title: 'Pay Bill?',
-            text: "Are you sure you want to mark this bill as paid?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#4318FF',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Mark Paid'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                processPayment(billId);
-            }
-        });
+﻿        // Confirm Payment Logic
+        function confirmPayment(billId) {
+            Swal.fire({
+                title: 'Pay Bill?',
+                text: "Are you sure you want to mark this bill as paid?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#4318FF',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Mark Paid'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    processPayment(billId);
+                }
+            });
         }
 
-    function processPayment(billId) {
-        // Show loading spinner
-        Swal.fire({
-            title: 'Processing...',
-            didOpen: () => { Swal.showLoading() }
-        });
+        function processPayment(billId) {
+            Swal.fire({
+                title: 'Processing...',
+                didOpen: () => { Swal.showLoading() }
+            });
 
-    // AJAX Call
-    fetch("/UserMenu/MarkAsPaid", {
-        method: "POST",
-    headers: {"Content-Type": "application/x-www-form-urlencoded" },
-    body: "billId=" + billId
+            fetch("/UserMenu/MarkAsPaid", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "billId=" + billId
             })
             .then(r => r.json())
             .then(result => {
                 if (result === 1) {
-        Swal.fire('Success', 'Bill marked as paid!', 'success');
-    updateUiToPaid(billId);
+                    Swal.fire('Success', 'Bill marked as paid!', 'success');
+                    updateUiToPaid(billId);
                 } else {
-        Swal.fire('Error', 'Could not update bill.', 'error');
+                    Swal.fire('Error', 'Could not update bill.', 'error');
                 }
-            })
-            .catch(err => {
-        console.error(err);
-    Swal.fire('Error', 'Network error occurred.', 'error');
             });
         }
 
-    // 2. Request Recheck Logic
+
+        function sendRecheckRequest(billId) {
+            const msg = document.getElementById("recheckMsg").value.trim();
+            if (!msg) {
+                alert("Please write a reason");
+                return;
+            }
+
+            fetch("/UserMenu/RequestRecheck", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "billId=" + billId + "&msg=" + encodeURIComponent(msg)
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result === 1) {
+                    closeConsumptionModal();
+                    alert("Recheck request sent!");
+                    location.reload();
+                } else {
+                    alert("Error");
+                }
+            });
+        }
+
+        function updateUiToPaid(billId) {
+            const badge = document.getElementById(`badge-${billId}`);
+            if (badge) {
+                badge.className = "status-badge status-pending";
+                badge.innerText = "Pending";
+            }
+            const actions = document.getElementById(`actions-${billId}`);
+            if (actions) {
+                actions.innerHTML = `<div class="w-100 text-center text-muted fw-bold p-2 bg-light rounded">
+                    <i class="bi bi-hourglass-split"></i> Awaiting Verification
+                </div>`;
+            }
+        }
+
+        // Close modal on outside click
+        window.onclick = function(e) {
+            if (e.target.id === "consumptionModal") closeConsumptionModal();
+        }
+
+
+
     function openRecheckPopup(billId) {
-        Swal.fire({
-            title: 'Request Recheck',
-            input: 'textarea',
-            inputLabel: 'Why is the bill incorrect?',
-            inputPlaceholder: 'Type your reason here...',
-            showCancelButton: true,
-            confirmButtonText: 'Send Request',
-            confirmButtonColor: '#e31a1a',
-            preConfirm: (message) => {
-                if (!message) {
-                    Swal.showValidationMessage('Please write a reason');
-                }
-                return message;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                sendRecheck(billId, result.value);
-            }
-        });
-        }
-
-    function sendRecheck(billId, msg) {
-        Swal.fire({
-            title: 'Sending...',
-            didOpen: () => { Swal.showLoading() }
-        });
-
-    const params = new URLSearchParams();
-    params.append("billId", billId);
-    params.append("msg", msg);
-
-    fetch("/UserMenu/RequestRecheck", {
-        method: "POST",
-    body: params
-            })
+        fetch("/UserMenu/RecheckConsumptionsByBill", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "billId=" + billId
+        })
             .then(r => r.json())
-            .then(result => {
-                if (result === 1) {
-        Swal.fire('Sent', 'Recheck request sent to admin.', 'success');
-    updateUiToRecheck(billId);
-                } else {
-        Swal.fire('Error', 'Failed to send request.', 'error');
-                }
-            })
-            .catch(err => {
-        Swal.fire('Error', 'Network error.', 'error');
+            .then(consumptions => {
+                let table = `
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Meal Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                      
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+                consumptions.forEach(c => {
+                    const actionBtn = c.wasUserPresent
+                        ? `<button type="button" class="btn btn-sm btn-outline-danger" onclick="sendSingleRecheck(${c.id}, this)">Send Recheck Request</button>`
+                        : `<span class="text-muted">Request Sent</span>`;
+
+                    table += `
+                <tr>
+                    <td>${new Date(c.consumptionDate).toLocaleDateString()}</td>
+                    <td>${c.mealItem.name}</td>
+                    <td>${c.quantity}</td>
+                    <td>Rs. ${c.mealItem.price}</td>
+               
+                    <td>${actionBtn}</td>
+                </tr>`;
+                });
+
+                table += `</tbody></table>`;
+                document.getElementById("consumptionTable").innerHTML = table;
+                document.getElementById("consumptionModal").style.display = "flex";
             });
-        }
+    }
 
-    // 3. UI Helper Functions (Update page without reload)
-    function updateUiToPaid(billId) {
-            // Update Badge
-            const badge = document.getElementById(`badge-${billId}`);
-    if(badge) {
-        badge.className = "status-badge status-pending";
-    badge.innerText = "Pending";
-            }
-    // Update Buttons
-    const actions = document.getElementById(`actions-${billId}`);
-    if(actions) {
-        actions.innerHTML = `
-                    <div class="w-100 text-center text-muted fw-bold p-2 bg-light rounded">
-                        <i class="bi bi-hourglass-split"></i> Awaiting Verification
-                    </div>`;
-            }
-        }
+function closeConsumptionModal() {
+    document.getElementById("consumptionModal").style.display = "none";
+}
 
-    function updateUiToRecheck(billId) {
-            const badge = document.getElementById(`badge-${billId}`);
-    if(badge) {
-        badge.className = "status-badge status-pending";
-    badge.innerText = "In Recheck";
+function sendSingleRecheck(consumptionId, button) {
+    if (!confirm("Send recheck request for this item?")) return;
+
+    button.disabled = true;
+    button.innerHTML = "Sending...";
+
+    fetch("/UserMenu/RecheckConsumptions", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "id=" + consumptionId
+    })
+        .then(r => r.json())
+        .then(result => {
+            if (result === 1) {
+                button.closest("td").innerHTML = '<span class="text-muted">Request Sent</span>';
+                alert("Recheck request sent!");
+            } else {
+                button.disabled = false;
+                button.innerHTML = "Send Recheck Request";
+                alert("Error");
             }
-    const actions = document.getElementById(`actions-${billId}`);
-    if(actions) {
-        actions.innerHTML = `
-                    <div class="w-100 text-center text-warning fw-bold p-2 bg-light rounded">
-                        <i class="bi bi-envelope-paper"></i> Recheck Sent
-                    </div>`;
-            }
-        }
+        });
+}
+
+// Close modal on outside click
+window.onclick = function (e) {
+    if (e.target.id === "consumptionModal") closeConsumptionModal();
+}

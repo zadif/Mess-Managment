@@ -661,8 +661,10 @@ namespace EAD.Controllers
         public async Task<JsonResult> ApproveRecheck(int id)
         {
             using (EadProjectContext db = new EadProjectContext())
-            { 
-          
+            {
+                //Reducing the bill
+                var temp = await db.DailyConsumptions.Where(e => e.Id == id).Include(s => s.Bill).Include(s => s.MealItem).FirstOrDefaultAsync();
+                temp.Bill.TotalAmount -= temp.MealItem.Price;
                     await db.DailyConsumptions.Where(e => e.Id == id).ExecuteDeleteAsync();
                     await db.SaveChangesAsync();
                 }
