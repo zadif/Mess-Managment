@@ -24,6 +24,8 @@ namespace EAD.Controllers
 
                 var temp =await db.Bills.Where(e => e.UserId == Convert.ToInt32(id)).ToListAsync();
                 var temp2 =await  db.BillRecheckRequests.Where(e => e.UserId == Convert.ToInt32(id)).ToListAsync();
+                temp.Reverse();
+                temp2.Reverse();
 
                 BillViewModel b = new BillViewModel(temp,temp2);
 
