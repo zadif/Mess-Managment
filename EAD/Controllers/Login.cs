@@ -34,71 +34,88 @@ namespace EAD.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginPage(string email, string password, string role)
         {
-            if (role == "Admin")
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                if (email == "a" && password == "a")
-                {
-                    Response.Cookies.Append("Role", "Admin", new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddDays(30),
-                        HttpOnly = true,
-                        Secure = true
-                    });
-                    return RedirectToAction("AdminHome", "Dashboard");
-                }
-                else
-                {
-                    ViewBag.Error = "Wrong credentials";
-                    
-                    return View();
-                }
+                ViewBag.Error = "Please fill all fields";
+                return View();
             }
-            else
+
+            try
             {
-                using(EadProjectContext db = new EadProjectContext())
+                if (role == "Admin")
                 {
-                    var usr =await db.Users.FirstOrDefaultAsync(e => (e.Email == email));
-                    if (usr != null && BCrypt.Net.BCrypt.Verify(password, usr.Password))
+                    if (email == "a" && password == "a")
                     {
-                        if (usr.IsActive)
-                        {
-                        // Save Role & UserId in cookies (lasts 30 days)
-                        Response.Cookies.Append("Role", "User", new CookieOptions
+                        Response.Cookies.Append("Role", "Admin", new CookieOptions
                         {
                             Expires = DateTime.Now.AddDays(30),
                             HttpOnly = true,
                             Secure = true
                         });
-
-                        Response.Cookies.Append("UserId",Convert.ToString( usr.Id), new CookieOptions
-                        {
-                            Expires = DateTime.Now.AddDays(30),
-                            HttpOnly = true,
-                            Secure = true
-                        });
-                       return RedirectToAction("Home", "Dashboard");
-
-                            // Password is correct → login success
-
-                        }
-                        else
-                        {
-                            ViewBag.Error = "Your account is currently deactivated, Contact admin";
-                            return View();
-                        }
-
-
+                        return RedirectToAction("AdminHome", "Dashboard");
                     }
                     else
                     {
                         ViewBag.Error = "Wrong credentials";
-                        return View();
 
-                        // Wrong credentials
+                        return View();
                     }
                 }
+                else
+                {
+                    using (EadProjectContext db = new EadProjectContext())
+                    {
+                        var usr = await db.Users.FirstOrDefaultAsync(e => (e.Email == email));
+                        if (usr != null && BCrypt.Net.BCrypt.Verify(password, usr.Password))
+                        {
+                            if (usr.IsActive)
+                            {
+                                // Save Role & UserId in cookies (lasts 30 days)
+                                Response.Cookies.Append("Role", "User", new CookieOptions
+                                {
+                                    Expires = DateTime.Now.AddDays(30),
+                                    HttpOnly = true,
+                                    Secure = true
+                                });
+
+                                Response.Cookies.Append("UserId", Convert.ToString(usr.Id), new CookieOptions
+                                {
+                                    Expires = DateTime.Now.AddDays(30),
+                                    HttpOnly = true,
+                                    Secure = true
+                                });
+                                return RedirectToAction("Home", "Dashboard");
+
+                                // Password is correct → login success
+
+                            }
+                            else
+                            {
+                                ViewBag.Error = "Your account is currently deactivated, Contact admin";
+                                return View();
+                            }
+
+
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Wrong credentials";
+                            return View();
+
+                            // Wrong credentials
+                        }
+                    }
+                }
+                ViewBag.Error = "Server is not responsing, Try Again";
             }
-            ViewBag.Error = "Server is not responsing, Try Again";
+            catch (Exception)
+            {
+                ViewBag.Error = "Server error. Please try later.";
+            }
+
+
+
+            
             return View();
         }
         [HttpPost]
