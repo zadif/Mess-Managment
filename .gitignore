@@ -266,3 +266,4 @@ history/
 # JetBrains Rider
 *.sln.iml
 .vs
+config.bat
