@@ -73,13 +73,24 @@ namespace EAD.Controllers
 
                 using (var db = new EadProjectContext())
                 {
-                    var bill = await db.Bills.FirstOrDefaultAsync(b => b.Id == billId && b.UserId == userId);
+                    var bill = await db.Bills.Where(b => b.Id == billId && b.UserId == userId).Include(s=>s.DailyConsumptions).FirstOrDefaultAsync();
 
                     if (bill != null && !bill.IsPaid)
                     {
                         bill.IsPaid = true;
                         bill.PaidOn = DateTime.Now;
-                        await db.SaveChangesAsync(); // Changed to Async
+
+                        //Changing daily consumptions which are marked to recheck 
+                        foreach (var consum in bill.DailyConsumptions)
+                        {
+                            if (consum.WasUserPresent == false)
+                            {
+                                consum.WasUserPresent = true;
+                            }
+                        }
+
+
+                            await db.SaveChangesAsync(); // Changed to Async
                         return Json(1);
                     }
                 }
