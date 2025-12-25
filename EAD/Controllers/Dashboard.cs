@@ -1,11 +1,15 @@
 ﻿using EAD.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EAD.Controllers
 {
+
     public class Dashboard : Controller
     {
+        [Authorize(AuthenticationSchemes = "JwtAuth", Roles = "Admin")]
+
         public IActionResult AdminHome()
         {
             try
@@ -18,6 +22,8 @@ namespace EAD.Controllers
                 return View();
             }
         }
+        [Authorize(AuthenticationSchemes = "JwtAuth", Roles = "User")]
+
 
         public async Task<IActionResult> Home()
         {

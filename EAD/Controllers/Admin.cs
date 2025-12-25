@@ -1,4 +1,5 @@
 ﻿using EAD.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace EAD.Controllers
 {
+    [Authorize(AuthenticationSchemes = "JwtAuth" ,Roles = "Admin")]
+
     public class Admin : Controller
     {
         public async Task<IActionResult> ManageUsers()

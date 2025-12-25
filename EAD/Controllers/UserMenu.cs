@@ -1,9 +1,13 @@
 ﻿using EAD.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EAD.Controllers
 {
+    [Authorize(AuthenticationSchemes = "JwtAuth", Roles = "User")]
+
+
     public class UserMenu : Controller
     {
         public async Task<IActionResult> fullMenu()

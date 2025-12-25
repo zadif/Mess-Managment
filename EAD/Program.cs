@@ -1,7 +1,50 @@
+using EAD;
 using EAD.Controllers;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
+
+
+// JWT configuration
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+
+builder.Services.AddAuthentication("JwtAuth")
+    .AddJwtBearer("JwtAuth", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            RoleClaimType = ClaimTypes.Role,
+        };
+
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.Redirect("/Login/loginpage");
+                return Task.CompletedTask;
+            },
+            OnForbidden = context =>
+            {
+                context.Response.Redirect("/Login/AccessDenied");
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
   .AddCookie(options =>
@@ -13,6 +56,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
       options.Cookie.HttpOnly = true;   // Recommended security
       options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // or Always in production
   });
+
 builder.Services.AddAuthorization();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -31,6 +75,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+
+app.UseMiddleware<jwtAuth>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
