@@ -1,0 +1,88 @@
+﻿@model List<EAD.Models.RecheckDailyConsumptionViewModel>
+
+@{
+    ViewData["Title"] = "My Daily Consumptions";
+}
+
+<h2 class="text-center mb-4">My Daily Consumptions</h2>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <p>No consumption records found.</p>
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>Date</th>
+                <th>Meal Item</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                var isBillPaid = (c.Bill != null && c.Bill.IsPaid);
+                <tr>
+                    <td>@c.ConsumptionDate.ToString("dd MMM yyyy")</td>
+                    <td>@c.MealItem.Name</td>
+                    <td>Rs. @c.MealItem.Price</td>
+                    <!-- ADD ID HERE: status-[ID] -->
+                    <td id="status-@c.Id">
+                        @if (isBillPaid)
+                        {
+                            <span class="badge bg-success">Bill Paid</span>
+                        }
+                        else if (!isBillPaid && c.WasUserPresent)
+                        {
+                            <span class="badge bg-warning">Pending</span>
+                        }
+                        else if (!isBillPaid && !c.WasUserPresent)
+                        {
+                            <span class="badge bg-danger">Recheck Request Sent</span>
+                        }
+                    </td>
+
+                    <!-- ADD ID HERE: action-[ID] -->
+                    <td id="action-@c.Id">
+                        @if (!isBillPaid && c.WasUserPresent)
+                        {
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="openRecheckModal(@c.Id)">
+                                Request Recheck
+                            </button>
+                        }
+                        else if (!isBillPaid && !c.WasUserPresent)
+                        {
+                            <span class="text-muted">Request Sent</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+      
+    </table>
+}
+
+<!-- RECHECK MODAL -->
+<div id="recheckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:500px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <h4>Request Recheck</h4>
+            <span onclick="closeRecheckModal()" style="font-size:28px; cursor:pointer;">×</span>
+        </div>
+        <p>Why do you want to recheck this consumption?</p>
+        <textarea id="recheckMessage" style="width:100%; height:100px; padding:10px; border-radius:8px; border:1px solid #ccc;" placeholder="I was absent / didn't eat this..."></textarea>
+        <div style="margin-top:20px; text-align:right;">
+            <button type="button" onclick="sendRecheckRequest()" class="btn btn-danger">Send Request</button>
+            <button type="button" onclick="closeRecheckModal()" class="btn btn-secondary ms-2">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+        <script src="~/js/UserRecheckConsumptions.js"></script>

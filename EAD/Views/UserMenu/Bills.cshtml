@@ -1,9 +1,6 @@
 ﻿@model BillViewModel
 @{
     ViewData["Title"] = "My Bills";
-    Layout = null; /* TEMPORARILY SET TO NULL TO ENSURE MY STYLES LOAD.
-                      Change back to your layout (e.g., Layout = "_Layout";)
-                      if you want to keep your sidebar. */
 }
 
 <!DOCTYPE html>
@@ -11,17 +8,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- 1. FORCE LOAD BOOTSTRAP 5 & SWEETALERT (Fixes the "Shitty UI" and "Nothing Happens") -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="~/css/userBills.css" rel="stylesheet" />
 </head>
 <body>
-
     <div class="page-container">
-        <!-- Header -->
         <div class="page-header text-center mb-5">
             <h1 class="display-6">Monthly Bills</h1>
             <p>Manage your mess expenses easily</p>
@@ -50,17 +43,14 @@
                     var isVerified = bill.VerifiedByAdmin;
                     var isSentforRecheck = Model.BillInRecheck[recheckArrId];
 
-                    /* Determine UI State */
                     string badgeClass = "status-unpaid";
                     string badgeText = "Unpaid";
-
                     if (isVerified) { badgeClass = "status-paid"; badgeText = "Verified"; }
                     else if (isPaid) { badgeClass = "status-pending"; badgeText = "Pending"; }
                     else if (isSentforRecheck) { badgeClass = "status-pending"; badgeText = "In Recheck"; }
 
                     <div class="col">
                         <div class="bill-card" id="card-@bill.Id">
-                            <!-- Header Section -->
                             <div>
                                 <span class="status-badge @badgeClass" id="badge-@bill.Id">@badgeText</span>
                                 <span class="bill-id">Bill #@bill.Id</span>
@@ -68,13 +58,11 @@
                                 <div class="bill-amount-value">Rs. @bill.TotalAmount</div>
                             </div>
 
-                            <!-- Details Section -->
                             <div class="mb-3">
                                 <div class="bill-info-row">
                                     <i class="bi bi-calendar-event"></i>
                                     <span>Generated: <strong>@bill.GeneratedOn</strong></span>
                                 </div>
-
                                 @if (bill.PaidOn.HasValue)
                                 {
                                     <div class="bill-info-row text-success">
@@ -91,7 +79,6 @@
                                 }
                             </div>
 
-                            <!-- Action Buttons -->
                             <div class="action-area" id="actions-@bill.Id">
                                 @if (!isPaid && !isSentforRecheck)
                                 {
@@ -129,8 +116,23 @@
         }
     </div>
 
-    <!-- 3. JAVASCRIPT LOGIC (INLINE TO ENSURE IT LOADS) -->
+    <!-- CONSUMPTIONS POPUP MODAL -->
+    <div id="consumptionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:800px; max-height:90%; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h4>Bill Consumptions</h4>
+                <span onclick="closeConsumptionModal()" style="font-size:30px; cursor:pointer;">×</span>
+            </div>
+            <div id="consumptionTable">
+                <!-- Filled by JS -->
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="closeConsumptionModal()" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   <script src="~/js/userBills.js"></script>
+    <script src="~/js/userBills.js"></script>
 </body>
 </html>

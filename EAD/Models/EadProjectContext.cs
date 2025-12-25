@@ -78,6 +78,7 @@ public partial class EadProjectContext : DbContext
 
             entity.Property(e => e.ConsumptionDate).HasDefaultValueSql("(CONVERT([date],getdate()))");
             entity.Property(e => e.Quantity).HasDefaultValue(1);
+            entity.Property(e => e.WasUserPresent).HasDefaultValue(true);
 
             entity.HasOne(d => d.Bill).WithMany(p => p.DailyConsumptions)
                 .HasForeignKey(d => d.BillId)
