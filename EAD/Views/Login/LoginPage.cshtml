@@ -12,14 +12,32 @@
 
     <!-- Link to your CSS file -->
     <link rel="stylesheet" href="~/css/login.css">
+    
+    <style>
+        /* New "Decent" Error Style */
+        .custom-error-pill {
+            background-color: #fff1f2;       /* Very light pink background */
+            color: #be123c;                  /* Deep red text */
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 10px 25px;
+            border-radius: 50px;             /* This makes it round (Pill shape) */
+            border: 1px solid #fda4af;       /* Subtle border */
+            
+            /* Positioning */
+            width: fit-content;              /* Only take up necessary space, not full width */
+            margin: 0 auto 20px auto;        /* Center it horizontally */
+            
+            /* Flex layout for icon alignment */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+    </style>
 </head>
 <body>
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger">
-            @ViewBag.Error
-        </div>
-    }
 
  
     <div class="main-container">
@@ -29,6 +47,15 @@
                 <h1>Mess Management</h1>
                 <p id="role-subtitle">User Login</p>
             </div>
+
+            <!-- NEW LOCATION: Inside the card, using the new Pill Style -->
+            @if (ViewBag.Error != null)
+            {
+                <div class="custom-error-pill">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>@ViewBag.Error</span>
+                </div>
+            }
 
             <form action="/Login/LoginPage" class="login-form" method="post">
                 <!-- Input 1: Name/Email -->
@@ -47,6 +74,7 @@
 
                 <!-- Input 3: Role -->
                 <input type="hidden" name="role" id="hiddenRoleInput" value="User" />
+                
                 <!-- Login Button -->
                 <button type="submit" class="btn-login">Login</button>
             </form>
