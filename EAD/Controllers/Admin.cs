@@ -901,5 +901,38 @@ namespace EAD.Controllers
                 return Json(new { success = false });
             }
         }
+   
+    public async Task< IActionResult> Statistics()
+        {
+
+                StatisticsViewModel cs=new StatisticsViewModel();
+        
+            try
+            {
+                using (EadProjectContext db = new EadProjectContext())
+                {
+                    cs.numUsers = await db.Users.CountAsync();
+                    cs.numInactiveUsers = await db.Users.Where(e => e.IsActive == false).CountAsync();
+                    cs.numBills = await db.Bills.CountAsync();
+                    var paidBills = await db.Bills.Where(e => e.IsPaid == true).ToListAsync();
+                    decimal total = 0;
+                    foreach (var bil in paidBills)
+                    {
+                        total += bil.TotalAmount;
+                    }
+                    cs.total = total;
+                    cs.numPaidBills = paidBills.Count();
+                    cs.numMenuItems = await db.MealItems.CountAsync();
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Server error. Please try later.";
+            }
+            return View(cs);
+
+
+        }
+
     }
 }
