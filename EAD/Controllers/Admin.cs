@@ -770,7 +770,7 @@ namespace EAD.Controllers
             {
                 using (EadProjectContext db = new EadProjectContext())
                 {
-                    var temps = await db.DailyConsumptions.Where(e => e.WasUserPresent == false).Include(s => s.User)
+                    var temps = await db.DailyConsumptions.Where(e => e.WasUserPresent == false).Include(s => s.User).Include(s=>s.MealItem)
                           .Select(m => new recheckDailyConsumptionAdminViewModel
                           {
                               Id = m.Id,
@@ -778,7 +778,8 @@ namespace EAD.Controllers
                               WasUserPresent = m.WasUserPresent,
                               Quantity = m.Quantity,
                               BillId = m.BillId,
-                              User = m.User
+                              User = m.User,
+                              MealItem = m.MealItem
                           })
                         .ToListAsync();
                     temps.Reverse();
@@ -794,7 +795,6 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> ApproveRecheck(int id)
         {
             try

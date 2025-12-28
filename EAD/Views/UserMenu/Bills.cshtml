@@ -116,21 +116,58 @@
         }
     </div>
 
-    <!-- CONSUMPTIONS POPUP MODAL -->
+    <!-- 1. The Large Consumption List Modal (Existing) -->
     <div id="consumptionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
         <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:800px; max-height:90%; overflow-y:auto;">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <h4>Bill Consumptions</h4>
-                <span onclick="closeConsumptionModal()" style="font-size:30px; cursor:pointer;">×</span>
+                <h4 class="fw-bold text-primary">Bill Consumptions</h4>
+                <span onclick="closeConsumptionModal()" style="font-size:30px; cursor:pointer;" class="text-secondary">&times;</span>
             </div>
             <div id="consumptionTable">
-                <!-- Filled by JS -->
+                <!-- Table Filled by JS -->
+                <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>
             </div>
             <div style="margin-top:20px; text-align:right;">
                 <button onclick="closeConsumptionModal()" class="btn btn-secondary">Close</button>
             </div>
         </div>
     </div>
+
+    <!-- 2. The New Rectangular Confirmation Modal (New) -->
+    <!-- Note: z-index is 10000 to appear ABOVE the consumption modal -->
+    <div class="modal fade" id="confirmRecheckModal" tabindex="-1" aria-hidden="true" style="z-index: 10000;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark ms-2">Confirm Action</h5>
+                    <button type="button" class="btn-close me-2" onclick="closeConfirmRecheck()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center px-5 pb-5 pt-2">
+                    <div class="mb-3">
+                        <i class="bi bi-question-circle-fill text-warning" style="font-size: 4rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Are you sure?</h5>
+                    <p class="text-secondary mb-4">
+                        Do you want to request a recheck for this specific item?
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="button" class="btn btn-light fw-bold" onclick="closeConfirmRecheck()"
+                                style="border-radius: 8px; min-width: 120px;">
+                            Cancel
+                        </button>
+                        <button type="button" onclick="submitSingleRecheck()" class="btn fw-bold text-white"
+                                style="background-color: #4318FF; border-radius: 8px; min-width: 160px;">
+                            Yes, Recheck
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/userBills.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/userBills.js"></script>
