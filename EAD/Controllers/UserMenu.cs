@@ -284,5 +284,121 @@ namespace EAD.Controllers
                 return Json(null);
             }
         }
+    
+    public async Task<IActionResult> Profile()
+        {
+                UserProfileViewModel cs = new UserProfileViewModel();
+            try
+            {
+                string id = Request.Cookies["UserId"];
+                using (EadProjectContext db = new EadProjectContext())
+                {
+                    var temp = await db.Users.Where(e => e.Id ==Convert.ToInt32( id)).FirstOrDefaultAsync();
+                    cs.Name=temp.Name;
+                   cs.Email= temp.Email;
+                    cs.UserType = temp.UserType;
+                    
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Server error. Please try later.";
+               
+            }
+            return View(cs);
+        }
+    
+        // 2. POST: Update Name and User Type
+        [HttpPost]
+        public async Task<IActionResult> UpdateInfo(UserProfileViewModel model)
+        {
+            string id = Request.Cookies["UserId"];
+
+            try
+            {
+                using (EadProjectContext db = new EadProjectContext())
+                {
+                    var user = await db.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+                    if (user != null)
+                    {
+                        user.Name = model.Name;
+                        user.UserType = model.UserType;
+
+                        await db.SaveChangesAsync();
+                        TempData["Success"] = "Profile updated successfully!";
+                    }
+                }
+            }
+            catch
+            {
+                TempData["Error"] = "Failed to update profile.";
+            }
+            return RedirectToAction("Profile");
+        }
+
+        // 3. POST: Change Password
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(UserProfileViewModel model)
+        {
+            string id = Request.Cookies["UserId"];
+
+            try
+            {
+                using (EadProjectContext db = new EadProjectContext())
+                {
+                    var user = await db.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+
+                    // Check if user exists AND if the current password matches
+                    if (user != null && BCrypt.Net.BCrypt.Verify(model.CurrentPassword, user.Password))
+                    {
+                        user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword); // Set new password
+                        await db.SaveChangesAsync();
+                        TempData["Success"] = "Password changed successfully!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Incorrect current password. Please try again.";
+                    }
+                }
+            }
+            catch
+            {
+                TempData["Error"] = "An error occurred while changing password.";
+            }
+            return RedirectToAction("Profile");
+        }
+
+        // 4. POST: Deactivate Account
+        [HttpPost]
+        public async Task<IActionResult> DeactivateAccount()
+        {
+            string id = Request.Cookies["UserId"];
+            
+            try
+            {
+                using (EadProjectContext db = new EadProjectContext())
+                {
+                    var user = await db.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+                    if (user != null)
+                    {
+                       
+                        user.IsActive = false;
+
+                        await db.SaveChangesAsync();
+                    }
+                }
+
+                // Log out the user explicitly
+                Response.Cookies.Delete("UserId");
+
+                TempData["Success"] = "Account deactivated. Goodbye!";
+                return RedirectToAction("Logout", "Login"); 
+            }
+            catch
+            {
+                TempData["Error"] = "Could not deactivate account.";
+                return RedirectToAction("Profile");
+            }
+        }
     }
 }
