@@ -3,10 +3,7 @@
 }
 <link rel="stylesheet" href="~/css/generateDailyConsumptions.css">
 
-<!-- Main Container Card -->
 <div class="mess-container">
-
-    <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="page-title">Generate Today's Consumption</h2>
@@ -17,14 +14,10 @@
         </a>
     </div>
 
-    <!-- Alerts -->
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-theme-danger">
-            <i class="fa fa-exclamation-circle me-2"></i> @ViewBag.Error
-        </div>
-    }
-    else if (ViewBag.Menus == null || !(ViewBag.Menus as IEnumerable<DailyMenu>)?.Any() == true)
+    <!-- Dynamic Alert Area -->
+    <div id="alertContainer"></div>
+
+    @if (ViewBag.Menus == null || !(ViewBag.Menus as IEnumerable<DailyMenu>)?.Any() == true)
     {
         <div class="alert alert-theme-warning">
             <i class="fa fa-exclamation-triangle me-2"></i> No menu items found for today.
@@ -38,26 +31,22 @@
     }
     else
     {
-        <!-- Action Toolbar -->
         <div class="action-toolbar mb-4 p-3 rounded d-flex justify-content-between align-items-center flex-wrap gap-3">
             <button type="button" id="toggleBtn" class="btn btn-theme-outline" onclick="toggleCheckboxes()">
                 <i class="fa fa-check-square me-2"></i>Mark / Unmark All
             </button>
-
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-theme-danger-soft" onclick="deleteTodayConsumption()">
+                <button type="button" id="deleteAllBtn" class="btn btn-theme-danger-soft" onclick="deleteTodayConsumption()">
                     <i class="fa fa-trash me-2"></i>Delete All
                 </button>
-                <button type="submit" form="saveForm" class="btn btn-theme-success">
-                    <i class="fa fa-save me-2"></i>Save Consumption
+                <button type="button" id="saveBtn" class="btn btn-theme-success" onclick="saveAllConsumptions()">
+                    <i class="fa fa-save me-2"></i>Save Consumption (<span id="selectedCount">0</span>)
                 </button>
             </div>
         </div>
 
-        <!-- Main Table -->
         <div class="table-responsive">
-            <form id="saveForm" asp-action="generateDailyConsumptions" method="post">
-                @Html.AntiForgeryToken()
+            <form id="saveForm">
                 <table class="table theme-table align-middle">
                     <thead>
                         <tr>
@@ -78,10 +67,8 @@
                     <tbody>
                         @foreach (var user in ViewBag.Users)
                         {
-                            var alreadyGenerated = ViewBag.AlreadyGeneratedUserIds?.Contains(user.Id) == true;
-
-                            <!-- Add class 'row-highlight' if generated to visually separate them -->
-                            <tr class="@(alreadyGenerated ? "row-generated" : "")">
+                            var alreadyGenerated = ViewBag.AlreadyGenerated?.Contains(user.Id) == true;
+                            <tr class="@(alreadyGenerated ? "row-generated" : "")" data-user-id="@user.Id">
                                 <td class="ps-4">
                                     <div class="fw-bold text-white">@user.Name</div>
                                     <small class="text-muted">#@user.Id</small>
@@ -92,7 +79,7 @@
                                     </span>
                                 </td>
 
-                                @if (ViewBag.AlreadyGenerated.Contains(user.Id))
+                                @if (alreadyGenerated)
                                 {
                                     <td colspan="@ViewBag.Menus.Count" class="text-center">
                                         <span class="badge badge-generated">
@@ -109,8 +96,10 @@
                                             @if (canConsume)
                                             {
                                                 <div class="custom-check-wrapper">
-                                                    <input type="checkbox" name="consumptions" value="@user.Id-@menu.MealItemId"
-                                                           checked class="item form-check-input theme-checkbox" />
+                                                    <input type="checkbox"
+                                                           class="item theme-checkbox"
+                                                           data-value="@user.Id-@menu.MealItemId"
+                                                           checked />
                                                 </div>
                                             }
                                             else
@@ -122,16 +111,13 @@
                                 }
 
                                 <td class="text-center pe-4">
-                                    @if (ViewBag.AlreadyGenerated.Contains(user.Id))
+                                    @if (alreadyGenerated)
                                     {
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-sm btn-icon-blue" onclick="openEditModal(@user.Id)" title="Edit">
                                                 <i class="fa fa-edit"></i>
                                             </button>
-
-                                            <!-- Wrapped delete in a simplified styling -->
-                                            <button type="submit" formaction='@Url.Action("DeleteUserConsumption")' formmethod="post" class="btn btn-sm btn-icon-red ms-2"
-                                                    onclick="var i = document.createElement('input'); i.type='hidden'; i.name='userId'; i.value='@user.Id'; this.form.appendChild(i); return confirm('Delete consumption for @user.Name today?');">
+                                            <button type="button" class="btn btn-sm btn-icon-red ms-2" onclick="deleteUserConsumption(@user.Id, '@user.Name')">
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </div>
@@ -146,38 +132,25 @@
     }
 </div>
 
-<!-- Enhanced Modal HTML -->
+<!-- Edit Modal -->
 <div id="editModal" class="theme-modal-backdrop" style="display:none;">
     <div class="theme-modal-content">
-
-        <!-- Header -->
         <div class="theme-modal-header">
             <h5>Edit Consumption</h5>
             <span class="close-btn" onclick="closeModal()">&times;</span>
         </div>
-
-        <!-- Body -->
         <div class="theme-modal-body">
             <div class="d-flex align-items-center mb-2">
                 <span class="text-muted me-2">Editing for:</span>
                 <h3 id="modalUserName" class="m-0 text-white fw-bold"></h3>
             </div>
-
             <hr style="border-color: #2b2b40; margin-bottom: 20px;">
-
-            <!-- Dynamic Content Area -->
-            <!-- The CSS #modalBody will force big spacing here -->
-            <div id="modalBody">
-                <!-- Data from server loads here -->
-            </div>
+            <div id="modalBody"></div>
         </div>
-
-        <!-- Footer -->
         <div class="theme-modal-footer">
             <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
-            <button type="button" class="btn-modal-save" onclick="saveEdit()">Save Changes</button>
+            <button type="button" id="modalSaveBtn" class="btn-modal-save" onclick="saveEdit()">Save Changes</button>
         </div>
-
     </div>
 </div>
 

@@ -427,43 +427,6 @@ namespace EAD.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> generateDailyConsumptions(string[] consumptions)
-        {
-            try
-            {
-                var today = DateOnly.FromDateTime(DateTime.Today);
-                using (var db = new EadProjectContext())
-                {
-                    if (consumptions != null && consumptions.Any())
-                    {
-                        foreach (var item in consumptions)
-                        {
-                            var parts = item.Split('-');
-                            if (parts.Length == 2 && int.TryParse(parts[0], out int userId) && int.TryParse(parts[1], out int mealItemId))
-                            {
-                                await db.DailyConsumptions.AddAsync(new DailyConsumption
-                                {
-                                    UserId = userId,
-                                    MealItemId = mealItemId,
-                                    ConsumptionDate = today,
-                                    Quantity = 1,
-                                    WasUserPresent = true
-                                });
-                            }
-                        }
-                    }
-                    await db.SaveChangesAsync();
-                }
-                return RedirectToAction("GenerateDailyConsumptions");
-            }
-            catch (Exception)
-            {
-                ViewBag.Error = "Server error. Please try later.";
-                return RedirectToAction("GenerateDailyConsumptions");
-            }
-        }
-
         [HttpGet]
         public async Task<JsonResult> GetUserConsumption(int userId)
         {
@@ -516,24 +479,77 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> GenerateDailyConsumptions(string[] consumptions)
+        {
+            try
+            {
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                int addedCount = 0;
+
+                using (var db = new EadProjectContext())
+                {
+                    if (consumptions != null && consumptions.Any())
+                    {
+                        foreach (var item in consumptions)
+                        {
+                            var parts = item.Split('-');
+                            if (parts.Length == 2 &&
+                                int.TryParse(parts[0], out int userId) &&
+                                int.TryParse(parts[1], out int mealItemId))
+                            {
+                                await db.DailyConsumptions.AddAsync(new DailyConsumption
+                                {
+                                    UserId = userId,
+                                    MealItemId = mealItemId,
+                                    ConsumptionDate = today,
+                                    Quantity = 1,
+                                    WasUserPresent = true
+                                });
+                                addedCount++;
+                            }
+                        }
+                    }
+                    await db.SaveChangesAsync();
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Successfully added {addedCount} daily consumption records.",
+                    addedCount = addedCount
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Server error. Please try later."
+                });
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> SaveUserConsumption(int userId, string[] consumptions)
         {
             try
             {
                 var today = DateOnly.FromDateTime(DateTime.Today);
+                int addedCount = 0;
 
-                using (EadProjectContext db = new EadProjectContext())
+                using (var db = new EadProjectContext())
                 {
+                    // Delete existing records for this user today
                     await db.DailyConsumptions
                         .Where(d => d.UserId == userId && d.ConsumptionDate == today)
                         .ExecuteDeleteAsync();
 
-                    if (consumptions != null)
+                    if (consumptions != null && consumptions.Any())
                     {
                         foreach (var item in consumptions)
                         {
                             var parts = item.Split('-');
-                            if (int.TryParse(parts[1], out int mealItemId))
+                            if (parts.Length >= 2 && int.TryParse(parts[1], out int mealItemId))
                             {
                                 await db.DailyConsumptions.AddAsync(new DailyConsumption
                                 {
@@ -542,54 +558,84 @@ namespace EAD.Controllers
                                     ConsumptionDate = today,
                                     Quantity = 1
                                 });
+                                addedCount++;
                             }
                         }
                         await db.SaveChangesAsync();
                     }
-                    return Ok();
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = "User consumption saved successfully.",
+                        addedCount = addedCount
+                    });
                 }
             }
             catch (Exception)
             {
-                return StatusCode(500, "Server error");
+                return Json(new
+                {
+                    success = false,
+                    message = "Server error."
+                });
             }
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTodayConsumption()
         {
             try
             {
                 var today = DateOnly.FromDateTime(DateTime.Today);
+
                 using (var db = new EadProjectContext())
                 {
                     var deletedCount = await db.DailyConsumptions
                         .Where(d => d.ConsumptionDate == today && d.IsBilled == false)
                         .ExecuteDeleteAsync();
 
-                    await db.SaveChangesAsync();
-
                     if (deletedCount > 0)
-                        return Json(new { success = true, message = $"Deleted {deletedCount} consumption records for today." });
+                    {
+                        return Json(new
+                        {
+                            success = true,
+                            message = $"Deleted {deletedCount} consumption records for today."
+                        });
+                    }
                     else
-                        return Json(new { success = false, message = "No unbilled consumptions found for today." });
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "No unbilled consumptions found for today."
+                        });
+                    }
                 }
             }
             catch (Exception)
             {
-                return Json(new { success = false, message = "Server error." });
+                return Json(new
+                {
+                    success = false,
+                    message = "Server error."
+                });
             }
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUserConsumption(string userId)
         {
             try
             {
                 if (!int.TryParse(userId, out int uid))
-                    return Json(new { success = false, message = "Invalid user ID." });
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid user ID."
+                    });
+                }
 
                 var today = DateOnly.FromDateTime(DateTime.Today);
 
@@ -599,20 +645,33 @@ namespace EAD.Controllers
                         .Where(d => d.UserId == uid && d.ConsumptionDate == today && d.IsBilled == false)
                         .ExecuteDeleteAsync();
 
-                    await db.SaveChangesAsync();
-
                     if (deletedCount > 0)
-                        return Json(new { success = true, message = "User's consumption deleted successfully." });
+                    {
+                        return Json(new
+                        {
+                            success = true,
+                            message = "User's consumption deleted successfully."
+                        });
+                    }
                     else
-                        return Json(new { success = false, message = "No unbilled consumption found for this user today." });
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "No unbilled consumption found for this user today."
+                        });
+                    }
                 }
             }
             catch (Exception)
             {
-                return Json(new { success = false, message = "Server error." });
+                return Json(new
+                {
+                    success = false,
+                    message = "Server error."
+                });
             }
         }
-
         public async Task<IActionResult> Bills()
         {
             return View();
