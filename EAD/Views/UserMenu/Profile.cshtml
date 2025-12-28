@@ -6,119 +6,14 @@
 
 <!-- External Library for Popups -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<style>
-    /* MessMate Theme Consistency */
-    :root {
-        --primary-color: #5a67d8; /* Indigo */
-        --primary-hover: #4c51bf;
-        --bg-color: #eef2ff;
-        --card-bg: #ffffff;
-        --text-dark: #2d3748;
-        --danger-color: #fc8181; /* Soft Red/Pink */
-        --danger-hover: #f56565;
-    }
-
-    body {
-        background-color: var(--bg-color);
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .profile-header {
-        margin-bottom: 2rem;
-    }
-
-        .profile-header h2 {
-            color: var(--primary-color);
-            font-weight: 700;
-        }
-
-    .profile-card {
-        background: var(--card-bg);
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        border: none;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        transition: transform 0.2s;
-    }
-
-    .form-label {
-        font-weight: 600;
-        color: #718096;
-        font-size: 0.9rem;
-    }
-
-    .form-control {
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        padding: 0.75rem;
-        background-color: #f7fafc;
-    }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
-        }
-
-    .btn-messmate {
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 10px;
-        padding: 10px 25px;
-        font-weight: 600;
-        border: none;
-        transition: all 0.3s ease;
-    }
-
-        .btn-messmate:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-        }
-
-    .btn-danger-custom {
-        background-color: #ffeaea;
-        color: #c53030;
-        border: 1px solid #fc8181;
-        border-radius: 10px;
-        padding: 10px 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-        .btn-danger-custom:hover {
-            background-color: #c53030;
-            color: white;
-        }
-
-    .section-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .user-avatar-placeholder {
-        width: 80px;
-        height: 80px;
-        background-color: #ebf4ff;
-        color: var(--primary-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-</style>
-
+<link href="~/css/userProfile.css" rel="stylesheet" />
 <div class="container py-4">
     <div class="profile-header">
         <h2><i class="fas fa-user-circle me-2"></i> User Profile</h2>
         <p class="text-muted">Manage your personal information and security settings.</p>
+        <a href="/" class="btn-home-corner">
+            <i class="bi bi-house-door-fill"></i> Home
+        </a>
     </div>
 
     <div class="row">
