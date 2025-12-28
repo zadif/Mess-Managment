@@ -1,12 +1,12 @@
-using EAD;
+﻿using EAD;
 using EAD.Controllers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
 
 // JWT configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -26,8 +26,6 @@ builder.Services.AddAuthentication("JwtAuth")
             IssuerSigningKey = new SymmetricSecurityKey(key),
             RoleClaimType = ClaimTypes.Role,
         };
-
-
         options.Events = new JwtBearerEvents
         {
             OnChallenge = context =>
@@ -44,20 +42,19 @@ builder.Services.AddAuthentication("JwtAuth")
         };
     });
 
-
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-  .AddCookie(options =>
-  {
-      options.LoginPath = "/Login/LoginPage";           
-      options.AccessDeniedPath = "/Login/LoginPage";    
-      options.ExpireTimeSpan = TimeSpan.FromDays(7);
-      options.SlidingExpiration = true;
-      options.Cookie.HttpOnly = true;   // Recommended security
-      options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // or Always in production
-  });
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/LoginPage";
+        options.AccessDeniedPath = "/Login/LoginPage";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    });
 
 builder.Services.AddAuthorization();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -67,15 +64,20 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.UseDeveloperExceptionPage(); // Detailed errors in development
+}
+
+// THIS LINE MAKES YOUR CUSTOM 404 PAGE WORK IN BOTH DEV & PROD
+app.UseStatusCodePagesWithReExecute("/Error/404");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 
 app.UseMiddleware<jwtAuth>();
 
@@ -85,5 +87,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=LoginPage}/{id?}");
+app.MapFallbackToController("PageNotFound", "Error");
 
 app.Run();
