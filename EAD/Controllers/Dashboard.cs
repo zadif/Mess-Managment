@@ -8,6 +8,14 @@ namespace EAD.Controllers
 
     public class Dashboard : Controller
     {
+        private readonly EadProjectContext _context;  // ← Added: injected  _contextContext
+
+        public Dashboard(EadProjectContext context)  // ← Added context parameter
+        {
+            _context = context;
+        }
+
+
         [Authorize(AuthenticationSchemes = "JwtAuth", Roles = "Admin")]
 
         public IActionResult AdminHome()
@@ -31,7 +39,7 @@ namespace EAD.Controllers
 
             try
             {
-                using (var db = new EadProjectContext())
+                
                 {
                     // Get today's day (e.g., "Monday")
                     string today = DateTime.Today.ToString("dddd");  // Returns "Monday", "Tuesday", etc.
@@ -44,7 +52,7 @@ namespace EAD.Controllers
                     // Validate ID before using it
                     if (!string.IsNullOrEmpty(id) && int.TryParse(id, out int userId))
                     {
-                        User usr = await db.Users.Where(e => e.Id == userId).FirstOrDefaultAsync();
+                        User usr = await _context.Users.Where(e => e.Id == userId).FirstOrDefaultAsync();
                         if (usr != null)
                         {
                             int userTypeInt = usr.UserType;
@@ -55,7 +63,7 @@ namespace EAD.Controllers
 
                     if (userType == "liquid")
                     {
-                        list = await db.DailyMenus
+                        list = await _context.DailyMenus
                          .Include(m => m.MealItem)
                          .Where(d => d.DayOfWeek == today && (d.MealType == "Tea" || d.MealType == "Water"))
                          .Select(m => new DailyMenuViewModel
@@ -72,7 +80,7 @@ namespace EAD.Controllers
                     }
                     else
                     {
-                        list = await db.DailyMenus
+                        list = await _context.DailyMenus
                          .Include(m => m.MealItem)
                          .Where(d => d.DayOfWeek == today)
                          .Select(m => new DailyMenuViewModel

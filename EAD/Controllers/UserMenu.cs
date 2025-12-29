@@ -10,13 +10,19 @@ namespace EAD.Controllers
 
     public class UserMenu : Controller
     {
+        private readonly EadProjectContext _context;  // ← Added: injected  _contextContext
+
+        public UserMenu(EadProjectContext context)  // ← Added context parameter
+        {
+            _context = context;
+        }
         public async Task<IActionResult> fullMenu()
         {
             try
             {
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var temp = await db.DailyMenus.Include(e => e.MealItem).ToListAsync();
+                    var temp = await _context.DailyMenus.Include(e => e.MealItem).ToListAsync();
                     return View(temp);
                 }
             }
@@ -39,10 +45,10 @@ namespace EAD.Controllers
                     return RedirectToAction("LoginPage", "Account"); // Or wherever your login is
                 }
 
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var temp = await db.Bills.Where(e => e.UserId == userId).ToListAsync();
-                    var temp2 = await db.BillRecheckRequests.Where(e => e.UserId == userId).ToListAsync();
+                    var temp = await _context.Bills.Where(e => e.UserId == userId).ToListAsync();
+                    var temp2 = await _context.BillRecheckRequests.Where(e => e.UserId == userId).ToListAsync();
 
                     temp.Reverse();
                     temp2.Reverse();
@@ -71,9 +77,9 @@ namespace EAD.Controllers
                     return Json(0); // Error or Not Logged In
                 }
 
-                using (var db = new EadProjectContext())
+               
                 {
-                    var bill = await db.Bills.Where(b => b.Id == billId && b.UserId == userId).Include(s=>s.DailyConsumptions).FirstOrDefaultAsync();
+                    var bill = await _context.Bills.Where(b => b.Id == billId && b.UserId == userId).Include(s=>s.DailyConsumptions).FirstOrDefaultAsync();
 
                     if (bill != null && !bill.IsPaid)
                     {
@@ -90,7 +96,7 @@ namespace EAD.Controllers
                         }
 
 
-                            await db.SaveChangesAsync(); // Changed to Async
+                            await _context.SaveChangesAsync(); // Changed to Async
                         return Json(1);
                     }
                 }
@@ -119,9 +125,9 @@ namespace EAD.Controllers
                     return Json(0);
                 }
 
-                using (var db = new EadProjectContext())
+               
                 {
-                    var bill = await db.Bills.FirstOrDefaultAsync(b => b.Id == billId);
+                    var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == billId);
 
                     if (bill != null)
                     {
@@ -131,8 +137,8 @@ namespace EAD.Controllers
                         bil.RequestMessage = msg;
                         bil.Status = "Pending"; // Good practice to set default status
 
-                        await db.BillRecheckRequests.AddAsync(bil);
-                        await db.SaveChangesAsync();
+                        await _context.BillRecheckRequests.AddAsync(bil);
+                        await _context.SaveChangesAsync();
                         return Json(1);
                     }
                 }
@@ -155,9 +161,9 @@ namespace EAD.Controllers
                     return RedirectToAction("LoginPage", "Account");
                 }
 
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var temp2 = await db.BillRecheckRequests
+                    var temp2 = await _context.BillRecheckRequests
                         .Where(e => e.UserId == userId)
                         .Include(s => s.Bill)
                         .ToListAsync();
@@ -185,9 +191,9 @@ namespace EAD.Controllers
                     return RedirectToAction("LoginPage", "Account");
                 }
 
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var temps = await db.DailyConsumptions
+                    var temps = await _context.DailyConsumptions
                         .Where(e => e.UserId == userId)
                         .Include(s => s.MealItem)
                         .Include(s => s.Bill)
@@ -224,13 +230,13 @@ namespace EAD.Controllers
                     return Json(0);
                 }
 
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var temp = await db.DailyConsumptions.Where(e => e.Id == consumptionId).FirstOrDefaultAsync();
+                    var temp = await _context.DailyConsumptions.Where(e => e.Id == consumptionId).FirstOrDefaultAsync();
                     if (temp != null)
                     {
                         temp.WasUserPresent = false;
-                        await db.SaveChangesAsync(); // Changed to Async
+                        await _context.SaveChangesAsync(); // Changed to Async
                         return Json(1);
                     }
                 }
@@ -247,9 +253,9 @@ namespace EAD.Controllers
         {
             try
             {
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var bill = await db.Bills
+                    var bill = await _context.Bills
                         .Where(e => e.Id == billId)
                         .Include(b => b.DailyConsumptions)
                             .ThenInclude(dc => dc.MealItem)
@@ -291,9 +297,9 @@ namespace EAD.Controllers
             try
             {
                 string id = Request.Cookies["UserId"];
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var temp = await db.Users.Where(e => e.Id ==Convert.ToInt32( id)).FirstOrDefaultAsync();
+                    var temp = await _context.Users.Where(e => e.Id ==Convert.ToInt32( id)).FirstOrDefaultAsync();
                     cs.Name=temp.Name;
                    cs.Email= temp.Email;
                     cs.UserType = temp.UserType;
@@ -316,15 +322,15 @@ namespace EAD.Controllers
 
             try
             {
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var user = await db.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
                     if (user != null)
                     {
                         user.Name = model.Name;
                         user.UserType = model.UserType;
 
-                        await db.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                         TempData["Success"] = "Profile updated successfully!";
                     }
                 }
@@ -344,15 +350,15 @@ namespace EAD.Controllers
 
             try
             {
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var user = await db.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
 
                     // Check if user exists AND if the current password matches
                     if (user != null && BCrypt.Net.BCrypt.Verify(model.CurrentPassword, user.Password))
                     {
                         user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword); // Set new password
-                        await db.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                         TempData["Success"] = "Password changed successfully!";
                     }
                     else
@@ -376,22 +382,22 @@ namespace EAD.Controllers
             
             try
             {
-                using (EadProjectContext db = new EadProjectContext())
+                 
                 {
-                    var user = await db.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
                     if (user != null)
                     {
                        
                         user.IsActive = false;
 
-                        await db.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
                 }
 
                 // Log out the user explicitly
                 Response.Cookies.Delete("UserId");
 
-                TempData["Success"] = "Account deactivated. Goodbye!";
+                TempData["Success"] = "Account deactivated. Goo_contextye!";
                 return RedirectToAction("Logout", "Login"); 
             }
             catch
