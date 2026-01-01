@@ -13,7 +13,35 @@
             <i class="fa fa-home me-2"></i>Home
         </a>
     </div>
+    <!-- NEW: Date Picker + Load Button -->
+    <!-- Date Picker + Load Button -->
+    <div class="mb-4 p-4 bg-theme-dark rounded shadow-sm border border-theme-border">
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <label for="consumptionDate" class="text-white fw-medium mb-0" style="white-space: nowrap;">
+                    Select Date:
+                </label>
+                <input type="date"
+                       id="consumptionDate"
+                       class="form-control"
+                       style="max-width: 200px;"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       value="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       required />
+            </div>
 
+            <button type="button"
+                    id="loadDateBtn"
+                    class="fa fa-home me-2">
+                <i class="fa fa-home me-2"></i>Load Consumption
+            </button>
+        </div>
+
+        <small class="text-muted mt-3 d-block">
+            Current data shown is for: <strong id="displayDate">@DateTime.Today.ToString("dddd, MMMM dd, yyyy")</strong>
+
+        </small>
+    </div>
     <!-- Dynamic Alert Area -->
     <div id="alertContainer"></div>
 

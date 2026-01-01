@@ -45,11 +45,34 @@ async function saveAllConsumptions() {
     consumptions.forEach(val => formData.append('consumptions', val));
 
 
+    const displayDateEl = document.getElementById('displayDate');
+    let selectedDate = '';
+
+    // Try to get it from data-date attribute first (best way, if you have it)
+    if (displayDateEl?.dataset.date) {
+        selectedDate = displayDateEl.dataset.date;
+    }
+    // Fallback: parse the visible text (e.g., "Wednesday, January 01, 2026")
+    else if (displayDateEl) {
+        const text = displayDateEl.textContent.trim();
+        const dateObj = new Date(text);
+        if (!isNaN(dateObj)) {
+            selectedDate = dateObj.toISOString().split('T')[0]; // "2026-01-01"
+        }
+    }
+
+    // Final fallback to today if something went wrong
+    if (!selectedDate) {
+        selectedDate = new Date().toISOString().split('T')[0];
+    }
+
+    formData.append('date', selectedDate);
+
     try {
         isSaving = true;
         disableButtons(true);
 
-        const response = await fetch('/Admin/generateDailyConsumptions', {
+        const response = await fetch('/Admin/GenerateDailyConsumptions', {
             method: 'POST',
             body: formData,
             
@@ -235,3 +258,67 @@ document.addEventListener('DOMContentLoaded', () => {
         cb.addEventListener('change', updateSelectedCount);
     });
 });
+
+
+    // Function to load consumption data for the selected date
+    async function loadConsumptionForDate() {
+        const dateInput = document.getElementById('consumptionDate');
+    const selectedDate = dateInput.value;
+
+    if (!selectedDate) {
+        showAlert('Please select a valid date.', 'warning');
+    return;
+        }
+
+    // Build URL: /ControllerName/generateDailyConsumptions?date=YYYY-MM-DD
+    // Adjust the controller name below if your page is under a specific controller
+        // Example: if URL is /Admin/generateDailyConsumptions → use '/Admin/generateDailyConsumptions'
+
+
+    const url = `/Admin/generateDailyConsumptions?date=${selectedDate}`;
+
+    try {
+            const response = await fetch(url, {
+        method: 'GET',
+  
+            });
+
+    if (!response.ok) {
+                throw new Error('Failed to load data');
+            }
+
+    const html = await response.text(); // Expecting full or partial HTML
+
+    // Replace the entire container content (or just the table if you return partial view)
+    document.querySelector('.mess-container').innerHTML =
+    (/<!DOCTYPE html>/.test(html)
+    ? html.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1] // if full page returned
+    : html); // if partial view
+
+    // Update displayed date
+    const dateObj = new Date(selectedDate);
+    const formatted = dateObj.toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+    document.getElementById('displayDate').textContent = formatted;
+
+    showAlert(`Consumption data loaded for ${formatted}`, 'success');
+        updateSelectedCount();
+            // Re-attach any scripts if needed (your existing JS file is already loaded globally)
+        } catch (error) {
+        console.error(error);
+    showAlert('Error loading consumption data. Please try again.', 'danger');
+        }
+    }
+
+    // Attach click event
+    document.getElementById('loadDateBtn').addEventListener('click', loadConsumptionForDate);
+
+    // Optional: Trigger on Enter key in date field
+    document.getElementById('consumptionDate').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+        e.preventDefault();
+    loadConsumptionForDate();
+        }
+    });
+

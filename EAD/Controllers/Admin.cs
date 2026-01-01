@@ -388,43 +388,73 @@ namespace EAD.Controllers
                 return RedirectToAction("DailyMeals");
             }
         }
-
-        public async Task<IActionResult> generateDailyConsumptions()
+        [HttpGet]
+        public async Task<IActionResult> generateDailyConsumptions(string date = null)
         {
             try
             {
-                string today = DateTime.Today.ToString("dddd");
+                string Date;
+                DateTime targetDate;
 
-               
+                if (string.IsNullOrEmpty(date))
                 {
-                    var temp = await  _context.DailyMenus.Include(s => s.MealItem).Where(e => e.DayOfWeek == today).ToListAsync();
-                    if (temp != null)
+                    // Default: Today
+                    targetDate = DateTime.Today;
+                    Date = DateTime.Today.ToString("dddd"); // e.g., "Wednesday"
+                }
+                else
+                {
+                    // Parse the incoming "yyyy-MM-dd" string from date picker
+                    bool isValid = DateTime.TryParseExact(
+                        date,
+                        "yyyy-MM-dd",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out targetDate);
+
+                    if (isValid)
                     {
-                        var users = await  _context.Users.Where(e => e.IsActive == true).ToListAsync();
-
-                        if (users == null)
-                        {
-                            ViewBag.Error = "No User exists";
-                            return View();
-                        }
-                        var today2 = DateOnly.FromDateTime(DateTime.Today);
-                        var alreadyGeneratedUsers = await  _context.DailyConsumptions
-                            .Where(d => d.ConsumptionDate == today2)
-                            .Select(d => d.UserId)
-                            .ToListAsync();
-
-                        ViewBag.AlreadyGenerated = alreadyGeneratedUsers;
-                        ViewBag.Users = users;
-                        ViewBag.Menus = temp;
-                        return View();
+                        // Successfully parsed
+                        Date = targetDate.ToString("dddd"); // e.g., "Monday"
                     }
                     else
                     {
-                        ViewBag.Error = "No Menu exists for today";
-                        return View();
+                        // Invalid date → fallback to today
+                        targetDate = DateTime.Today;
+                        Date = DateTime.Today.ToString("dddd");
+                        ViewBag.ErrorMessage = "Invalid date selected. Showing today's data.";
                     }
                 }
+
+
+                var temp = await _context.DailyMenus.Include(s => s.MealItem).Where(e => e.DayOfWeek == Date).ToListAsync();
+                if (temp != null)
+                {
+                    var users = await _context.Users.Where(e => e.IsActive == true).ToListAsync();
+
+                    if (users == null)
+                    {
+                        ViewBag.Error = "No User exists";
+                        return View();
+                    }
+                    var today2 = DateOnly.FromDateTime(targetDate);
+                    var alreadyGeneratedUsers = await _context.DailyConsumptions
+                        .Where(d => d.ConsumptionDate == today2)
+                        .Select(d => d.UserId)
+                        .ToListAsync();
+
+                    ViewBag.AlreadyGenerated = alreadyGeneratedUsers;
+                    ViewBag.Users = users;
+                    ViewBag.Menus = temp;
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Error = "No Menu exists for today";
+                    return View();
+                }
             }
+
             catch (Exception)
             {
                 ViewBag.Error = "Server error. Please try later.";
@@ -482,14 +512,43 @@ namespace EAD.Controllers
                 return Json(new { success = false, message = "Server error" });
             }
         }
-
+        public class GenerateConsumptionRequest
+        {
+            public string[] Consumptions { get; set; }
+            public string Date { get; set; }
+        }
         [HttpPost]
-        public async Task<IActionResult> GenerateDailyConsumptions(string[] consumptions)
+        public async Task<IActionResult> GenerateDailyConsumptions(
+   [FromForm] GenerateConsumptionRequest request)
         {
             try
             {
-                var today = DateOnly.FromDateTime(DateTime.Today);
+                string[] consumptions = request.Consumptions;
+                string date = request.Date;
+                DateOnly Date;
+                if (date == null)
+                {
+
+                    Date = DateOnly.FromDateTime(DateTime.Today);
+                }
+                else
+                {
+                    bool isValid = DateOnly.TryParseExact(
+                date,
+                "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out Date);
+
+                    if (!isValid)
+                    {
+                        Date = DateOnly.FromDateTime(DateTime.Today);
+                        ViewBag.ErrorMessage = "Invalid date. Showing today.";
+                    }
+                }
                 int addedCount = 0;
+
+
 
                
                 {
@@ -506,7 +565,7 @@ namespace EAD.Controllers
                                 {
                                     UserId = userId,
                                     MealItemId = mealItemId,
-                                    ConsumptionDate = today,
+                                    ConsumptionDate = Date,
                                     Quantity = 1,
                                     WasUserPresent = true
                                 });
