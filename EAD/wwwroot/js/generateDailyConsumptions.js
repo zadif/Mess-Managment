@@ -260,60 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-    // Function to load consumption data for the selected date
-    async function loadConsumptionForDate() {
-        const dateInput = document.getElementById('consumptionDate');
-    const selectedDate = dateInput.value;
-
-    if (!selectedDate) {
-        showAlert('Please select a valid date.', 'warning');
-    return;
-        }
-
-    // Build URL: /ControllerName/generateDailyConsumptions?date=YYYY-MM-DD
-    // Adjust the controller name below if your page is under a specific controller
-        // Example: if URL is /Admin/generateDailyConsumptions → use '/Admin/generateDailyConsumptions'
-
-
-    const url = `/Admin/generateDailyConsumptions?date=${selectedDate}`;
-
-    try {
-            const response = await fetch(url, {
-        method: 'GET',
   
-            });
-
-    if (!response.ok) {
-                throw new Error('Failed to load data');
-            }
-
-    const html = await response.text(); // Expecting full or partial HTML
-
-    // Replace the entire container content (or just the table if you return partial view)
-    document.querySelector('.mess-container').innerHTML =
-    (/<!DOCTYPE html>/.test(html)
-    ? html.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1] // if full page returned
-    : html); // if partial view
-
-    // Update displayed date
-    const dateObj = new Date(selectedDate);
-    const formatted = dateObj.toLocaleDateString('en-US', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            });
-    document.getElementById('displayDate').textContent = formatted;
-
-    showAlert(`Consumption data loaded for ${formatted}`, 'success');
-        updateSelectedCount();
-            // Re-attach any scripts if needed (your existing JS file is already loaded globally)
-        } catch (error) {
-        console.error(error);
-    showAlert('Error loading consumption data. Please try again.', 'danger');
-        }
-    }
-
-    // Attach click event
-    document.getElementById('loadDateBtn').addEventListener('click', loadConsumptionForDate);
-
     // Optional: Trigger on Enter key in date field
     document.getElementById('consumptionDate').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
@@ -322,3 +269,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
+
+async function loadConsumptionForDate() {
+    const dateInput = document.getElementById('consumptionDate');
+    const selectedDate = dateInput.value;
+    if (!selectedDate) {
+        showAlert('Please select a valid date.', 'warning');
+        return;
+    }
+
+    const url = `/Admin/generateDailyConsumptions?date=${selectedDate}`;
+
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        if (!response.ok) throw new Error('Failed to load data');
+
+        const html = await response.text();
+
+        document.querySelector('.mess-container').innerHTML =
+            (/<!DOCTYPE html>/.test(html)
+                ? html.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1]
+                : html);
+
+        // Update displayed date
+        const dateObj = new Date(selectedDate);
+        const formatted = dateObj.toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        document.getElementById('displayDate').textContent = formatted;
+
+        showAlert(`Consumption data loaded for ${formatted}`, 'success');
+        updateSelectedCount();
+
+        // === FIX: Re-attach the click listener to the NEW button ===
+        const newLoadBtn = document.getElementById('loadDateBtn');
+        if (newLoadBtn) {
+            newLoadBtn.addEventListener('click', loadConsumptionForDate);
+        }
+        // === Also sync the date input so saving uses correct date ===
+        const newDateInput = document.getElementById('consumptionDate');
+        if (newDateInput) {
+            newDateInput.value = selectedDate;
+        }
+
+    } catch (error) {
+        console.error(error);
+        showAlert('Error loading consumption data. Please try again.', 'danger');
+    }
+}
+// Re-attach event listener to the newly loaded button
+const loadBtn = document.getElementById('loadDateBtn');
+if (loadBtn) {
+    loadBtn.addEventListener('click', loadConsumptionForDate);
+}
