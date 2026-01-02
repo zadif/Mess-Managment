@@ -602,18 +602,19 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveUserConsumption(int userId, string[] consumptions)
+        public async Task<IActionResult> SaveUserConsumption(int userId, string[] consumptions,string date)
         {
             try
             {
-                var today = DateOnly.FromDateTime(DateTime.Today);
+                DateOnly Date = changeDateFormat(date);
+
                 int addedCount = 0;
 
                
                 {
                     // Delete existing records for this user today
                     await  _context.DailyConsumptions
-                        .Where(d => d.UserId == userId && d.ConsumptionDate == today)
+                        .Where(d => d.UserId == userId && d.ConsumptionDate == Date)
                         .ExecuteDeleteAsync();
 
                     if (consumptions != null && consumptions.Any())
@@ -627,7 +628,7 @@ namespace EAD.Controllers
                                 {
                                     UserId = userId,
                                     MealItemId = mealItemId,
-                                    ConsumptionDate = today,
+                                    ConsumptionDate = Date,
                                     Quantity = 1
                                 });
                                 addedCount++;

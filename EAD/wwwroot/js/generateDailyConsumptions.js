@@ -138,6 +138,8 @@ async function saveEdit() {
     const formData = new FormData();
     formData.append('userId', window.currentEditUserId);
     consumptions.forEach(v => formData.append('consumptions', v));
+    let selectedDate = getDate();
+    formData.append('date', selectedDate);
 
 
     try {
