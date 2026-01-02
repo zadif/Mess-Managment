@@ -696,7 +696,7 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUserConsumption(string userId)
+        public async Task<IActionResult> DeleteUserConsumption(string userId,string date)
         {
             try
             {
@@ -709,12 +709,13 @@ namespace EAD.Controllers
                     });
                 }
 
-                var today = DateOnly.FromDateTime(DateTime.Today);
+                DateOnly Date = changeDateFormat(date);
 
-               
+
+
                 {
                     var deletedCount = await  _context.DailyConsumptions
-                        .Where(d => d.UserId == uid && d.ConsumptionDate == today && d.IsBilled == false)
+                        .Where(d => d.UserId == uid && d.ConsumptionDate == Date && d.IsBilled == false)
                         .ExecuteDeleteAsync();
 
                     if (deletedCount > 0)

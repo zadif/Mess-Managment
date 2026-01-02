@@ -174,7 +174,8 @@ async function deleteUserConsumption(userId, userName) {
 
     const formData = new FormData();
     formData.append('userId', userId);
-
+    let selectedDate = getDate();
+    formData.append('date', selectedDate);
 
     try {
         const response = await fetch('/Admin/DeleteUserConsumption', {
