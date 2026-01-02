@@ -105,7 +105,7 @@ async function openEditModal(userId) {
                                class="theme-checkbox" ${item.isChecked ? 'checked' : ''}
                                onclick="event.stopPropagation()">
                         <label for="${id}">
-                            <span class="d-block text-white fw-bold">${item.mealType}</span>
+                             <span class="d-block text-white fw-bold">${item.mealType}:  &nbsp;&nbsp;</span>
                             <span class="text-muted small">${item.itemName}</span>
                         </label>
                     </div>`;
