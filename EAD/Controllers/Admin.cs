@@ -388,6 +388,33 @@ namespace EAD.Controllers
                 return RedirectToAction("DailyMeals");
             }
         }
+
+        private DateOnly changeDateFormat(string date)
+        {
+            DateOnly Date;
+            if (date == null)
+            {
+
+                Date = DateOnly.FromDateTime(DateTime.Today);
+            }
+            else
+            {
+                bool isValid = DateOnly.TryParseExact(
+            date,
+            "yyyy-MM-dd",
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None,
+            out Date);
+
+                if (!isValid)
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Today);
+                    ViewBag.ErrorMessage = "Invalid date. Showing today.";
+                }
+            }
+            return Date;
+        }
+
         [HttpGet]
         public async Task<IActionResult> generateDailyConsumptions(string date = null)
         {
@@ -525,27 +552,8 @@ namespace EAD.Controllers
             {
                 string[] consumptions = request.Consumptions;
                 string date = request.Date;
-                DateOnly Date;
-                if (date == null)
-                {
-
-                    Date = DateOnly.FromDateTime(DateTime.Today);
-                }
-                else
-                {
-                    bool isValid = DateOnly.TryParseExact(
-                date,
-                "yyyy-MM-dd",
-                System.Globalization.CultureInfo.InvariantCulture,
-                System.Globalization.DateTimeStyles.None,
-                out Date);
-
-                    if (!isValid)
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Today);
-                        ViewBag.ErrorMessage = "Invalid date. Showing today.";
-                    }
-                }
+                DateOnly Date= changeDateFormat(date);
+               
                 int addedCount = 0;
 
 
@@ -647,16 +655,15 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteTodayConsumption()
+        public async Task<IActionResult> DeleteTodayConsumption( string date = null)
         {
             try
             {
-                var today = DateOnly.FromDateTime(DateTime.Today);
+                DateOnly Date = changeDateFormat(date);
 
-               
                 {
                     var deletedCount = await  _context.DailyConsumptions
-                        .Where(d => d.ConsumptionDate == today && d.IsBilled == false)
+                        .Where(d => d.ConsumptionDate == Date && d.IsBilled == false)
                         .ExecuteDeleteAsync();
 
                     if (deletedCount > 0)

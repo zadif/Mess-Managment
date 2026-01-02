@@ -29,6 +29,7 @@ function toggleCheckboxes() {
     updateSelectedCount();
 }
 
+
 // Save all consumptions (main Save button)
 async function saveAllConsumptions() {
     if (isSaving) return;
@@ -45,26 +46,9 @@ async function saveAllConsumptions() {
     consumptions.forEach(val => formData.append('consumptions', val));
 
 
-    const displayDateEl = document.getElementById('displayDate');
-    let selectedDate = '';
+    let selectedDate = getDate();
 
-    // Try to get it from data-date attribute first (best way, if you have it)
-    if (displayDateEl?.dataset.date) {
-        selectedDate = displayDateEl.dataset.date;
-    }
-    // Fallback: parse the visible text (e.g., "Wednesday, January 01, 2026")
-    else if (displayDateEl) {
-        const text = displayDateEl.textContent.trim();
-        const dateObj = new Date(text);
-        if (!isNaN(dateObj)) {
-            selectedDate = dateObj.toISOString().split('T')[0]; // "2026-01-01"
-        }
-    }
-
-    // Final fallback to today if something went wrong
-    if (!selectedDate) {
-        selectedDate = new Date().toISOString().split('T')[0];
-    }
+ 
 
     formData.append('date', selectedDate);
 
@@ -202,11 +186,15 @@ async function deleteUserConsumption(userId, userName) {
 async function deleteTodayConsumption() {
     if (!confirm('Delete ALL consumption records for today? This cannot be undone.')) return;
 
-
+    const formData = new FormData();
+    let selectedDate = getDate();
+    formData.append('date', selectedDate);
     try {
         disableButtons(true);
         const response = await fetch('/Admin/DeleteTodayConsumption', {
             method: 'POST',
+            body: formData,
+
         });
 
         const result = await response.json();
@@ -322,4 +310,38 @@ async function loadConsumptionForDate() {
 const loadBtn = document.getElementById('loadDateBtn');
 if (loadBtn) {
     loadBtn.addEventListener('click', loadConsumptionForDate);
+}
+
+
+
+function getDate() {
+    const displayDateEl = document.getElementById('displayDate');
+    let selectedDate = '';
+
+    // Priority: data-date attribute (exact, no parsing needed)
+    if (displayDateEl?.dataset.date) {
+        selectedDate = displayDateEl.dataset.date;
+    }
+    // Fallback: parse visible text safely in local time
+    else if (displayDateEl) {
+        const text = displayDateEl.textContent.trim();
+        const dateObj = new Date(text);
+        if (!isNaN(dateObj.getTime())) {
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            selectedDate = `${year}-${month}-${day}`;
+        }
+    }
+
+    // Final fallback: today's date in LOCAL time (no UTC shift)
+    if (!selectedDate) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth()   +1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        selectedDate = `${year}-${month}-${day}`;
+    }
+
+    return selectedDate;
 }
