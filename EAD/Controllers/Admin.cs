@@ -490,16 +490,16 @@ namespace EAD.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetUserConsumption(int userId)
+        public async Task<JsonResult> GetUserConsumption(int userId,string date)
         {
             try
             {
-                var today = DateOnly.FromDateTime(DateTime.Today);
+                DateOnly Date = changeDateFormat(date);
 
-               
+
                 {
                     var consumedItemIdList = await  _context.DailyConsumptions
-                         .Where(d => d.UserId == userId && d.ConsumptionDate == today)
+                         .Where(d => d.UserId == userId && d.ConsumptionDate == Date)
                          .Select(d => d.MealItemId)
                          .ToListAsync();
 
@@ -507,7 +507,7 @@ namespace EAD.Controllers
 
                     var menus = await  _context.DailyMenus
                         .Include(m => m.MealItem)
-                        .Where(m => m.DayOfWeek == today.DayOfWeek.ToString())
+                        .Where(m => m.DayOfWeek == Date.DayOfWeek.ToString())
                         .ToListAsync();
 
                     var user = await  _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();

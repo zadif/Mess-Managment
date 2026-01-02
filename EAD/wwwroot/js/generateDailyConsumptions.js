@@ -82,8 +82,17 @@ async function saveAllConsumptions() {
 // Open Edit Modal
 async function openEditModal(userId) {
     try {
-        const response = await fetch(`/Admin/GetUserConsumption?userId=${userId}`);
-        if (!response.ok) throw new Error('Failed to fetch');
+        let selectedDate = getDate();
+
+        const params = new URLSearchParams({
+            userId: userId,
+            date: selectedDate
+        });
+
+        const response = await fetch(`/Admin/GetUserConsumption?${params}`);
+     if (!response.ok) {
+    console.error('Fetch failed:', response.status, await response.text());
+}
 
         const data = await response.json();
 
