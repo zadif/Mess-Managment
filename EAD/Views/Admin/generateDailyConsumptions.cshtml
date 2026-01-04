@@ -13,7 +13,7 @@
             <i class="fa fa-home me-2"></i>Home
         </a>
     </div>
-    <!-- NEW: Date Picker + Load Button -->
+
     <!-- Date Picker + Load Button -->
     <div class="mb-4 p-4 bg-theme-dark rounded shadow-sm border border-theme-border">
         <div class="d-flex flex-wrap align-items-center gap-3">
@@ -30,34 +30,29 @@
                        required />
             </div>
 
-            <a class="btn btn-theme-orange" id="loadDateBtn">
-          
-                  Load Consumptions
-                </a>
+            <button class="btn btn-theme-orange" id="loadDateBtn" onclick="loadData()">
+                Load Consumptions
+            </button>
         </div>
 
         <small class="text-muted mt-3 d-block">
             Current data shown is for: <strong id="displayDate">@DateTime.Today.ToString("dddd, MMMM dd, yyyy")</strong>
-
         </small>
     </div>
+
     <!-- Dynamic Alert Area -->
     <div id="alertContainer"></div>
 
-    @if (ViewBag.Menus == null || !(ViewBag.Menus as IEnumerable<DailyMenu>)?.Any() == true)
-    {
-        <div class="alert alert-theme-warning">
-            <i class="fa fa-exclamation-triangle me-2"></i> No menu items found for today.
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+        <div class="spinner-border text-theme-orange" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
-    }
-    else if (ViewBag.Users == null || !(ViewBag.Users as IEnumerable<User>)?.Any() == true)
-    {
-        <div class="alert alert-theme-warning">
-            <i class="fa fa-users-slash me-2"></i> No active users found.
-        </div>
-    }
-    else
-    {
+        <p class="text-muted mt-2">Loading data...</p>
+    </div>
+
+    <!-- Content Container -->
+    <div id="contentContainer" style="display: none;">
         <div class="action-toolbar mb-4 p-3 rounded d-flex justify-content-between align-items-center flex-wrap gap-3">
             <button type="button" id="toggleBtn" class="btn btn-theme-outline" onclick="toggleCheckboxes()">
                 <i class="fa fa-check-square me-2"></i>Mark / Unmark All
@@ -74,89 +69,23 @@
 
         <div class="table-responsive">
             <form id="saveForm">
-                <table class="table theme-table align-middle">
+                <table class="table theme-table align-middle" id="consumptionTable">
                     <thead>
-                        <tr>
-                            <th class="ps-4">User</th>
-                            <th>Type</th>
-                            @foreach (var menu in ViewBag.Menus)
-                            {
-                                <th class="text-center">
-                                    <div class="d-flex flex-column">
-                                        <span class="menu-type">@menu.MealType</span>
-                                        <small class="text-muted">@menu.MealItem.Name (Rs. @menu.MealItem.Price)</small>
-                                    </div>
-                                </th>
-                            }
-                            <th class="text-center pe-4">Actions</th>
+                        <tr id="tableHeaderRow">
+                            <!-- Headers will be injected by JS -->
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (var user in ViewBag.Users)
-                        {
-                            var alreadyGenerated = ViewBag.AlreadyGenerated?.Contains(user.Id) == true;
-                            <tr class="@(alreadyGenerated ? "row-generated" : "")" data-user-id="@user.Id">
-                                <td class="ps-4">
-                                    <div class="fw-bold text-white">@user.Name</div>
-                                    <small class="text-muted">#@user.Id</small>
-                                </td>
-                                <td>
-                                    <span class="badge @(user.UserType == 2 ? "badge-food" : "badge-drink")">
-                                        @(user.UserType == 2 ? "Food + Drinks" : "Drinks Only")
-                                    </span>
-                                </td>
-
-                                @if (alreadyGenerated)
-                                {
-                                    <td colspan="@ViewBag.Menus.Count" class="text-center">
-                                        <span class="badge badge-generated">
-                                            <i class="fa fa-check me-1"></i> Generated
-                                        </span>
-                                    </td>
-                                }
-                                else
-                                {
-                                    @foreach (var menu in ViewBag.Menus)
-                                    {
-                                        var canConsume = user.UserType == 2 || !menu.MealItem.Category.Equals("Food", StringComparison.OrdinalIgnoreCase);
-                                        <td class="text-center">
-                                            @if (canConsume)
-                                            {
-                                                <div class="custom-check-wrapper">
-                                                    <input type="checkbox"
-                                                           class="item theme-checkbox"
-                                                           data-value="@user.Id-@menu.MealItemId"
-                                                           checked />
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted opacity-25"><i class="fa fa-ban"></i></span>
-                                            }
-                                        </td>
-                                    }
-                                }
-
-                                <td class="text-center pe-4">
-                                    @if (alreadyGenerated)
-                                    {
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-icon-blue" onclick="openEditModal(@user.Id)" title="Edit">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-icon-red ms-2" onclick="deleteUserConsumption(@user.Id, '@user.Name')">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    }
-                                </td>
-                            </tr>
-                        }
+                    <tbody id="tableBody">
+                        <!-- Rows will be injected by JS -->
                     </tbody>
                 </table>
             </form>
         </div>
-    }
+    </div>
+
+    <div id="noDataMessage" class="alert alert-theme-warning" style="display: none;">
+        <i class="fa fa-exclamation-triangle me-2"></i> No menu items found for this date.
+    </div>
 </div>
 
 <!-- Edit Modal -->
@@ -182,3 +111,9 @@
 </div>
 
 <script src="~/js/generateDailyConsumptions.js"></script>
+<script>
+    // Load data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadData();
+    });
+</script>

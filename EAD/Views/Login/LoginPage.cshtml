@@ -38,8 +38,6 @@
     </style>
 </head>
 <body>
-
- 
     <div class="main-container">
         <div class="login-card">
 
@@ -57,7 +55,7 @@
                 </div>
             }
 
-            <form action="/Login/LoginPage" class="login-form" method="post">
+            <form action="/Login/LoginPage" class="login-form" method="post" onsubmit="return validateForm()">
                 <!-- Input 1: Name/Email -->
                 <div class="input-group">
                     <input type="text" id="username" required placeholder=" " name="email">
@@ -95,9 +93,8 @@
 
         </div>
     </div>
-
-    <!-- Link to your JS file -->
+      <!-- Link to your JS file -->
     <script src="~/js/login.js"></script>
-
+  
 </body>
 </html>

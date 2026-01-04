@@ -49,3 +49,27 @@
          document.getElementById("hiddenRoleInput").value = "User";
     }
 });
+
+
+    function validateForm() {
+        const email = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('hiddenRoleInput').value;
+
+        // Admin bypass: Admin login is hardcoded as "a"/"a" in backend, so we skip validation for Admin
+        if (role === 'Admin') {
+            return true;
+        }
+
+        if (!email.includes('@')) {
+            alert('Please enter a valid email address containing "@".');
+            return false;
+        }
+
+        if (password.length < 3) {
+            alert('Password must be at least 3 characters long.');
+            return false;
+        }
+
+        return true;
+    }

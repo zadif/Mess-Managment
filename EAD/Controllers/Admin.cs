@@ -8,24 +8,24 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace EAD.Controllers
 {
-    [Authorize(AuthenticationSchemes = "JwtAuth" ,Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = "JwtAuth", Roles = "Admin")]
 
     public class Admin : Controller
     {
         private readonly EadProjectContext _context;  // ← Added: injected  _contextContext
 
-        public Admin( EadProjectContext context)  // ← Added context parameter
+        public Admin(EadProjectContext context)  // ← Added context parameter
         {
-            _context = context; 
+            _context = context;
         }
         public async Task<IActionResult> ManageUsers()
         {
             List<User> usr = new List<User>();
             try
             {
-               
-                    usr = await _context.Users.ToListAsync();
-                
+
+                usr = await _context.Users.ToListAsync();
+
             }
             catch (Exception)
             {
@@ -61,12 +61,12 @@ namespace EAD.Controllers
                 if (!ModelState.IsValid)
                     return View(user);
 
-               
+
                 {
                     if (user.Id == 0)
                     {
                         // CHECK IF EMAIL ALREADY EXISTS
-                        if (await  _context.Users.AnyAsync(u => u.Email == user.Email))
+                        if (await _context.Users.AnyAsync(u => u.Email == user.Email))
                         {
                             ViewBag.Error = "Email already exists.";
                             return View(user);
@@ -80,12 +80,12 @@ namespace EAD.Controllers
 
                         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                         user.CreatedOn = DateTime.Now;
-                        await  _context.Users.AddAsync(user);
+                        await _context.Users.AddAsync(user);
                     }
                     else
                     {
                         // Edit User → Update only if NewPassword is provided
-                        var existing = await  _context.Users.FindAsync(user.Id);
+                        var existing = await _context.Users.FindAsync(user.Id);
                         if (existing != null)
                         {
                             existing.Name = user.Name;
@@ -100,7 +100,7 @@ namespace EAD.Controllers
                             }
                         }
                     }
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("ManageUsers");
             }
@@ -117,9 +117,9 @@ namespace EAD.Controllers
             {
                 if (string.IsNullOrEmpty(id)) return RedirectToAction("ManageUsers");
 
-               
+
                 {
-                    var temp = await  _context.Users.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
+                    var temp = await _context.Users.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
                     if (temp != null)
                     {
                         return View("AddUser", temp);
@@ -140,12 +140,12 @@ namespace EAD.Controllers
             {
                 if (string.IsNullOrEmpty(id)) return RedirectToAction("ManageUsers");
 
-               
+
                 {
-                    int rowsAffected = await  _context.Users
+                    int rowsAffected = await _context.Users
                         .Where(u => u.Id == Convert.ToInt32(id))
                         .ExecuteDeleteAsync();
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("ManageUsers");
             }
@@ -162,9 +162,9 @@ namespace EAD.Controllers
             List<MealItem> items = new List<MealItem>();
             try
             {
-               
+
                 {
-                    items = await  _context.MealItems.ToListAsync();
+                    items = await _context.MealItems.ToListAsync();
                 }
             }
             catch (Exception)
@@ -188,15 +188,15 @@ namespace EAD.Controllers
                 if (!ModelState.IsValid)
                     return View(item);
 
-               
+
                 {
                     if (item.Id == 0)
                     {
-                        await  _context.MealItems.AddAsync(item);
+                        await _context.MealItems.AddAsync(item);
                     }
                     else
                     {
-                        var existing = await  _context.MealItems.FindAsync(item.Id);
+                        var existing = await _context.MealItems.FindAsync(item.Id);
                         if (existing != null)
                         {
                             existing.Name = item.Name;
@@ -205,7 +205,7 @@ namespace EAD.Controllers
                             existing.Category = item.Category;
                         }
                     }
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("ManageMeals");
             }
@@ -222,9 +222,9 @@ namespace EAD.Controllers
             {
                 if (string.IsNullOrEmpty(id)) return RedirectToAction("ManageMeals");
 
-               
+
                 {
-                    var temp = await  _context.MealItems.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
+                    var temp = await _context.MealItems.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
                     if (temp != null)
                     {
                         return View("AddMeal", temp);
@@ -244,12 +244,12 @@ namespace EAD.Controllers
             {
                 if (string.IsNullOrEmpty(id)) return RedirectToAction("ManageMeals");
 
-               
+
                 {
-                    int rowsAffected = await  _context.MealItems
+                    int rowsAffected = await _context.MealItems
                         .Where(u => u.Id == Convert.ToInt32(id))
                         .ExecuteDeleteAsync();
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("ManageMeals");
             }
@@ -264,9 +264,9 @@ namespace EAD.Controllers
             List<DailyMenuViewModel> meals = new List<DailyMenuViewModel>();
             try
             {
-               
+
                 {
-                    meals = await  _context.DailyMenus
+                    meals = await _context.DailyMenus
                         .Include(m => m.MealItem)
                         .Select(m => new DailyMenuViewModel
                         {
@@ -293,9 +293,9 @@ namespace EAD.Controllers
             try
             {
                 List<MealItem> items = new List<MealItem>();
-               
+
                 {
-                    items = await  _context.MealItems.ToListAsync();
+                    items = await _context.MealItems.ToListAsync();
                 }
                 ViewBag.MealItems = items;
                 return View(new DailyMenu());
@@ -321,13 +321,13 @@ namespace EAD.Controllers
                     return View("DailyMeals");
                 }
 
-               
+
                 {
                     if (item.Id == 0)
-                        await  _context.DailyMenus.AddAsync(item);
+                        await _context.DailyMenus.AddAsync(item);
                     else
                     {
-                        var existing = await  _context.DailyMenus.FindAsync(item.Id);
+                        var existing = await _context.DailyMenus.FindAsync(item.Id);
                         if (existing != null)
                         {
                             existing.DayOfWeek = item.DayOfWeek;
@@ -336,7 +336,7 @@ namespace EAD.Controllers
                             existing.MealItem = item.MealItem;
                         }
                     }
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("DailyMeals");
             }
@@ -351,12 +351,12 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    int rowsAffected = await  _context.DailyMenus
+                    int rowsAffected = await _context.DailyMenus
                         .Where(u => u.Id == Convert.ToInt32(id))
                         .ExecuteDeleteAsync();
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("DailyMeals");
             }
@@ -370,12 +370,12 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var temp = await  _context.DailyMenus.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
+                    var temp = await _context.DailyMenus.Where(usr => usr.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
                     if (temp != null)
                     {
-                        List<MealItem> items = await  _context.MealItems.ToListAsync();
+                        List<MealItem> items = await _context.MealItems.ToListAsync();
                         ViewBag.MealItems = items;
                         return View("SetDailyMeals", temp);
                     }
@@ -416,7 +416,7 @@ namespace EAD.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> generateDailyConsumptions(string date = null)
+        public async Task<IActionResult> GetDailyConsumptionsData(string date = null)
         {
             try
             {
@@ -425,72 +425,55 @@ namespace EAD.Controllers
 
                 if (string.IsNullOrEmpty(date))
                 {
-                    // Default: Today
                     targetDate = DateTime.Today;
-                    Date = DateTime.Today.ToString("dddd"); // e.g., "Wednesday"
+                    Date = DateTime.Today.ToString("dddd");
                 }
                 else
                 {
-                    // Parse the incoming "yyyy-MM-dd" string from date picker
-                    bool isValid = DateTime.TryParseExact(
-                        date,
-                        "yyyy-MM-dd",
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        System.Globalization.DateTimeStyles.None,
-                        out targetDate);
-
+                    bool isValid = DateTime.TryParseExact(date, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out targetDate);
                     if (isValid)
                     {
-                        // Successfully parsed
-                        Date = targetDate.ToString("dddd"); // e.g., "Monday"
+                        Date = targetDate.ToString("dddd");
                     }
                     else
                     {
-                        // Invalid date → fallback to today
                         targetDate = DateTime.Today;
                         Date = DateTime.Today.ToString("dddd");
-                        ViewBag.ErrorMessage = "Invalid date selected. Showing today's data.";
                     }
                 }
 
+                var menus = await _context.DailyMenus.Include(s => s.MealItem).Where(e => e.DayOfWeek == Date).ToListAsync();
+                var users = await _context.Users.Where(e => e.IsActive == true).ToListAsync();
 
-                var temp = await _context.DailyMenus.Include(s => s.MealItem).Where(e => e.DayOfWeek == Date).ToListAsync();
-                if (temp != null)
+                var today2 = DateOnly.FromDateTime(targetDate);
+                var alreadyGeneratedUsers = await _context.DailyConsumptions
+                    .Where(d => d.ConsumptionDate == today2)
+                    .Select(d => d.UserId)
+                    .ToListAsync();
+
+                return Json(new
                 {
-                    var users = await _context.Users.Where(e => e.IsActive == true).ToListAsync();
-
-                    if (users == null)
-                    {
-                        ViewBag.Error = "No User exists";
-                        return View();
-                    }
-                    var today2 = DateOnly.FromDateTime(targetDate);
-                    var alreadyGeneratedUsers = await _context.DailyConsumptions
-                        .Where(d => d.ConsumptionDate == today2)
-                        .Select(d => d.UserId)
-                        .ToListAsync();
-
-                    ViewBag.AlreadyGenerated = alreadyGeneratedUsers;
-                    ViewBag.Users = users;
-                    ViewBag.Menus = temp;
-                    return View();
-                }
-                else
-                {
-                    ViewBag.Error = "No Menu exists for today";
-                    return View();
-                }
+                    success = true,
+                    users = users.Select(u => new { u.Id, u.Name, u.UserType }),
+                    menus = menus.Select(m => new { m.MealItemId, m.MealType, MealItem = new { m.MealItem.Name, m.MealItem.Price, m.MealItem.Category } }),
+                    alreadyGenerated = alreadyGeneratedUsers,
+                    displayDate = targetDate.ToString("dddd, MMMM dd, yyyy")
+                });
             }
-
             catch (Exception)
             {
-                ViewBag.Error = "Server error. Please try later.";
-                return View();
+                return Json(new { success = false, message = "Server error" });
             }
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetUserConsumption(int userId,string date)
+        public IActionResult generateDailyConsumptions()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetUserConsumption(int userId, string date)
         {
             try
             {
@@ -498,19 +481,19 @@ namespace EAD.Controllers
 
 
                 {
-                    var consumedItemIdList = await  _context.DailyConsumptions
+                    var consumedItemIdList = await _context.DailyConsumptions
                          .Where(d => d.UserId == userId && d.ConsumptionDate == Date)
                          .Select(d => d.MealItemId)
                          .ToListAsync();
 
                     var consumedItemIds = consumedItemIdList.ToHashSet();
 
-                    var menus = await  _context.DailyMenus
+                    var menus = await _context.DailyMenus
                         .Include(m => m.MealItem)
                         .Where(m => m.DayOfWeek == Date.DayOfWeek.ToString())
                         .ToListAsync();
 
-                    var user = await  _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+                    var user = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
 
                     var menuList = new List<object>();
 
@@ -552,13 +535,13 @@ namespace EAD.Controllers
             {
                 string[] consumptions = request.Consumptions;
                 string date = request.Date;
-                DateOnly Date= changeDateFormat(date);
-               
+                DateOnly Date = changeDateFormat(date);
+
                 int addedCount = 0;
 
 
 
-               
+
                 {
                     if (consumptions != null && consumptions.Any())
                     {
@@ -569,7 +552,7 @@ namespace EAD.Controllers
                                 int.TryParse(parts[0], out int userId) &&
                                 int.TryParse(parts[1], out int mealItemId))
                             {
-                                await  _context.DailyConsumptions.AddAsync(new DailyConsumption
+                                await _context.DailyConsumptions.AddAsync(new DailyConsumption
                                 {
                                     UserId = userId,
                                     MealItemId = mealItemId,
@@ -581,7 +564,7 @@ namespace EAD.Controllers
                             }
                         }
                     }
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
 
                 return Json(new
@@ -602,7 +585,7 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveUserConsumption(int userId, string[] consumptions,string date)
+        public async Task<IActionResult> SaveUserConsumption(int userId, string[] consumptions, string date)
         {
             try
             {
@@ -610,10 +593,10 @@ namespace EAD.Controllers
 
                 int addedCount = 0;
 
-               
+
                 {
                     // Delete existing records for this user today
-                    await  _context.DailyConsumptions
+                    await _context.DailyConsumptions
                         .Where(d => d.UserId == userId && d.ConsumptionDate == Date)
                         .ExecuteDeleteAsync();
 
@@ -624,7 +607,7 @@ namespace EAD.Controllers
                             var parts = item.Split('-');
                             if (parts.Length >= 2 && int.TryParse(parts[1], out int mealItemId))
                             {
-                                await  _context.DailyConsumptions.AddAsync(new DailyConsumption
+                                await _context.DailyConsumptions.AddAsync(new DailyConsumption
                                 {
                                     UserId = userId,
                                     MealItemId = mealItemId,
@@ -634,7 +617,7 @@ namespace EAD.Controllers
                                 addedCount++;
                             }
                         }
-                        await  _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
 
                     return Json(new
@@ -656,14 +639,14 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteTodayConsumption( string date = null)
+        public async Task<IActionResult> DeleteTodayConsumption(string date = null)
         {
             try
             {
                 DateOnly Date = changeDateFormat(date);
 
                 {
-                    var deletedCount = await  _context.DailyConsumptions
+                    var deletedCount = await _context.DailyConsumptions
                         .Where(d => d.ConsumptionDate == Date && d.IsBilled == false)
                         .ExecuteDeleteAsync();
 
@@ -696,7 +679,7 @@ namespace EAD.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUserConsumption(string userId,string date)
+        public async Task<IActionResult> DeleteUserConsumption(string userId, string date)
         {
             try
             {
@@ -714,7 +697,7 @@ namespace EAD.Controllers
 
 
                 {
-                    var deletedCount = await  _context.DailyConsumptions
+                    var deletedCount = await _context.DailyConsumptions
                         .Where(d => d.UserId == uid && d.ConsumptionDate == Date && d.IsBilled == false)
                         .ExecuteDeleteAsync();
 
@@ -754,9 +737,9 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var temps = await  _context.DailyConsumptions.Where(e => e.IsBilled == false)
+                    var temps = await _context.DailyConsumptions.Where(e => e.IsBilled == false)
                         .Include(c => c.MealItem)
                         .Include(c => c.User).ToListAsync();
                     temps.Reverse();
@@ -775,18 +758,18 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
                     var bill = new Bill
                     {
                         UserId = Convert.ToInt32(userId),
                         TotalAmount = Convert.ToDecimal(total),
                     };
-                    await  _context.Bills.AddAsync(bill);
-                    await  _context.SaveChangesAsync();
+                    await _context.Bills.AddAsync(bill);
+                    await _context.SaveChangesAsync();
 
                     // Mark consumptions as billed
-                    var consumptions = await  _context.DailyConsumptions
+                    var consumptions = await _context.DailyConsumptions
                         .Where(d => d.UserId == bill.UserId && d.IsBilled == false)
                         .ToListAsync();
 
@@ -795,7 +778,7 @@ namespace EAD.Controllers
                         c.IsBilled = true;
                         c.BillId = bill.Id;
                     }
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
 
                 return Json(new { success = true });
@@ -810,9 +793,9 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var temps = await  _context.Bills
+                    var temps = await _context.Bills
                            .Include(c => c.User).ToListAsync();
                     temps.Reverse();
                     return View(temps);
@@ -830,14 +813,14 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var bill = await  _context.Bills.FirstOrDefaultAsync(b => b.Id == billId);
+                    var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == billId);
 
                     if (bill != null && bill.IsPaid && !bill.VerifiedByAdmin)
                     {
                         bill.VerifiedByAdmin = true;
-                        await  _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                         return Json(1); // Success
                     }
                 }
@@ -851,9 +834,9 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var temp = await  _context.BillRecheckRequests.Include(s => s.Bill).Include(s => s.User).ToListAsync();
+                    var temp = await _context.BillRecheckRequests.Include(s => s.Bill).Include(s => s.User).ToListAsync();
                     temp.Reverse();
                     return View(temp);
                 }
@@ -870,9 +853,9 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var request = await  _context.BillRecheckRequests.Include(r => r.Bill).FirstOrDefaultAsync(r => r.Id == requestId);
+                    var request = await _context.BillRecheckRequests.Include(r => r.Bill).FirstOrDefaultAsync(r => r.Id == requestId);
 
                     if (request == null) return Json(new { success = false });
 
@@ -886,7 +869,7 @@ namespace EAD.Controllers
                         request.Status = "Rejected";
                     }
 
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                     return Json(new { success = true });
                 }
             }
@@ -900,9 +883,9 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var temps = await  _context.DailyConsumptions.Where(e => e.WasUserPresent == false).Include(s => s.User).Include(s=>s.MealItem)
+                    var temps = await _context.DailyConsumptions.Where(e => e.WasUserPresent == false).Include(s => s.User).Include(s => s.MealItem)
                           .Select(m => new recheckDailyConsumptionAdminViewModel
                           {
                               Id = m.Id,
@@ -931,18 +914,18 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
                     //Reducing the bill
-                    var temp = await  _context.DailyConsumptions.Where(e => e.Id == id).Include(s => s.Bill).Include(s => s.MealItem).FirstOrDefaultAsync();
+                    var temp = await _context.DailyConsumptions.Where(e => e.Id == id).Include(s => s.Bill).Include(s => s.MealItem).FirstOrDefaultAsync();
                     if (temp != null)
                     {
                         if (temp.Bill != null && temp.MealItem != null)
                         {
                             temp.Bill.TotalAmount -= temp.MealItem.Price;
                         }
-                        await  _context.DailyConsumptions.Where(e => e.Id == id).ExecuteDeleteAsync();
-                        await  _context.SaveChangesAsync();
+                        await _context.DailyConsumptions.Where(e => e.Id == id).ExecuteDeleteAsync();
+                        await _context.SaveChangesAsync();
                     }
                 }
                 return Json(new { success = true });
@@ -958,14 +941,14 @@ namespace EAD.Controllers
         {
             try
             {
-               
+
                 {
-                    var consumption = await  _context.DailyConsumptions.Where(e => e.Id == id).FirstOrDefaultAsync();
+                    var consumption = await _context.DailyConsumptions.Where(e => e.Id == id).FirstOrDefaultAsync();
                     if (consumption != null)
                     {
                         consumption.WasUserPresent = true; // Put it back
                     }
-                    await  _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return Json(new { success = true });
             }
@@ -974,12 +957,12 @@ namespace EAD.Controllers
                 return Json(new { success = false });
             }
         }
-   
-    public async Task< IActionResult> Statistics()
+
+        public async Task<IActionResult> Statistics()
         {
 
-                StatisticsViewModel cs=new StatisticsViewModel();
-        
+            StatisticsViewModel cs = new StatisticsViewModel();
+
             try
             {
                 {

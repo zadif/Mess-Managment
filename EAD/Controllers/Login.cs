@@ -81,7 +81,7 @@ namespace EAD.Controllers
             {
                 if (role == "Admin")
                 {
-                    if (email == "a" && password == "a")
+                    if (email == "admin@gmail.com" && password == "123")
                     {
                         var token = GenerateJwtToken(email, "Admin");
                         // Save JWT Token in HttpOnly Cookie
@@ -120,7 +120,7 @@ namespace EAD.Controllers
                             {
                                 Expires = DateTime.Now.AddDays(30),
                                 HttpOnly = true,
-                                Secure = true
+                              //  Secure = true
                             });
                             return RedirectToAction("Home", "Dashboard");
                         }
