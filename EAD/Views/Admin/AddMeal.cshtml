@@ -25,31 +25,30 @@
                 <!-- Dish Name -->
                 <div class="form-group">
                     <label asp-for="Name" class="form-label">Dish Name <span class="text-danger">*</span></label>
-                    <input asp-for="Name" class="form-control" placeholder="Ex: Chicken Biryani" />
+                    <input asp-for="Name" class="form-control" placeholder="Ex: Chicken Biryani" required minlength="2" maxlength="100" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <!-- Description -->
                 <div class="form-group">
                     <label asp-for="Description" class="form-label">Description <span class="text-danger">*</span></label>
-                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Ex: Spicy rice with tender chicken"></textarea>
+                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Ex: Spicy rice with tender chicken" required maxlength="500"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <!-- Price -->
                 <div class="form-group">
                     <label asp-for="Price" class="form-label">Price (PKR) <span class="text-danger">*</span></label>
-                    <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="150.00" />
+                    <input asp-for="Price" type="number" step="0.01" min="0.01" max="10000" class="form-control" placeholder="150.00" required />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
 
                 <!-- Category -->
                 <div class="form-group">
-                    <label asp-for="Category" class="form-label">Category <span class="text-danger">*</">*</span></label>
-                    <select asp-for="Category" class="form-control">
+                    <label asp-for="Category" class="form-label">Category <span class="text-danger">*</span></label>
+                    <select asp-for="Category" class="form-control" required>
                         <option value="" disabled selected>Select category</option>
                         <option value="Food">Food</option>
-                      
                         <option value="Tea">Tea</option>
                         <option value="Water">Water</option>
                     </select>

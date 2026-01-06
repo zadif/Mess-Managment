@@ -26,15 +26,15 @@
 
                 <!-- Name -->
                 <div class="form-group">
-                    <label asp-for="Name" class="form-label"></label>
-                    <input asp-for="Name" class="form-control" placeholder="Ex: John Doe" />
+                    <label asp-for="Name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                    <input asp-for="Name" class="form-control" placeholder="Ex: John Doe" required minlength="2" maxlength="100" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <!-- Email -->
                 <div class="form-group">
-                    <label asp-for="Email" class="form-label"></label>
-                    <input asp-for="Email" class="form-control" placeholder="Ex: john@example.com" />
+                    <label asp-for="Email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Ex: john@example.com" required />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
@@ -42,27 +42,29 @@
                 @if (Model.Id == 0)
                 {
                     <div class="form-group">
-                        <label asp-for="Password" class="form-label">Password *</label>
-                        <input asp-for="Password" type="password" class="form-control" />
+                        <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                 }
                 else
                 {
                     <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="NewPassword" class="form-control" placeholder="Leave blank to keep current" />
-                        <small class="text-muted">Only fill to change password</small>
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="NewPassword" class="form-control" placeholder="Leave blank to keep current" minlength="6" />
+                        <small style="color: var(--text-muted); font-size: 0.85rem;">Only fill if you want to change password</small>
                     </div>
                 }
 
                 <!-- User Type -->
                 <div class="form-group">
-                    <label asp-for="UserType" class="form-label">User Type</label>
-                    <select asp-for="UserType" class="form-control">
+                    <label asp-for="UserType" class="form-label">User Type <span class="text-danger">*</span></label>
+                    <select asp-for="UserType" class="form-control" required>
+                        <option value="" disabled>Select user type</option>
                         <option value="1">Tea & Water Only</option>
                         <option value="2">Food + Tea & Water</option>
                     </select>
+                    <span asp-validation-for="UserType" class="text-danger"></span>
                 </div>
 
                 <!-- Is Active -->
