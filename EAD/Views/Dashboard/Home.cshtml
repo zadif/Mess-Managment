@@ -85,6 +85,13 @@
                         <i class="far fa-calendar"></i>
                         <span>@DateTime.Now.ToString("ddd, MMM dd")</span>
                     </div>
+
+                    <!-- Download Report Button (User) -->
+                    <a href="@Url.Action("UserBillsReport", "Reports")" class="header-report-btn" title="Download My Report">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Download Report</span>
+                    </a>
+
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
@@ -205,6 +212,19 @@
                         </div>
                         <div class="action-arrow">
                             <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="@Url.Action("UserBillsReport", "Reports")" class="quick-action-card report-card">
+                        <div class="action-icon report">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="action-info">
+                            <h4>Download Report</h4>
+                            <p>Get PDF of your bills & consumption</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-download"></i>
                         </div>
                     </a>
                 </div>
