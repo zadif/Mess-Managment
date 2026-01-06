@@ -1,180 +1,178 @@
-﻿
-.btn-home-corner {
-    position: absolute; /* Fixes it to the top right of the page */
-    top: 25px;
-    right: 30px;
-    background-color: #ffffff;
-    color: #5a67d8; /* Your Theme Purple */
-    padding: 10px 24px;
-    border-radius: 50px; /* Pill shape */
-    text-decoration: none;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Soft shadow */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    z-index: 1000; /* Ensures it stays on top */
+﻿.btn-home-corner {
+  position: absolute; /* Fixes it to the top right of the page */
+  top: 25px;
+  right: 30px;
+  background-color: #ffffff;
+  color: #059669; /* Emerald Theme */
+  padding: 10px 24px;
+  border-radius: 50px; /* Pill shape */
+  text-decoration: none;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  z-index: 1000; /* Ensures it stays on top */
 }
 
 .btn-home-corner:hover {
-    background-color: #5a67d8;
-    color: #ffffff;
-    transform: translateY(-3px); /* Subtle lift effect */
-    box-shadow: 0 6px 15px rgba(90, 103, 216, 0.3); /* Purple glow shadow */
+  background-color: #059669;
+  color: #ffffff;
+  transform: translateY(-3px); /* Subtle lift effect */
+  box-shadow: 0 6px 15px rgba(5, 150, 105, 0.3); /* Emerald glow shadow */
 }
 
 body {
-    background-color: #f4f7fe; /* Light blue-grey background */
-    font-family: 'Poppins', sans-serif;
-    color: #2b3674;
+  background-color: #f0fdf4; /* Light emerald-tinted background */
+  font-family: "Poppins", sans-serif;
+  color: #0f172a;
 }
 
 /* Page Container */
 .page-container {
-    padding: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* Header Styling */
 .page-header h1 {
-    color: #2b3674;
-    font-weight: 700;
-    margin-bottom: 10px;
+  color: #0f172a;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .page-header p {
-    color: #a3aed0;
-    font-size: 1.1rem;
+  color: #64748b;
+  font-size: 1.1rem;
 }
 
 /* CARD DESIGN */
 .bill-card {
-    background: #ffffff;
-    border-radius: 20px;
-    border: none;
-    padding: 25px;
-    position: relative;
-    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
-    transition: all 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  background: #ffffff;
+  border-radius: 20px;
+  border: none;
+  padding: 25px;
+  position: relative;
+  box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-    .bill-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0px 25px 50px rgba(112, 144, 176, 0.2);
-    }
+.bill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 25px 50px rgba(112, 144, 176, 0.2);
+}
 
 /* Status Badge Top Right */
 .status-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 6px 14px;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .status-unpaid {
-    background: #fee2e2;
-    color: #dc2626;
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 .status-pending {
-    background: #fef3c7;
-    color: #d97706;
+  background: #fef3c7;
+  color: #d97706;
 }
 
 .status-paid {
-    background: #dcfce7;
-    color: #166534;
+  background: #dcfce7;
+  color: #166534;
 }
 
 /* Card Content */
 .bill-id {
-    color: #a3aed0;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    display: block;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  display: block;
 }
 
 .bill-amount-label {
-    font-size: 0.85rem;
-    color: #a3aed0;
-    font-weight: 500;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .bill-amount-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #4318FF; /* Your Indigo Theme Color */
-    line-height: 1.2;
-    margin-bottom: 15px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669; /* Emerald Theme Color */
+  line-height: 1.2;
+  margin-bottom: 15px;
 }
 
 .bill-info-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-    color: #2b3674;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #0f172a;
 }
 
-    .bill-info-row i {
-        margin-right: 10px;
-        color: #4318FF;
-        font-size: 1.1rem;
-    }
+.bill-info-row i {
+  margin-right: 10px;
+  color: #059669;
+  font-size: 1.1rem;
+}
 
 /* Buttons */
 .action-area {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
 }
 
 .btn-pay {
-    background-color: #4318FF;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 10px 0;
-    font-weight: 600;
-    width: 100%;
-    transition: 0.2s;
+  background-color: #059669;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 0;
+  font-weight: 600;
+  width: 100%;
+  transition: 0.2s;
 }
 
-    .btn-pay:hover {
-        background-color: #3311db;
-        color: white;
-    }
+.btn-pay:hover {
+  background-color: #047857;
+  color: white;
+}
 
 .btn-recheck {
-    background-color: transparent;
-    color: #e31a1a;
-    border: 2px solid #fee2e2;
-    border-radius: 12px;
-    padding: 10px 0;
-    font-weight: 600;
-    width: 100%;
-    transition: 0.2s;
+  background-color: transparent;
+  color: #e31a1a;
+  border: 2px solid #fee2e2;
+  border-radius: 12px;
+  padding: 10px 0;
+  font-weight: 600;
+  width: 100%;
+  transition: 0.2s;
 }
 
-    .btn-recheck:hover {
-        background-color: #fee2e2;
-    }
+.btn-recheck:hover {
+  background-color: #fee2e2;
+}
 
 /* Empty State */
 .empty-state {
-    text-align: center;
-    padding: 60px;
-    color: #a3aed0;
+  text-align: center;
+  padding: 60px;
+  color: #64748b;
 }
-

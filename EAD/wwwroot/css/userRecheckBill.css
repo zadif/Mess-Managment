@@ -1,145 +1,142 @@
-﻿
-/* Theme Variables */
+﻿/* Theme Variables */
 :root {
-    --messmate-primary: #5a67d8;
-    --messmate-bg: #eef2ff;
-    --messmate-text: #2d3748;
-    --messmate-danger: #e53e3e;
+  --messmate-primary: #059669;
+  --messmate-bg: #f0fdf4;
+  --messmate-text: #0f172a;
+  --messmate-danger: #e53e3e;
 }
 
 body {
-    background-color: var(--messmate-bg);
-    font-family: 'Segoe UI', sans-serif;
+  background-color: var(--messmate-bg);
+  font-family: "Segoe UI", sans-serif;
 }
 
 /* 1. Ensure the container handles the absolute positioning */
 .rel-container {
-    position: relative;
+  position: relative;
 }
 
 /* 2. Position the button at the TOP RIGHT of the container */
 .btn-home-corner {
-    position: absolute;
-    top: 1; /* Changed from -60px to 0 to keep it visible */
-    right: 15px;
-    background-color: white;
-    color: var(--messmate-primary);
-    padding: 8px 20px;
-    border-radius: 30px;
-    box-shadow: 0 4px 10px rgba(90, 103, 216, 0.15);
-    text-decoration: none;
-    font-weight: 700;
-    z-index: 10;
-    display: inline-flex;
-    align-items: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: absolute;
+  top: 1; /* Changed from -60px to 0 to keep it visible */
+  right: 15px;
+  background-color: white;
+  color: var(--messmate-primary);
+  padding: 8px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.15);
+  text-decoration: none;
+  font-weight: 700;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-    .btn-home-corner:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(90, 103, 216, 0.25);
-        color: var(--messmate-primary);
-    }
+.btn-home-corner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(5, 150, 105, 0.25);
+  color: var(--messmate-primary);
+}
 
 /* 3. Push the card down so it doesn't hide behind the button */
 .mess-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 30px;
-    margin-top: 50px; /* ADDED: Creates space for the Home button */
-    margin-right:30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  margin-top: 50px; /* ADDED: Creates space for the Home button */
+  margin-right: 30px;
 }
-
 
 <!-- ... Rest of your content ... -->
 /* Card Styling */
 .mess-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 30px;
-    margin-top: 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  margin-top: 20px;
 }
 
 .page-title {
-    color: var(--messmate-text);
-    font-weight: 800;
-    margin-bottom: 5px;
+  color: var(--messmate-text);
+  font-weight: 800;
+  margin-bottom: 5px;
 }
 
 /* Table Styling */
 .custom-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-    .custom-table th {
-        background-color: #f7fafc;
-        color: #718096;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        padding: 15px 20px;
-        border-bottom: 2px solid #edf2f7;
-    }
+.custom-table th {
+  background-color: #f0fdf4;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 15px 20px;
+  border-bottom: 2px solid #d1fae5;
+}
 
-    .custom-table td {
-        padding: 18px 20px;
-        border-bottom: 1px solid #edf2f7;
-        vertical-align: middle;
-    }
+.custom-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid #d1fae5;
+  vertical-align: middle;
+}
 
 /* Date Header */
 .date-group-header {
-    background-color: #f8faff;
-    font-weight: 700;
-    color: var(--messmate-primary);
-    padding: 15px 20px;
-    border-bottom: 1px solid #e2e8f0;
+  background-color: #ecfdf5;
+  font-weight: 700;
+  color: var(--messmate-primary);
+  padding: 15px 20px;
+  border-bottom: 1px solid #d1fae5;
 }
 
 /* Badges */
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .status-paid {
-    background-color: #c6f6d5;
-    color: #22543d;
+  background-color: #c6f6d5;
+  color: #22543d;
 }
 
 .status-pending {
-    background-color: #fefcbf;
-    color: #744210;
+  background-color: #fefcbf;
+  color: #744210;
 }
 
 .status-recheck {
-    background-color: #fed7d7;
-    color: #822727;
+  background-color: #fed7d7;
+  color: #822727;
 }
 
 /* Action Button */
 .btn-action-recheck {
-    border: 1px solid var(--messmate-danger);
-    color: var(--messmate-danger);
-    background: transparent;
-    padding: 6px 16px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.2s;
+  border: 1px solid var(--messmate-danger);
+  color: var(--messmate-danger);
+  background: transparent;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
-    .btn-action-recheck:hover {
-        background: var(--messmate-danger);
-        color: white;
-    }
-
+.btn-action-recheck:hover {
+  background: var(--messmate-danger);
+  color: white;
+}

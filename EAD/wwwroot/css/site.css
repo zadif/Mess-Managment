@@ -1,0 +1,144 @@
+/* =============================================
+   MESSMATE - GLOBAL SITE STYLES
+   Base styles for all pages
+   ============================================= */
+
+/* CSS Variables - Global Theme */
+:root {
+  /* Primary Colors */
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --primary-light: #34d399;
+
+  /* Background Colors */
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --bg-elevated: #334155;
+
+  /* Text Colors */
+  --text-white: #f8fafc;
+  --text-gray: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Accent Colors */
+  --blue: #3b82f6;
+  --purple: #8b5cf6;
+  --orange: #f59e0b;
+  --red: #ef4444;
+  --cyan: #06b6d4;
+
+  /* Transitions */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--primary-light);
+}
+
+/* Buttons - Base */
+button,
+.btn {
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+/* Form Elements */
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Utility Classes */
+.text-primary {
+  color: var(--primary) !important;
+}
+.text-muted {
+  color: var(--text-muted) !important;
+}
+.bg-dark {
+  background-color: var(--bg-dark) !important;
+}
+.bg-card {
+  background-color: var(--bg-card) !important;
+}
+
+/* Container Override */
+.container {
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Selection */
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Remove Bootstrap Default Styles */
+.pb-3 {
+  padding-bottom: 0 !important;
+}

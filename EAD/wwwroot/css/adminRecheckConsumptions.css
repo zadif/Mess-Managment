@@ -1,143 +1,141 @@
-﻿
-:root {
-    --primary-orange: #ff5733;
-    --bg-dark: #151521;
-    --card-dark: #2b2b40;
-    --text-light: #ffffff;
-    --text-muted: #a0a0b0;
-    --theme-orange: #d35400; /* Burnt Orange from your Login/Dashboard */
-    --theme-green: #27ae60;
-    --theme-red: #c0392b;
+﻿:root {
+  --primary-orange: #10b981;
+  --bg-dark: #0f172a;
+  --card-dark: #1e293b;
+  --text-light: #f1f5f9;
+  --text-muted: #94a3b8;
+  --theme-orange: #10b981; /* Emerald accent */
+  --theme-green: #34d399;
+  --theme-red: #f43f5e;
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-light);
-    font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: "Poppins", sans-serif;
 }
 
 .page-header {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .page-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--text-light);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-light);
 }
 
 /* Card Styling */
 .mess-card {
-    background-color: var(--card-dark);
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background-color: var(--card-dark);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Table Styling */
 .table-custom {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px; /* Space between rows */
-    color: var(--text-light);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* Space between rows */
+  color: var(--text-light);
 }
 
-    .table-custom thead th {
-        color: var(--text-muted);
-        font-weight: 500;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        padding: 15px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
+.table-custom thead th {
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-    .table-custom tbody tr {
-        background-color: rgba(255, 255, 255, 0.03); /* Slightly lighter than card */
-        transition: transform 0.2s ease;
-    }
+.table-custom tbody tr {
+  background-color: rgba(255, 255, 255, 0.03); /* Slightly lighter than card */
+  transition: transform 0.2s ease;
+}
 
-        .table-custom tbody tr:hover {
-            transform: scale(1.01);
-            background-color: rgba(255, 255, 255, 0.05);
-        }
+.table-custom tbody tr:hover {
+  transform: scale(1.01);
+  background-color: rgba(255, 255, 255, 0.05);
+}
 
-    .table-custom td {
-        padding: 20px 15px;
-        vertical-align: middle;
-        border-top: none;
-        border-bottom: none;
-    }
+.table-custom td {
+  padding: 20px 15px;
+  vertical-align: middle;
+  border-top: none;
+  border-bottom: none;
+}
 
-        .table-custom td:first-child {
-            border-radius: 10px 0 0 10px;
-        }
+.table-custom td:first-child {
+  border-radius: 10px 0 0 10px;
+}
 
-        .table-custom td:last-child {
-            border-radius: 0 10px 10px 0;
-        }
+.table-custom td:last-child {
+  border-radius: 0 10px 10px 0;
+}
 
 /* Buttons */
 .btn-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 0 5px;
-    color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 5px;
+  color: white;
 }
 
 .btn-approve {
-    background-color: rgba(39, 174, 96, 0.15);
-    color: var(--theme-green);
-    border: 1px solid rgba(39, 174, 96, 0.3);
+  background-color: rgba(52, 211, 153, 0.15);
+  color: var(--theme-green);
+  border: 1px solid rgba(52, 211, 153, 0.3);
 }
 
-    .btn-approve:hover {
-        background-color: var(--theme-green);
-        color: white;
-        box-shadow: 0 0 15px rgba(39, 174, 96, 0.4);
-    }
+.btn-approve:hover {
+  background-color: var(--theme-green);
+  color: white;
+  box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+}
 
 .btn-reject {
-    background-color: rgba(192, 57, 43, 0.15);
-    color: var(--theme-red);
-    border: 1px solid rgba(192, 57, 43, 0.3);
+  background-color: rgba(244, 63, 94, 0.15);
+  color: var(--theme-red);
+  border: 1px solid rgba(244, 63, 94, 0.3);
 }
 
-    .btn-reject:hover {
-        background-color: var(--theme-red);
-        color: white;
-        box-shadow: 0 0 15px rgba(192, 57, 43, 0.4);
-    }
+.btn-reject:hover {
+  background-color: var(--theme-red);
+  color: white;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+}
 
 /* Badge for Status */
 .badge-status {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    background-color: rgba(211, 84, 0, 0.15);
-    color: var(--theme-orange);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--theme-orange);
 }
 
 .btn-home {
-    background-color: #ff5733;
-    color: white;
-    padding: 10px 24px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 14px;
-    box-shadow: 0 4px 15px rgba(255, 87, 51, 0.3);
-    transition: transform 0.2s;
+  background-color: #10b981;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  transition: transform 0.2s;
 }
 
-    .btn-home:hover {
-        transform: translateY(-2px);
-        color: white;
-    }
-
+.btn-home:hover {
+  transform: translateY(-2px);
+  color: white;
+}

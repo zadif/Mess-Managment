@@ -1,110 +1,108 @@
 ﻿:root {
-    --bg-dark: #151521; /* Deepest background */
-    --card-bg: #2b2b40; /* Card surface */
-    --text-main: #ffffff; /* White text */
-    --text-muted: #a0a0a0; /* Grey text */
-    --accent: #d35400; /* Burnt Orange/Red from your login button */
-    --accent-glow: rgba(211, 84, 0, 0.3);
+  --bg-dark: #0f172a; /* Deepest slate background */
+  --card-bg: #1e293b; /* Card surface */
+  --text-main: #f1f5f9; /* Light slate text */
+  --text-muted: #94a3b8; /* Muted slate text */
+  --accent: #10b981; /* Emerald accent */
+  --accent-glow: rgba(16, 185, 129, 0.3);
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: 'Poppins', sans-serif; /* Assuming a modern font */
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: "Poppins", sans-serif; /* Assuming a modern font */
 }
 
 /* Card Styling */
 .stat-card {
-    background-color: var(--card-bg);
-    border: none;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    transition: transform 0.3s ease;
+  background-color: var(--card-bg);
+  border: none;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
 }
 
-    .stat-card:hover {
-        transform: translateY(-5px);
-    }
+.stat-card:hover {
+  transform: translateY(-5px);
+}
 
 /* Icon Styling */
 .icon-box {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--accent);
-    margin-right: 15px;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent);
+  margin-right: 15px;
 }
 
 .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
 }
 
 .stat-label {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Chart Container */
 .chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  position: relative;
+  height: 300px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 h4.card-title {
-    border-left: 4px solid var(--accent);
-    padding-left: 10px;
-    margin-bottom: 20px;
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+  margin-bottom: 20px;
 }
 
 /* Custom Scrollbar for dashboard feel */
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-dark);
+  background: var(--bg-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 4px;
+  background: #444;
+  border-radius: 4px;
 }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--accent);
-    }
-
-
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
 
 .btn-home {
-    margin-left:15px;
-    background-color: #fd5d38;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 20px; /* Pill shape */
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    transition: opacity 0.3s ease;
+  margin-left: 15px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px; /* Pill shape */
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
 }
 
-    .btn-home:hover {
-        opacity: 0.9;
-        color: white;
-    }
+.btn-home:hover {
+  opacity: 0.9;
+  color: white;
+}

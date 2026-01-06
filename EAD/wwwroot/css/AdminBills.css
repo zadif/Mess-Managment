@@ -1,150 +1,150 @@
 ﻿:root {
-    --bg-dark: #151521; /* Main Background */
-    --card-bg: #1e1e2d; /* Card Background */
-    --primary-orange: #fd5d38; /* The Orange Button Color */
-    --text-white: #ffffff;
-    --text-muted: #a1a5b7; /* Grey text */
-    --accent-cyan: #009ef7;
-    --accent-purple: #7239ea;
-    --accent-pink: #d13b63;
+  --bg-dark: #0f172a; /* Main Background - Slate */
+  --card-bg: #1e293b; /* Card Background - Slate */
+  --primary-orange: #10b981; /* Emerald accent */
+  --text-white: #f1f5f9;
+  --text-muted: #94a3b8; /* Slate grey text */
+  --accent-cyan: #14b8a6;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #10b981;
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-white);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Header Section */
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
 }
 
 .page-title h2 {
-    font-weight: 700;
-    margin: 0;
-    font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.75rem;
 }
 
 .page-title p {
-    color: var(--text-muted);
-    margin: 5px 0 0 0;
-    font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 5px 0 0 0;
+  font-size: 0.95rem;
 }
 
 .btn-home {
-    background-color: var(--primary-orange);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 20px; /* Pill shape */
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    transition: opacity 0.3s ease;
+  background-color: var(--primary-orange);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px; /* Pill shape */
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
 }
 
-    .btn-home:hover {
-        opacity: 0.9;
-        color: white;
-    }
+.btn-home:hover {
+  opacity: 0.9;
+  color: white;
+}
 
 /* Grid Layout */
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
 /* Card Styling */
 .menu-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 1.5rem;
-    position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 180px;
-    border-top: 4px solid transparent; /* Prepare for colored top border */
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  border-top: 4px solid transparent; /* Prepare for colored top border */
 }
 
-    .menu-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
 
 /* Specific Accents for Cards */
 .card-cyan {
-    border-top-color: var(--accent-cyan);
+  border-top-color: var(--accent-cyan);
 }
 
 .card-purple {
-    border-top-color: var(--accent-purple);
+  border-top-color: var(--accent-purple);
 }
 
 .card-pink {
-    border-top-color: var(--primary-orange);
+  border-top-color: var(--primary-orange);
 }
 
 /* Icon Styling */
 .icon-box {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .bg-cyan-light {
-    background-color: rgba(0, 158, 247, 0.1);
-    color: var(--accent-cyan);
+  background-color: rgba(20, 184, 166, 0.1);
+  color: var(--accent-cyan);
 }
 
 .bg-purple-light {
-    background-color: rgba(114, 57, 234, 0.1);
-    color: var(--accent-purple);
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--accent-purple);
 }
 
 .bg-pink-light {
-    background-color: rgba(253, 93, 56, 0.1);
-    color: var(--primary-orange);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--primary-orange);
 }
 
 .card-title {
-    color: var(--text-white);
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+  color: var(--text-white);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .card-desc {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
 .action-link {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    margin-top: auto;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-top: auto;
 }
 
 .menu-card:hover .action-link {
-    color: var(--text-white);
+  color: var(--text-white);
 }
 
 /* FontAwesome placeholder if you don't have it, borders will still look good */

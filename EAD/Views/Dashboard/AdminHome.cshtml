@@ -3,180 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal | Mess Management</title>
+    <title>Admin Dashboard | MessMate</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Link to CSS -->
     <link rel="stylesheet" href="~/css/AdminHome.css">
 </head>
 <body>
 
-    <!-- Extended Header Section -->
-    <header class="admin-header">
-        <nav class="navbar-top">
-            <div class="nav-brand">
-                <div class="brand-logo">
-                    <i class="fas fa-user-shield"></i>
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-bowl-food"></i>
+                    </div>
+                    <span class="logo-text">MessMate</span>
                 </div>
-                <span>Mess Admin</span>
-            </div>
-            <form action="/Login/Logout" method="post">
-                <button id="logoutBtn" class="btn-logout">
-                    Logout <i class="fas fa-sign-out-alt"></i>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
                 </button>
-            </form>
-        </nav>
+            </div>
 
-        <!-- Title Section -->
-        <div class="header-content">
-            <h1>Dashboard Overview</h1>
-            <p>Welcome back, Admin. Here is what's happening today.</p>
-        </div>
-    </header>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main Menu</span>
+                    <a href="/Dashboard/AdminHome" class="nav-link active">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/Admin/ManageUsers" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </a>
+                    <a href="/Admin/ManageMeals" class="nav-link">
+                        <i class="fas fa-utensils"></i>
+                        <span>Meal Items</span>
+                    </a>
+                    <a href="/Admin/DailyMeals" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Daily Menu</span>
+                    </a>
+                </div>
 
-    <!-- Main Content (Overlapping the header) -->
-    <main class="dashboard-container">
+                <div class="nav-section">
+                    <span class="nav-section-title">Operations</span>
+                    <a href="/Admin/generateDailyConsumptions" class="nav-link">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Daily Consumptions</span>
+                    </a>
+                    <a href="/Admin/Bills" class="nav-link">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Billing</span>
+                    </a>
+                    <a href="/Admin/Statistics" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+            </nav>
 
-        <div class="dashboard-grid">
+            <div class="sidebar-footer">
+                <form action="/Login/Logout" method="post">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
 
-            <!-- Card 1: Users -->
-            <div class="card" onclick="location.href='/Admin/ManageUsers'">
-                <div class="card-top-accent accent-blue"></div>
-                <div class="card-body">
-                    <div class="card-header">
-                        <div class="card-icon icon-bg-blue">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header Bar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Welcome back, Administrator</p>
+                </div>
+                <div class="header-right">
+                    <div class="date-badge">
+                        <i class="far fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                    <div class="admin-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Quick Stats Row -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
                             <i class="fas fa-users"></i>
                         </div>
-                        <div class="card-options">
-                            <i class="fas fa-ellipsis-h"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="userCount">--</span>
+                            <span class="stat-label">Total Users</span>
                         </div>
                     </div>
-                    <div class="card-text">
-                        <h3>Users</h3>
-                        <p>Students & Staff</p>
-                    </div>
-                </div>
-                <div class="card-footer">
-                  
-                    <span class="stat-label">Manage users</span>
-                </div>
-            </div>
-
-            <!-- Card 2: Meals (Tracking) -->
-            <div class="card" onclick="location.href='/Admin/ManageMeals'">
-                <div class="card-top-accent accent-green"></div>
-                <div class="card-body">
-                    <div class="card-header">
-                        <div class="card-icon icon-bg-green">
+                    <div class="stat-card">
+                        <div class="stat-icon green">
                             <i class="fas fa-utensils"></i>
                         </div>
-                        <div class="card-options">
-                            <i class="fas fa-ellipsis-h"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="mealCount">--</span>
+                            <span class="stat-label">Menu Items</span>
                         </div>
                     </div>
-                    <div class="card-text">
-                        <h3>Menu</h3>
-                        <p>Today's Serving</p>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="billCount">--</span>
+                            <span class="stat-label">Pending Bills</span>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <span class="stat-label">Manage Meals</span>
-                </div>
-            </div>
-
-            <!-- Card 3: Statistics -->
-            <div class="card" onclick="location.href='/Admin/Statistics'">
-                <div class="card-top-accent accent-orange"></div>
-                <div class="card-body">
-                    <div class="card-header">
-                        <div class="card-icon icon-bg-orange">
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
                             <i class="fas fa-chart-pie"></i>
                         </div>
-                        <div class="card-options">
-                            <i class="fas fa-ellipsis-h"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="todayMeals">--</span>
+                            <span class="stat-label">Today's Meals</span>
                         </div>
                     </div>
-                    <div class="card-text">
-                        <h3>Statistics</h3>
-                        <p>Financials & Reports</p>
-                    </div>
                 </div>
-                <div class="card-footer">
-                    <span class="stat-link">View Report <i class="fas fa-arrow-right"></i></span>
+
+                <!-- Quick Actions Grid -->
+                <div class="section-header">
+                    <h2>Quick Actions</h2>
+                    <p>Manage your mess operations</p>
+                </div>
+
+                <div class="actions-grid">
+                    <a href="/Admin/ManageUsers" class="action-tile">
+                        <div class="tile-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>User Management</h3>
+                            <p>Add, edit or remove users from the system</p>
+                        </div>
+                        <div class="tile-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="/Admin/ManageMeals" class="action-tile">
+                        <div class="tile-icon">
+                            <i class="fas fa-hamburger"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Meal Items</h3>
+                            <p>Configure available food and beverages</p>
+                        </div>
+                        <div class="tile-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="/Admin/DailyMeals" class="action-tile">
+                        <div class="tile-icon">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Daily Menu</h3>
+                            <p>Set up the weekly meal schedule</p>
+                        </div>
+                        <div class="tile-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="/Admin/generateDailyConsumptions" class="action-tile">
+                        <div class="tile-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Daily Consumptions</h3>
+                            <p>Track and manage daily meal consumption</p>
+                        </div>
+                        <div class="tile-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="/Admin/Bills" class="action-tile">
+                        <div class="tile-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Billing Center</h3>
+                            <p>Generate and manage user bills</p>
+                        </div>
+                        <div class="tile-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="/Admin/Statistics" class="action-tile">
+                        <div class="tile-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Analytics</h3>
+                            <p>View reports and financial statistics</p>
+                        </div>
+                        <div class="tile-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
                 </div>
             </div>
-
-            <!-- NEW Card 4: Manage Meals -->
-            <div class="card" onclick="location.href='/Admin/DailyMeals'">
-                <div class="card-top-accent accent-purple"></div>
-                <div class="card-body">
-                    <div class="card-header">
-                        <div class="card-icon icon-bg-purple">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                        <div class="card-options">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                    <div class="card-text">
-                        <h3>Manage Meals</h3>
-                        <p>Edit Weekly Schedule</p>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <span class="stat-link">Edit Menu <i class="fas fa-cog"></i></span>
-                </div>
-            </div>
-
-
-            <div class="card" onclick="location.href='/Admin/generateDailyConsumptions'">
-                <div class="card-top-accent accent-yellow"></div>
-                <div class="card-body">
-                    <div class="card-header">
-                        <div class="card-icon icon-bg-purple">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                        <div class="card-options">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                    <div class="card-text">
-                        <h3>Manage Daily Consumptions</h3>
-                        <p>Manage users's daily consumptions</p>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <span class="stat-link">Edit Menu <i class="fas fa-cog"></i></span>
-                </div>
-            </div>
-
-            <div class="card" onclick="location.href='/Admin/Bills'">
-                <div class="card-top-accent accent-yellow"></div>
-                <div class="card-body">
-                    <div class="card-header">
-                        <div class="card-icon icon-bg-purple">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                        <div class="card-options">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                    <div class="card-text">
-                        <h3>Manage bills</h3>
-                        <p>Generate and edit bills</p>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <span class="stat-link">Edit Menu <i class="fas fa-cog"></i></span>
-                </div>
-            </div>
-
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- Link to JS -->
     <script src="~/js/AdminHome.js"></script>

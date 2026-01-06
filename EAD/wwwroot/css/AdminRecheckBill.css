@@ -1,204 +1,203 @@
-﻿
-:root {
-    --bg-dark: #151521;
-    --card-dark: #1e1e2d;
-    --text-light: #e0e6ed;
-    --text-muted: #a1a5b7;
-    --accent-orange: #fd5d38;
-    --border-color: #2b2b40;
+﻿:root {
+  --bg-dark: #0f172a;
+  --card-dark: #1e293b;
+  --text-light: #f1f5f9;
+  --text-muted: #94a3b8;
+  --accent-orange: #10b981;
+  --border-color: #334155;
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-light);
-    font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: "Inter", sans-serif;
 }
 
 /* Card Container */
 .dashboard-card {
-    background-color: var(--card-dark);
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--card-dark);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Typography */
 .page-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
-    color: var(--text-muted);
-    font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 /* Table Styling */
 .custom-table-container {
-    margin-top: 2rem;
-    overflow-x: auto;
+  margin-top: 2rem;
+  overflow-x: auto;
 }
 
 .table-dark-custom {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 0.5rem; /* Spacing between rows */
-    color: var(--text-light);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem; /* Spacing between rows */
+  color: var(--text-light);
 }
 
-    .table-dark-custom thead th {
-        background-color: transparent;
-        color: var(--text-muted);
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        font-weight: 600;
-    }
+.table-dark-custom thead th {
+  background-color: transparent;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+}
 
-    .table-dark-custom tbody tr {
-        background-color: rgba(255,255,255, 0.02);
-        transition: all 0.2s ease;
-    }
+.table-dark-custom tbody tr {
+  background-color: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+}
 
-        .table-dark-custom tbody tr:hover {
-            background-color: rgba(255,255,255, 0.04);
-            transform: translateY(-2px);
-        }
+.table-dark-custom tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
 
-    .table-dark-custom td {
-        padding: 1rem;
-        vertical-align: middle;
-        border-top: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-    }
+.table-dark-custom td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
 
-        .table-dark-custom td:first-child {
-            border-left: 1px solid var(--border-color);
-            border-top-left-radius: 0.5rem;
-            border-bottom-left-radius: 0.5rem;
-        }
+.table-dark-custom td:first-child {
+  border-left: 1px solid var(--border-color);
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
 
-        .table-dark-custom td:last-child {
-            border-right: 1px solid var(--border-color);
-            border-top-right-radius: 0.5rem;
-            border-bottom-right-radius: 0.5rem;
-        }
+.table-dark-custom td:last-child {
+  border-right: 1px solid var(--border-color);
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
 
 /* Badges */
 .badge-custom {
-    padding: 0.5em 0.8em;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .badge-pending {
-    background-color: rgba(255, 193, 7, 0.15);
-    color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
 }
 
 .badge-processed {
-    background-color: rgba(108, 117, 125, 0.15);
-    color: #a1a5b7;
+  background-color: rgba(108, 117, 125, 0.15);
+  color: #a1a5b7;
 }
 
 .badge-approved {
-    background-color: rgba(25, 135, 84, 0.15);
-    color: #198754;
+  background-color: rgba(25, 135, 84, 0.15);
+  color: #198754;
 }
 
 /* Buttons */
 .btn-action {
-    background-color: #3e4095; /* Blue from screenshot */
-    color: white;
-    border: none;
-    padding: 0.4rem 1rem;
-    border-radius: 0.4rem;
-    font-size: 0.85rem;
-    transition: 0.3s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+  background-color: #059669; /* Emerald accent */
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
-    .btn-action:hover {
-        background-color: #303275;
-        color: white;
-    }
+.btn-action:hover {
+  background-color: #047857;
+  color: white;
+}
 
 /* Sweet Alert Customization for Dark Mode */
 .swal2-popup.swal2-toast {
-    background: var(--card-dark) !important;
-    color: white !important;
+  background: var(--card-dark) !important;
+  color: white !important;
 }
 
 div:where(.swal2-container) div:where(.swal2-popup) {
-    background: #1e1e2d !important;
-    border: 1px solid #2b2b40;
-    color: #e0e6ed;
+  background: #1e293b !important;
+  border: 1px solid #334155;
+  color: #f1f5f9;
 }
 
 div:where(.swal2-input) {
-    background: #151521 !important;
-    color: white !important;
-    border: 1px solid #2b2b40 !important;
+  background: #0f172a !important;
+  color: white !important;
+  border: 1px solid #334155 !important;
 }
 
-.swal2-title, .swal2-html-container {
-    color: #e0e6ed !important;
+.swal2-title,
+.swal2-html-container {
+  color: #f1f5f9 !important;
 }
-
 
 .badge-custom {
-    padding: 0.5em 0.8em;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .badge-pending {
-    background-color: rgba(255, 193, 7, 0.15);
-    color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
 }
 /* Yellow */
 .badge-approved {
-    background-color: rgba(25, 135, 84, 0.15);
-    color: #198754;
+  background-color: rgba(25, 135, 84, 0.15);
+  color: #198754;
 }
 /* Green */
 .badge-rejected {
-    background-color: rgba(220, 53, 69, 0.15);
-    color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
 }
 /* Red */
 .badge-processed {
-    background-color: rgba(108, 117, 125, 0.15);
-    color: #a1a5b7;
+  background-color: rgba(108, 117, 125, 0.15);
+  color: #a1a5b7;
 }
 
 .btn-home {
-    background-color: #fd5d38; /* Your theme's orange accent */
-    color: white;
-    padding: 0.6rem 1.5rem;
-    border-radius: 2rem; /* Rounded pill shape */
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(253, 93, 56, 0.3); /* Glow effect */
-    border: none;
+  background-color: #10b981; /* Emerald theme accent */
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 2rem; /* Rounded pill shape */
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); /* Glow effect */
+  border: none;
 }
 
-    .btn-home:hover {
-        background-color: #e04a28; /* Slightly darker on hover */
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(253, 93, 56, 0.4);
-    }
+.btn-home:hover {
+  background-color: #059669; /* Slightly darker on hover */
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}

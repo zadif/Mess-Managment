@@ -1,75 +1,76 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
+  // DOM Elements - New Tab-based UI
+  const tabUser = document.getElementById("tab-user");
+  const tabAdmin = document.getElementById("tab-admin");
+  const tabIndicator = document.querySelector(".tab-indicator");
+  const hiddenRoleInput = document.getElementById("hiddenRoleInput");
+  const subtitle = document.getElementById("role-subtitle");
 
-    // DOM Elements
-    const toggleCheckbox = document.getElementById("mode-toggle");
-    const body = document.body;
-    const subtitle = document.getElementById("role-subtitle");
-    const textUser = document.getElementById("text-user");
-    const textAdmin = document.getElementById("text-admin");
+  // Initialize state (default to User)
+  setActiveRole("User");
 
-    // Initialize state (default to User)
-    textUser.classList.add("text-active");
+  // Event Listeners for Role Tabs
+  tabUser.addEventListener("click", () => setActiveRole("User"));
+  tabAdmin.addEventListener("click", () => setActiveRole("Admin"));
 
-    // Event Listener for Toggle
-    toggleCheckbox.addEventListener("change", () => {
-        if (toggleCheckbox.checked) {
-            enableAdminMode();
-        } else {
-            enableUserMode();
-        }
-    });
+  function setActiveRole(role) {
+    // Update active tab styling
+    tabUser.classList.toggle("active", role === "User");
+    tabAdmin.classList.toggle("active", role === "Admin");
 
-    function enableAdminMode() {
-        // 1. Add class to body (triggers CSS variable change)
-        body.classList.add("admin-mode");
-
-        // 2. Update Text
-        subtitle.textContent = "Admin Login";
-
-        // 3. Update Active Label Color
-        textUser.classList.remove("text-active");
-        textAdmin.classList.add("text-active");
-
-        // 4. (Optional) Update hidden input for MVC form submission if needed
-         document.getElementById("hiddenRoleInput").value = "Admin";
+    // Move indicator
+    if (tabIndicator) {
+      tabIndicator.style.transform =
+        role === "Admin" ? "translateX(100%)" : "translateX(0)";
     }
 
-    function enableUserMode() {
-        // 1. Remove class from body
-        body.classList.remove("admin-mode");
-
-        // 2. Update Text
-        subtitle.textContent = "User Login";
-
-        // 3. Update Active Label Color
-        textAdmin.classList.remove("text-active");
-        textUser.classList.add("text-active");
-
-        // 4. (Optional) Update hidden input for MVC form submission if needed
-         document.getElementById("hiddenRoleInput").value = "User";
+    // Update subtitle text
+    if (subtitle) {
+      subtitle.textContent = `Sign in as ${role}`;
     }
+
+    // Update hidden input for form submission
+    if (hiddenRoleInput) {
+      hiddenRoleInput.value = role;
+    }
+  }
 });
 
+// Password visibility toggle
+function togglePasswordVisibility() {
+  const passwordInput = document.getElementById("password");
+  const eyeIcon = document.getElementById("eye-icon");
 
-    function validateForm() {
-        const email = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const role = document.getElementById('hiddenRoleInput').value;
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    eyeIcon.classList.remove("fa-eye");
+    eyeIcon.classList.add("fa-eye-slash");
+  } else {
+    passwordInput.type = "password";
+    eyeIcon.classList.remove("fa-eye-slash");
+    eyeIcon.classList.add("fa-eye");
+  }
+}
 
-        // Admin bypass: Admin login is hardcoded as "a"/"a" in backend, so we skip validation for Admin
-        if (role === 'Admin') {
-            return true;
-        }
+function validateForm() {
+  const email = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const role = document.getElementById("hiddenRoleInput").value;
 
-        if (!email.includes('@')) {
-            alert('Please enter a valid email address containing "@".');
-            return false;
-        }
+  // Admin bypass: Admin login is hardcoded as "a"/"a" in backend, so we skip validation for Admin
+  if (role === "Admin") {
+    return true;
+  }
 
-        if (password.length < 3) {
-            alert('Password must be at least 3 characters long.');
-            return false;
-        }
+  if (!email.includes("@")) {
+    alert('Please enter a valid email address containing "@".');
+    return false;
+  }
 
-        return true;
-    }
+  if (password.length < 3) {
+    alert("Password must be at least 3 characters long.");
+    return false;
+  }
+
+  return true;
+}

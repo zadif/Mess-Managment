@@ -1,672 +1,670 @@
-﻿/* --- Color Variables based on Screenshot --- */
+﻿/* --- Color Variables based on Emerald Theme --- */
 :root {
-    --bg-dark: #151521;
-    --card-bg: #1e1e2d;
-    --primary-orange: #fd5d38;
-    --primary-orange-hover: #e34f2d;
-    --text-white: #ffffff;
-    --text-muted: #959cb6;
-    --border-color: #2b2b40;
-    --table-hover: #26263a;
-    --success-green: #0ec9ae;
-    --danger-red: #f1416c;
-    --info-blue: #3699ff;
+  --bg-dark: #0f172a;
+  --card-bg: #1e293b;
+  --primary-orange: #10b981;
+  --primary-orange-hover: #059669;
+  --text-white: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --table-hover: #334155;
+  --success-green: #34d399;
+  --danger-red: #f43f5e;
+  --info-blue: #14b8a6;
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-muted);
-    font-family: 'Poppins', sans-serif; /* Assuming this font based on screenshot */
+  background-color: var(--bg-dark);
+  color: var(--text-muted);
+  font-family: "Poppins", sans-serif; /* Assuming this font based on screenshot */
 }
 
 /* --- Container Card --- */
 .mess-container {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    margin-top: 20px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
 }
 
 .page-title {
-    color: var(--text-white);
-    font-weight: 600;
-    margin-bottom: 5px;
+  color: var(--text-white);
+  font-weight: 600;
+  margin-bottom: 5px;
 }
 
 /* --- Buttons --- */
 .btn-theme-orange {
-    background-color: var(--primary-orange);
-    color: white;
-    border-radius: 8px;
-    padding: 10px 20px;
-    border: none;
-    font-weight: 500;
-    transition: 0.3s;
+  background-color: var(--primary-orange);
+  color: white;
+  border-radius: 8px;
+  padding: 10px 20px;
+  border: none;
+  font-weight: 500;
+  transition: 0.3s;
 }
 
-    .btn-theme-orange:hover {
-        background-color: var(--primary-orange-hover);
-        color: white;
-    }
+.btn-theme-orange:hover {
+  background-color: var(--primary-orange-hover);
+  color: white;
+}
 
 .btn-theme-outline {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 8px 16px;
-    border-radius: 8px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
-    .btn-theme-outline:hover {
-        background-color: var(--border-color);
-        color: var(--text-white);
-    }
+.btn-theme-outline:hover {
+  background-color: var(--border-color);
+  color: var(--text-white);
+}
 
 .btn-theme-success {
-    background-color: var(--success-green);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
+  background-color: var(--success-green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
 }
 
 .btn-theme-danger-soft {
-    background-color: rgba(241, 65, 108, 0.1);
-    color: var(--danger-red);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
+  background-color: rgba(244, 63, 94, 0.1);
+  color: var(--danger-red);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
 }
 
-    .btn-theme-danger-soft:hover {
-        background-color: var(--danger-red);
-        color: white;
-    }
+.btn-theme-danger-soft:hover {
+  background-color: var(--danger-red);
+  color: white;
+}
 
 /* --- Icons Buttons (Edit/Delete) --- */
 .btn-icon-blue {
-    background-color: rgba(54, 153, 255, 0.1);
-    color: var(--info-blue);
-    border-radius: 6px;
-    border: none;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  background-color: rgba(20, 184, 166, 0.1);
+  color: var(--info-blue);
+  border-radius: 6px;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-    .btn-icon-blue:hover {
-        background-color: var(--info-blue);
-        color: white;
-    }
+.btn-icon-blue:hover {
+  background-color: var(--info-blue);
+  color: white;
+}
 
 .btn-icon-red {
-    background-color: rgba(241, 65, 108, 0.1);
-    color: var(--danger-red);
-    border-radius: 6px;
-    border: none;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  background-color: rgba(244, 63, 94, 0.1);
+  color: var(--danger-red);
+  border-radius: 6px;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-    .btn-icon-red:hover {
-        background-color: var(--danger-red);
-        color: white;
-    }
+.btn-icon-red:hover {
+  background-color: var(--danger-red);
+  color: white;
+}
 
 /* --- Alerts --- */
 .alert-theme-warning {
-    background-color: rgba(255, 199, 0, 0.1);
-    color: #ffc700;
-    border: 1px dashed #ffc700;
-    border-radius: 8px;
+  background-color: rgba(255, 199, 0, 0.1);
+  color: #ffc700;
+  border: 1px dashed #ffc700;
+  border-radius: 8px;
 }
 
 .alert-theme-danger {
-    background-color: rgba(241, 65, 108, 0.1);
-    color: var(--danger-red);
-    border: 1px dashed var(--danger-red);
-    border-radius: 8px;
+  background-color: rgba(244, 63, 94, 0.1);
+  color: var(--danger-red);
+  border: 1px dashed var(--danger-red);
+  border-radius: 8px;
 }
 
 /* --- Table Styling --- */
 .table-responsive {
-    border-radius: 8px;
-    overflow: hidden;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .theme-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    color: var(--text-muted);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--text-muted);
 }
 
-    .theme-table thead tr {
-        background-color: #151521; /* Darker header */
-    }
+.theme-table thead tr {
+  background-color: #151521; /* Darker header */
+}
 
-    .theme-table th {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        color: var(--text-muted);
-        padding: 15px;
-        border-bottom: 1px solid var(--border-color);
-    }
+.theme-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
 
-    .theme-table td {
-        background-color: var(--card-bg);
-        border-bottom: 1px solid var(--border-color);
-        padding: 15px;
-        vertical-align: middle;
-    }
+.theme-table td {
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px;
+  vertical-align: middle;
+}
 
-    .theme-table tbody tr:hover td {
-        background-color: var(--table-hover);
-    }
+.theme-table tbody tr:hover td {
+  background-color: var(--table-hover);
+}
 
 .menu-type {
-    color: var(--primary-orange);
-    font-weight: bold;
-    font-size: 0.8rem;
+  color: var(--primary-orange);
+  font-weight: bold;
+  font-size: 0.8rem;
 }
 
 /* Generated Row Highlight */
 .row-generated td {
-    background-color: rgba(255, 199, 0, 0.02) !important;
+  background-color: rgba(255, 199, 0, 0.02) !important;
 }
 
 /* --- Badges --- */
 .badge {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.75rem;
 }
 
 .badge-food {
-    background-color: rgba(14, 201, 174, 0.1);
-    color: var(--success-green);
+  background-color: rgba(14, 201, 174, 0.1);
+  color: var(--success-green);
 }
 
 .badge-drink {
-    background-color: rgba(54, 153, 255, 0.1);
-    color: var(--info-blue);
+  background-color: rgba(54, 153, 255, 0.1);
+  color: var(--info-blue);
 }
 
 .badge-generated {
-    background-color: rgba(255, 199, 0, 0.1);
-    color: #ffc700;
+  background-color: rgba(255, 199, 0, 0.1);
+  color: #ffc700;
 }
 
 /* --- Custom Checkbox --- */
 .theme-checkbox {
-    background-color: var(--bg-dark);
-    border: 1px solid var(--border-color);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    /* This makes the checkbox orange when checked */
-    accent-color: var(--primary-orange);
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  /* This makes the checkbox orange when checked */
+  accent-color: var(--primary-orange);
 }
 
-    .theme-checkbox:focus {
-        box-shadow: 0 0 0 0.25rem rgba(253, 93, 56, 0.25);
-    }
+.theme-checkbox:focus {
+  box-shadow: 0 0 0 0.25rem rgba(253, 93, 56, 0.25);
+}
 
 /* --- Modal Styling --- */
 .theme-modal-backdrop {
-    position: fixed;
-    z-index: 1050;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(2px);
+  position: fixed;
+  z-index: 1050;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
 }
 
 .theme-modal-content {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    width: 500px;
-    max-width: 90%;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    animation: fadeIn 0.3s ease;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
 }
 
 .theme-modal-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-white);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-white);
 }
 
 .theme-modal-body {
-    padding: 20px;
-    color: var(--text-muted);
+  padding: 20px;
+  color: var(--text-muted);
 }
 
 .theme-modal-footer {
-    padding: 20px;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .close-btn {
-    color: var(--text-muted);
-    font-size: 1.5rem;
-    cursor: pointer;
-    line-height: 1;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
 }
 
-    .close-btn:hover {
-        color: var(--text-white);
-    }
+.close-btn:hover {
+  color: var(--text-white);
+}
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-
 
 /* --- Enhanced Modal Styling --- */
 
 /* 1. The Backdrop (Darker & Blurry) */
 .theme-modal-backdrop {
-    position: fixed;
-    z-index: 1050;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.65); /* Darker dim */
-    backdrop-filter: blur(4px); /* Modern blur effect */
-    display: flex; /* Flex to center */
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    animation: fadeInBackdrop 0.3s forwards;
+  position: fixed;
+  z-index: 1050;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.65); /* Darker dim */
+  backdrop-filter: blur(4px); /* Modern blur effect */
+  display: flex; /* Flex to center */
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeInBackdrop 0.3s forwards;
 }
 
 /* 2. The Modal Card (Spacious & Dark) */
 .theme-modal-content {
-    background-color: #1e1e2d; /* Matches your dashboard card */
-    border-radius: 16px; /* More rounded corners */
-    width: 600px; /* Wider default width */
-    max-width: 90%; /* Responsive width */
-    border: 1px solid #323248; /* Subtle border */
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-    transform: scale(0.95);
-    animation: zoomInModal 0.3s forwards;
-    display: flex;
-    flex-direction: column;
+  background-color: #1e1e2d; /* Matches your dashboard card */
+  border-radius: 16px; /* More rounded corners */
+  width: 600px; /* Wider default width */
+  max-width: 90%; /* Responsive width */
+  border: 1px solid #323248; /* Subtle border */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  transform: scale(0.95);
+  animation: zoomInModal 0.3s forwards;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 3. Header */
 .theme-modal-header {
-    padding: 25px 30px;
-    border-bottom: 1px solid #323248;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  padding: 25px 30px;
+  border-bottom: 1px solid #323248;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-    .theme-modal-header h5 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #ffffff;
-        margin: 0;
-    }
+.theme-modal-header h5 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
 
 .close-btn {
-    color: #959cb6;
-    font-size: 1.8rem;
-    cursor: pointer;
-    transition: 0.2s;
-    line-height: 1;
+  color: #959cb6;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: 0.2s;
+  line-height: 1;
 }
 
-    .close-btn:hover {
-        color: #ffffff;
-    }
+.close-btn:hover {
+  color: #ffffff;
+}
 
 /* 4. Body & Dynamic Checkbox Styling */
 .theme-modal-body {
-    padding: 30px;
-    color: #b5b5c3;
-    font-size: 1.1rem;
-    overflow-y: auto;
-    max-height: 60vh; /* Prevent it from getting too tall on small screens */
+  padding: 30px;
+  color: #b5b5c3;
+  font-size: 1.1rem;
+  overflow-y: auto;
+  max-height: 60vh; /* Prevent it from getting too tall on small screens */
 }
 
 /* Styling the dynamic content injected by JS */
 #modalBody div,
 #modalBody label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px; /* Spacing between items */
-    padding: 10px;
-    border-radius: 8px;
-    transition: background 0.2s;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Spacing between items */
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  cursor: pointer;
 }
 
 #modalBody:hover div:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 /* Make the checkbox BIGGER */
 #modalBody input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    margin-right: 15px;
-    accent-color: #0ec9ae; /* The Teal color from your screenshot */
-    cursor: pointer;
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  accent-color: #0ec9ae; /* The Teal color from your screenshot */
+  cursor: pointer;
 }
 
 /* 5. Footer & Buttons */
 .theme-modal-footer {
-    padding: 20px 30px;
-    border-top: 1px solid #323248;
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    background-color: #1a1a27; /* Slightly darker footer */
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+  padding: 20px 30px;
+  border-top: 1px solid #323248;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  background-color: #1a1a27; /* Slightly darker footer */
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 /* Teal Save Button */
 .btn-modal-save {
-    background-color: #0ec9ae; /* Teal */
-    color: #ffffff;
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-    transition: all 0.3s;
+  background-color: #0ec9ae; /* Teal */
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  transition: all 0.3s;
 }
 
-    .btn-modal-save:hover {
-        background-color: #0bb79e;
-        box-shadow: 0 4px 12px rgba(14, 201, 174, 0.3);
-    }
+.btn-modal-save:hover {
+  background-color: #0bb79e;
+  box-shadow: 0 4px 12px rgba(14, 201, 174, 0.3);
+}
 
 /* Cancel Button */
 .btn-modal-cancel {
-    background-color: transparent;
-    border: 1px solid #3f4254;
-    color: #959cb6;
-    font-weight: 500;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: 0.3s;
+  background-color: transparent;
+  border: 1px solid #3f4254;
+  color: #959cb6;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: 0.3s;
 }
 
-    .btn-modal-cancel:hover {
-        background-color: #2b2b40;
-        color: #ffffff;
-        border-color: #555;
-    }
+.btn-modal-cancel:hover {
+  background-color: #2b2b40;
+  color: #ffffff;
+  border-color: #555;
+}
 
 /* --- Animations --- */
 @keyframes fadeInBackdrop {
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes zoomInModal {
-    to {
-        transform: scale(1);
-    }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-    .theme-modal-content {
-        width: 95%;
-        margin: 10px;
-    }
+  .theme-modal-content {
+    width: 95%;
+    margin: 10px;
+  }
 
-    .theme-modal-header h5 {
-        font-size: 1.2rem;
-    }
+  .theme-modal-header h5 {
+    font-size: 1.2rem;
+  }
 
-    .theme-modal-footer {
-        flex-direction: column-reverse; /* Stack buttons on mobile */
-    }
+  .theme-modal-footer {
+    flex-direction: column-reverse; /* Stack buttons on mobile */
+  }
 
-    .btn-modal-save, .btn-modal-cancel {
-        width: 100%;
-        text-align: center;
-    }
+  .btn-modal-save,
+  .btn-modal-cancel {
+    width: 100%;
+    text-align: center;
+  }
 }
-
-
 
 /* --- High-End Dark Modal Styles --- */
 
 /* 1. The Backdrop (Blurred & Smooth) */
 .theme-modal-backdrop {
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.75); /* Darker overlay */
-    backdrop-filter: blur(5px); /* This makes it look premium */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    animation: modalFadeIn 0.3s forwards; /* Smooth entry */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75); /* Darker overlay */
+  backdrop-filter: blur(5px); /* This makes it look premium */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: modalFadeIn 0.3s forwards; /* Smooth entry */
 }
 
 /* 2. The Modal Card */
 .theme-modal-content {
-    background-color: #1e1e2d; /* Matches your dashboard */
-    border-radius: 16px;
-    width: 550px; /* Wider for more space */
-    max-width: 90%;
-    border: 1px solid #2b2b40;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: translateY(20px);
-    animation: modalSlideUp 0.3s 0.1s forwards; /* Slide up effect */
+  background-color: #1e1e2d; /* Matches your dashboard */
+  border-radius: 16px;
+  width: 550px; /* Wider for more space */
+  max-width: 90%;
+  border: 1px solid #2b2b40;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(20px);
+  animation: modalSlideUp 0.3s 0.1s forwards; /* Slide up effect */
 }
 
 /* 3. Header */
 .theme-modal-header {
-    background-color: #1b1b29;
-    padding: 25px 30px;
-    border-bottom: 1px solid #2b2b40;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background-color: #1b1b29;
+  padding: 25px 30px;
+  border-bottom: 1px solid #2b2b40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-    .theme-modal-header h5 {
-        margin: 0;
-        color: #ffffff;
-        font-size: 1.25rem;
-        font-weight: 600;
-    }
+.theme-modal-header h5 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
 
 .close-btn {
-    color: #565674;
-    font-size: 2rem;
-    line-height: 0.5;
-    cursor: pointer;
-    transition: 0.2s;
+  color: #565674;
+  font-size: 2rem;
+  line-height: 0.5;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-    .close-btn:hover {
-        color: #ffffff;
-    }
+.close-btn:hover {
+  color: #ffffff;
+}
 
 /* 4. The Body (Spacious) */
 .theme-modal-body {
-    padding: 30px;
-    color: #a1a5b7;
-    font-size: 1.1rem; /* Bigger text */
-    line-height: 1.6;
+  padding: 30px;
+  color: #a1a5b7;
+  font-size: 1.1rem; /* Bigger text */
+  line-height: 1.6;
 }
 
 /* Force the dynamic content to layout nicely */
 #modalBody {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Space between checkbox items */
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between checkbox items */
+  margin-top: 20px;
 }
 
-    /* --- CUSTOM CHECKBOX STYLING --- */
-    /* This targets the input generated by your backend */
-    #modalBody input[type="checkbox"] {
-        -webkit-appearance: none;
-        appearance: none;
-        background-color: #151521;
-        margin-right: 15px;
-        font: inherit;
-        color: currentColor;
-        width: 26px; /* Big square */
-        height: 26px;
-        border: 2px solid #323248;
-        border-radius: 6px;
-        display: inline-grid;
-        place-content: center;
-        cursor: pointer;
-        vertical-align: middle;
-        transition: all 0.2s ease-in-out;
-        position: relative;
-        top: -2px; /* Visual alignment fix */
-    }
+/* --- CUSTOM CHECKBOX STYLING --- */
+/* This targets the input generated by your backend */
+#modalBody input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #151521;
+  margin-right: 15px;
+  font: inherit;
+  color: currentColor;
+  width: 26px; /* Big square */
+  height: 26px;
+  border: 2px solid #323248;
+  border-radius: 6px;
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  top: -2px; /* Visual alignment fix */
+}
 
-        #modalBody input[type="checkbox"]:checked {
-            background-color: #0ec9ae; /* Your Teal Color */
-            border-color: #0ec9ae;
-        }
+#modalBody input[type="checkbox"]:checked {
+  background-color: #0ec9ae; /* Your Teal Color */
+  border-color: #0ec9ae;
+}
 
-            #modalBody input[type="checkbox"]:checked::before {
-                content: "";
-                width: 14px;
-                height: 14px;
-                box-shadow: inset 1em 1em white;
-                transform-origin: bottom left;
-                clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-            }
+#modalBody input[type="checkbox"]:checked::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  box-shadow: inset 1em 1em white;
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
 
-        #modalBody input[type="checkbox"]:hover {
-            border-color: #0ec9ae; /* Glow on hover */
-        }
+#modalBody input[type="checkbox"]:hover {
+  border-color: #0ec9ae; /* Glow on hover */
+}
 
 /* 5. Footer & Buttons */
 .theme-modal-footer {
-    padding: 20px 30px;
-    background-color: #1b1b29;
-    border-top: 1px solid #2b2b40;
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+  padding: 20px 30px;
+  background-color: #1b1b29;
+  border-top: 1px solid #2b2b40;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
 .btn-modal-cancel {
-    background: transparent;
-    border: 1px solid #323248;
-    color: #a1a5b7;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: 0.2s;
+  background: transparent;
+  border: 1px solid #323248;
+  color: #a1a5b7;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.2s;
 }
 
-    .btn-modal-cancel:hover {
-        background: #2b2b40;
-        color: white;
-    }
+.btn-modal-cancel:hover {
+  background: #2b2b40;
+  color: white;
+}
 
 .btn-modal-save {
-    background: #0ec9ae; /* Teal */
-    border: none;
-    color: #fff;
-    padding: 12px 30px;
-    border-radius: 8px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(14, 201, 174, 0.2); /* Teal glow */
-    transition: 0.2s;
+  background: #0ec9ae; /* Teal */
+  border: none;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(14, 201, 174, 0.2); /* Teal glow */
+  transition: 0.2s;
 }
 
-    .btn-modal-save:hover {
-        background: #0bb79e;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(14, 201, 174, 0.3);
-    }
+.btn-modal-save:hover {
+  background: #0bb79e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(14, 201, 174, 0.3);
+}
 
 /* Animations */
 @keyframes modalFadeIn {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Mobile Responsive */
 @media (max-width: 600px) {
-    .theme-modal-content {
-        width: 95%;
-        margin: 10px;
-    }
+  .theme-modal-content {
+    width: 95%;
+    margin: 10px;
+  }
 
-    .theme-modal-footer {
-        flex-direction: column-reverse;
-    }
+  .theme-modal-footer {
+    flex-direction: column-reverse;
+  }
 
-    .btn-modal-save, .btn-modal-cancel {
-        width: 100%;
-    }
+  .btn-modal-save,
+  .btn-modal-cancel {
+    width: 100%;
+  }
 }

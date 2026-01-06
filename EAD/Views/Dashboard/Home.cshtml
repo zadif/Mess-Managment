@@ -6,57 +6,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Mess Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Dashboard | MessMate</title>
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link to CSS -->
     <link rel="stylesheet" href="~/css/UserHome.css">
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <!-- SIDEBAR (Same as before) -->
-        <aside class="sidebar">
-            <div class="logo-area">
-                <i class="fas fa-utensils"></i> <span>MessMate</span>
+    <div class="user-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-bowl-food"></i>
+                    </div>
+                    <span class="logo-text">MessMate</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-            <nav class="nav-links">
-                <a href="/Dashboard/Home" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="/UserMenu/fullMenu" class="nav-item"><i class="fas fa-file-invoice-dollar"></i> <span>Full Week Menu</span></a>
-                <a href="/UserMenu/Bills" class="nav-item"><i class="fas fa-history"></i> <span>Bills</span></a>
-                <a href="/UserMenu/Profile" class="nav-item"> <i class="fas fa-user-circle me-2"></i><span>Profile</span></a>
 
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main Menu</span>
+                    <a href="/Dashboard/Home" class="nav-link active">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/UserMenu/fullMenu" class="nav-link">
+                        <i class="fas fa-calendar-week"></i>
+                        <span>Weekly Menu</span>
+                    </a>
+                    <a href="/UserMenu/Bills" class="nav-link">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>My Bills</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Account</span>
+                    <a href="/UserMenu/Profile" class="nav-link">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="/UserMenu/RecheckConsumptions" class="nav-link">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Consumption History</span>
+                    </a>
+                </div>
             </nav>
-            <form action="/Login/Logout" method="post" class="logout-form">
-                <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </form>
+
+            <div class="sidebar-footer">
+                <form action="/Login/Logout" method="post">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        <!-- Main Content Area -->
         <main class="main-content">
-            
-            <header class="top-bar">
-                <div class="date-display">
-                    <i class="far fa-calendar-alt"></i>
-                    <span>@DateTime.Now.ToString("dddd, dd MMMM yyyy")</span>
+            <!-- Top Header Bar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Welcome back! Here's your meal overview</p>
                 </div>
-                <div class="user-profile-pill">
-                    <div class="avatar">U</div><span>User Panel</span>
+                <div class="header-right">
+                    <div class="date-badge">
+                        <i class="far fa-calendar"></i>
+                        <span>@DateTime.Now.ToString("ddd, MMM dd")</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
                 </div>
             </header>
 
-            <div class="hero-banner">
-                <div class="hero-text">
-                    <h1>Delicious & Healthy</h1>
-                    <p>Check out what's on the menu today.</p>
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Hero Banner -->
+                <div class="hero-banner">
+                    <div class="hero-content">
+                        <div class="hero-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="hero-text">
+                            <h2>Today's Fresh Menu</h2>
+                            <p>Delicious meals prepared with care. Check what's cooking!</p>
+                        </div>
+                    </div>
+                    <div class="hero-decoration">
+                        <div class="deco-shape shape-1"></div>
+                        <div class="deco-shape shape-2"></div>
+                        <div class="deco-shape shape-3"></div>
+                    </div>
                 </div>
-                <div class="hero-decoration"><i class="fas fa-carrot"></i></div>
-            </div>
-         
-            <section class="menu-section">
+
+                <!-- Today's Menu Section -->
                 <div class="section-header">
-                    <h2>Today's Menu</h2>
-                    <span class="badge-count">@if(Model != null) { @Model.Count() } Items</span>
+                    <h2><i class="fas fa-bowl-rice"></i> Today's Menu</h2>
+                    <span class="item-count">@if(Model != null) { @Model.Count() } items</span>
                 </div>
 
                 <div class="menu-grid">
@@ -64,10 +122,7 @@
                     {
                         foreach (var item in Model)
                         {
-                            // Determine Icon color class based on category
-                            string bgClass = (item.Category == "Breakfast") ? "bg-orange" : "bg-blue";
-                            
-                            <!-- CLICKABLE CARD with Data Attributes -->
+                            string iconClass = (item.Category == "Breakfast") ? "breakfast" : "lunch";
                             <div class="menu-card" 
                                  onclick="openDetails(this)"
                                  data-name="@item.MealItemName"
@@ -75,17 +130,24 @@
                                  data-type="@item.MealType"
                                  data-price="@item.Price"
                                  data-desc="@(string.IsNullOrEmpty(item.Description) ? "Freshly prepared in our kitchen with healthy ingredients." : item.Description)"
-                                 data-color="@bgClass">
+                                 data-icon="@iconClass">
                                 
-                                <div class="card-icon-area @bgClass">
-                                    <i class="fas fa-utensils"></i>
+                                <div class="card-icon @iconClass">
+                                    @if(item.Category == "Breakfast")
+                                    {
+                                        <i class="fas fa-mug-hot"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-bowl-food"></i>
+                                    }
                                 </div>
-                                <div class="card-details">
-                                    <span class="category-tag">@item.Category</span>
-                                    <h3>@item.MealItemName</h3>
-                                    <p class="description">@item.MealType</p>
+                                <div class="card-info">
+                                    <span class="card-category">@item.Category</span>
+                                    <h3 class="card-title">@item.MealItemName</h3>
+                                    <span class="card-type">@item.MealType</span>
                                 </div>
-                                <div class="card-action">
+                                <div class="card-arrow">
                                     <i class="fas fa-chevron-right"></i>
                                 </div>
                             </div>
@@ -93,77 +155,121 @@
                     }
                     else
                     {
-                        <div class="no-data"><p>Menu not updated yet.</p></div>
+                        <div class="empty-menu">
+                            <i class="fas fa-utensils"></i>
+                            <p>Menu not updated yet</p>
+                            <span>Check back later for today's delicious options</span>
+                        </div>
                     }
                 </div>
-            </section>
-            <section class="quick-actions">
-                <div class="action-card primary" onclick="location.href='@Url.Action("Bills", "UserMenu")'">
-                    <div class="icon-box"><i class="fas fa-receipt"></i></div>
-                    <div class="text-box">
-                        <h4>View Bill Summary</h4>
-                        <p>Check your monthly expenses</p>
-                    </div>
-                    <i class="fas fa-arrow-right arrow"></i>
+
+                <!-- Quick Actions Section -->
+                <div class="section-header">
+                    <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
                 </div>
 
-                @* <div class="action-card secondary" onclick="location.href='@Url.Action("RecheckBills", "UserMenu")'">
-                    <div class="icon-box"><i class="fas fa-undo-alt"></i></div>
-                    <div class="text-box">
-                        <h4>Request Bill Recheck</h4>
-                        <p>Found an issue? Let us know.</p>
-                    </div>
-                    <i class="fas fa-arrow-right arrow"></i>
-                </div> *@
-                <div class="action-card secondary" onclick="location.href='@Url.Action("RecheckConsumptions", "UserMenu")'">
-                    <div class="icon-box"><i class="fas fa-undo-alt"></i></div>
-                    <div class="text-box">
-                        <h4>Check Your Daily Consumptions</h4>
-                        <p>Found an issue? Let us know.</p>
-                    </div>
-                    <i class="fas fa-arrow-right arrow"></i>
+                <div class="actions-row">
+                    <a href="@Url.Action("Bills", "UserMenu")" class="quick-action-card">
+                        <div class="action-icon green">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="action-info">
+                            <h4>View Bills</h4>
+                            <p>Check your monthly expenses</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="@Url.Action("RecheckConsumptions", "UserMenu")" class="quick-action-card">
+                        <div class="action-icon blue">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="action-info">
+                            <h4>Consumption History</h4>
+                            <p>Review your daily meal records</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="@Url.Action("fullMenu", "UserMenu")" class="quick-action-card">
+                        <div class="action-icon purple">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="action-info">
+                            <h4>Weekly Menu</h4>
+                            <p>Plan your meals ahead</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
                 </div>
-            </section>
+            </div>
         </main>
     </div>
 
-    <!-- === MODAL POPUP HTML (Hidden by default) === -->
+    <!-- Modal Popup -->
     <div id="foodModal" class="modal-overlay">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeDetails()">&times;</button>
+            <button class="modal-close" onclick="closeDetails()">&times;</button>
             
-            <div class="modal-header-icon" id="m-icon-bg">
+            <div class="modal-icon" id="m-icon-bg">
                 <i class="fas fa-utensils"></i>
             </div>
 
             <div class="modal-body">
                 <span class="modal-category" id="m-category">BREAKFAST</span>
                 <h2 id="m-name">Food Name</h2>
-                <div class="tags">
-                     <span class="tag-pill" id="m-type">Main Course</span>
+                <div class="modal-tags">
+                    <span class="tag" id="m-type">Main Course</span>
                 </div>
                 
-                <div class="divider"></div>
+                <div class="modal-divider"></div>
                 
                 <p class="modal-desc" id="m-desc">
                     Description goes here...
                 </p>
 
-                <div class="modal-footer-row">
-                    <div class="price-box">
-                        <span class="label">Price</span>
-                        <span class="value">Rs. <span id="m-price">0</span></span>
+                <div class="modal-footer">
+                    <div class="price-display">
+                        <span class="price-label">Price</span>
+                        <span class="price-value">Rs. <span id="m-price">0</span></span>
                     </div>
-                    <!-- Optional: Add to cart or just a close button -->
-                    <button class="btn-done" onclick="closeDetails()">Got it</button>
+                    <button class="modal-btn" onclick="closeDetails()">Got it</button>
                 </div>
             </div>
         </div>
     </div>
 
-   
-    <!-- === JAVASCRIPT === -->
+    <!-- JavaScript -->
     <script>
+        // Sidebar toggle for mobile
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                
+                let overlay = document.querySelector('.sidebar-overlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.className = 'sidebar-overlay';
+                    document.body.appendChild(overlay);
+                    overlay.addEventListener('click', () => {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    });
+                }
+                overlay.classList.toggle('active');
+            });
+        }
+
+        // Modal functionality
         const modal = document.getElementById('foodModal');
         const mName = document.getElementById('m-name');
         const mCategory = document.getElementById('m-category');
@@ -172,37 +278,30 @@
         const mPrice = document.getElementById('m-price');
         const mIconBg = document.getElementById('m-icon-bg');
 
-        // Function to Open Modal
         function openDetails(card) {
-            // 1. Get data from clicked card
             const name = card.getAttribute('data-name');
             const cat = card.getAttribute('data-category');
             const type = card.getAttribute('data-type');
             const price = card.getAttribute('data-price');
             const desc = card.getAttribute('data-desc');
-            const colorClass = card.getAttribute('data-color');
+            const iconClass = card.getAttribute('data-icon');
 
-            // 2. Populate Modal
             mName.innerText = name;
             mCategory.innerText = cat;
             mType.innerText = type;
             mDesc.innerText = desc;
             mPrice.innerText = price;
 
-            // Handle Icon Color
-            mIconBg.className = 'modal-header-icon'; // Reset
-            mIconBg.classList.add(colorClass);
+            mIconBg.className = 'modal-icon';
+            mIconBg.classList.add(iconClass);
 
-            // 3. Show Modal
             modal.classList.add('active');
         }
 
-        // Function to Close Modal
         function closeDetails() {
             modal.classList.remove('active');
         }
 
-        // Close when clicking outside the box
         window.onclick = function(event) {
             if (event.target == modal) {
                 closeDetails();

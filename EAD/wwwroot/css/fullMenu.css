@@ -1,225 +1,224 @@
-﻿
-/* --- THEME SETTINGS --- */
+﻿/* --- THEME SETTINGS --- */
 .btn-home-corner {
-    position: absolute; /* Fixes it to the top right of the page */
-    top: 25px;
-    right: 30px;
-    background-color: #ffffff;
-    color: #5a67d8; /* Your Theme Purple */
-    padding: 10px 24px;
-    border-radius: 50px; /* Pill shape */
-    text-decoration: none;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Soft shadow */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    z-index: 1000; /* Ensures it stays on top */
+  position: absolute; /* Fixes it to the top right of the page */
+  top: 25px;
+  right: 30px;
+  background-color: #ffffff;
+  color: #059669; /* Emerald Theme */
+  padding: 10px 24px;
+  border-radius: 50px; /* Pill shape */
+  text-decoration: none;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  z-index: 1000; /* Ensures it stays on top */
 }
 
 .btn-home-corner:hover {
-    background-color: #5a67d8;
-    color: #ffffff;
-    transform: translateY(-3px); /* Subtle lift effect */
-    box-shadow: 0 6px 15px rgba(90, 103, 216, 0.3); /* Purple glow shadow */
+  background-color: #059669;
+  color: #ffffff;
+  transform: translateY(-3px); /* Subtle lift effect */
+  box-shadow: 0 6px 15px rgba(5, 150, 105, 0.3); /* Emerald glow shadow */
 }
 
 :root {
-    /* Matches your Login Page Background roughly */
-    --bg-theme: #aabbe5;
-    /* Deep Purple for Headers */
-    --brand-primary: #5a67d8;
-    --brand-dark: #434190;
-    /* Text Colors */
-    --text-dark: #2d3748;
-    --text-light: #718096;
-    --price-color: #2f855a; /* Green for money */
+  /* Matches Emerald Theme Background */
+  --bg-theme: #a7f3d0;
+  /* Emerald for Headers */
+  --brand-primary: #059669;
+  --brand-dark: #047857;
+  /* Text Colors */
+  --text-dark: #0f172a;
+  --text-light: #64748b;
+  --price-color: #047857; /* Emerald green for money */
 }
 
 body {
-    background-color: var(--bg-theme); /* The Login Page Purple/Blue */
-    font-family: 'Poppins', sans-serif;
-    padding-bottom: 40px;
+  background-color: var(--bg-theme); /* The Emerald Background */
+  font-family: "Poppins", sans-serif;
+  padding-bottom: 40px;
 }
 
 /* --- LAYOUT --- */
 .page-container {
-    max-width: 1400px; /* Wide enough for the table */
-    margin: 30px auto;
-    padding: 0 20px;
+  max-width: 1400px; /* Wide enough for the table */
+  margin: 30px auto;
+  padding: 0 20px;
 }
 
 .header-area {
-    text-align: center;
-    margin-bottom: 30px;
-    color: white; /* White text on the colored background looks premium */
+  text-align: center;
+  margin-bottom: 30px;
+  color: white; /* White text on the colored background looks premium */
 }
 
-    .header-area h2 {
-        font-weight: 700;
-        font-size: 2.5rem;
-        margin-bottom: 5px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+.header-area h2 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-    .header-area p {
-        font-weight: 400;
-        opacity: 0.9;
-        font-size: 1.1rem;
-    }
+.header-area p {
+  font-weight: 400;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
 
 /* --- MAIN CARD --- */
 .menu-shadow-card {
-    background: #ffffff;
-    border-radius: 20px;
-    /* Deep shadow like the login box */
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
-    padding: 0;
+  background: #ffffff;
+  border-radius: 20px;
+  /* Deep shadow like the login box */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  padding: 0;
 }
 
 /* --- TABLE STYLING --- */
 .mess-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 900px; /* Ensures it doesn't squish on mobile */
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px; /* Ensures it doesn't squish on mobile */
 }
 
-    /* Table Header */
-    .mess-table thead th {
-        background-color: var(--brand-primary);
-        color: #ffffff;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 0.85rem;
-        padding: 20px;
-        font-weight: 600;
-        text-align: left;
-        border: none;
-    }
+/* Table Header */
+.mess-table thead th {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  padding: 20px;
+  font-weight: 600;
+  text-align: left;
+  border: none;
+}
 
-    /* Rounded corners for the header strip */
-    .mess-table thead tr:first-child th:first-child {
-        border-top-left-radius: 10px;
-    }
+/* Rounded corners for the header strip */
+.mess-table thead tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
 
-    .mess-table thead tr:first-child th:last-child {
-        border-top-right-radius: 10px;
-    }
+.mess-table thead tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
 
-    /* Table Body */
-    .mess-table tbody tr {
-        border-bottom: 1px solid #edf2f7;
-        transition: background-color 0.2s;
-    }
+/* Table Body */
+.mess-table tbody tr {
+  border-bottom: 1px solid #edf2f7;
+  transition: background-color 0.2s;
+}
 
-        .mess-table tbody tr:last-child {
-            border-bottom: none;
-        }
+.mess-table tbody tr:last-child {
+  border-bottom: none;
+}
 
-        .mess-table tbody tr:hover {
-            background-color: #fafbfe; /* Very subtle hover */
-        }
+.mess-table tbody tr:hover {
+  background-color: #fafbfe; /* Very subtle hover */
+}
 
-    .mess-table td {
-        padding: 20px;
-        vertical-align: top;
-        color: var(--text-dark);
-    }
+.mess-table td {
+  padding: 20px;
+  vertical-align: top;
+  color: var(--text-dark);
+}
 
 /* Day Column Styling */
 .col-day {
-    width: 12%;
-    background-color: #f8faff;
-    border-right: 2px solid #edf2f7;
+  width: 12%;
+  background-color: #f0fdf4;
+  border-right: 2px solid #d1fae5;
 }
 
 .day-text {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--brand-dark);
-    display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+  display: block;
 }
 
 /* --- MEAL ITEMS (CLEAN LIST STYLE) --- */
 .meal-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .meal-item-row {
-    position: relative;
-    padding-bottom: 12px;
-    border-bottom: 1px dashed #e2e8f0; /* Subtle separator */
-    cursor: pointer;
-    transition: transform 0.2s ease;
+  position: relative;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e2e8f0; /* Subtle separator */
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-    .meal-item-row:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
+.meal-item-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
 
-    .meal-item-row:hover .item-name {
-        color: var(--brand-primary);
-    }
+.meal-item-row:hover .item-name {
+  color: var(--brand-primary);
+}
 
 .item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
 }
 
 .item-name {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #2d3748;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2d3748;
 }
 
 .item-price {
-    font-weight: 700;
-    color: var(--price-color);
-    font-size: 0.9rem;
-    background: #f0fff4;
-    padding: 2px 6px;
-    border-radius: 4px;
+  font-weight: 700;
+  color: var(--price-color);
+  font-size: 0.9rem;
+  background: #d1fae5;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .item-cat {
-    font-size: 0.75rem;
-    color: #718096;
-    text-transform: uppercase;
-    font-weight: 500;
+  font-size: 0.75rem;
+  color: #718096;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
 /* --- EMPTY STATE --- */
 .no-food {
-    color: #cbd5e0;
-    font-size: 1.5rem;
-    text-align: center;
-    display: block;
-    margin-top: 10px;
+  color: #cbd5e0;
+  font-size: 1.5rem;
+  text-align: center;
+  display: block;
+  margin-top: 10px;
 }
 
 /* --- BUTTONS --- */
 .btn-policy {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 8px 20px;
-    border-radius: 50px;
-    backdrop-filter: blur(5px);
-    transition: all 0.3s;
-    text-decoration: none;
-    font-size: 0.9rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 8px 20px;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
-    .btn-policy:hover {
-        background-color: white;
-        color: var(--brand-primary);
-    }
-
+.btn-policy:hover {
+  background-color: white;
+  color: var(--brand-primary);
+}
