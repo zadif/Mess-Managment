@@ -36,7 +36,7 @@ namespace EAD.Controllers
             // Generate PDF
             var pdfBytes = GenerateAdminReport(users, bills, mealItems, dailyConsumptions);
 
-            var fileName = $"MessMate_Admin_Report_{DateTime.Now:yyyy-MM-dd_HH-mm}.pdf";
+            var fileName = $"KskMess_Admin_Report_{DateTime.Now:yyyy-MM-dd_HH-mm}.pdf";
             return File(pdfBytes, "application/pdf", fileName);
         }
 
@@ -52,7 +52,7 @@ namespace EAD.Controllers
 
                 var pdfBytes = GenerateBillsReport(bills, isAdmin: true);
 
-                var fileName = $"MessMate_Bills_Report_{DateTime.Now:yyyy-MM-dd_HH-mm}.pdf";
+                var fileName = $"KskMess_Bills_Report_{DateTime.Now:yyyy-MM-dd_HH-mm}.pdf";
                 return File(pdfBytes, "application/pdf", fileName);
             }
             catch (Exception)
@@ -89,7 +89,7 @@ namespace EAD.Controllers
 
             var pdfBytes = GenerateUserReport(user!, bills, consumptions);
 
-            var fileName = $"MessMate_My_Report_{DateTime.Now:yyyy-MM-dd_HH-mm}.pdf";
+            var fileName = $"KskMess_My_Report_{DateTime.Now:yyyy-MM-dd_HH-mm}.pdf";
             return File(pdfBytes, "application/pdf", fileName);
         }
 
@@ -246,7 +246,7 @@ namespace EAD.Controllers
             {
                 row.RelativeItem().Column(col =>
                 {
-                    col.Item().Text("MessMate").FontSize(24).Bold().FontColor(Colors.Green.Darken2);
+                    col.Item().Text("Ksk Mess").FontSize(24).Bold().FontColor(Colors.Green.Darken2);
                     col.Item().Text("Mess Management System").FontSize(10).FontColor(Colors.Grey.Darken1);
                 });
 
@@ -262,7 +262,7 @@ namespace EAD.Controllers
         {
             container.BorderTop(1).BorderColor(Colors.Grey.Lighten2).PaddingTop(5).Row(row =>
             {
-                row.RelativeItem().Text("© MessMate - Confidential Report").FontSize(8).FontColor(Colors.Grey.Medium);
+                row.RelativeItem().Text("© Ksk Mess - Confidential Report").FontSize(8).FontColor(Colors.Grey.Medium);
                 row.RelativeItem().AlignRight().Text(x =>
                 {
                     x.Span("Page ").FontSize(8).FontColor(Colors.Grey.Medium);
